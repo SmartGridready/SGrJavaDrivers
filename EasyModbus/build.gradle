@@ -5,7 +5,7 @@
  * Learn how to create Gradle builds at https://guides.gradle.org/creating-new-gradle-builds
  */
 
-  plugins {
+ plugins {
 	id 'java'
 	id 'maven-publish'
 }
@@ -35,8 +35,8 @@ configurations {
 	extraLibs.extendsFrom implementation
 }
 
-dependencies {	
-		
+dependencies {
+    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '0.2.1'	
 	implementation fileTree(dir: 'bin', include: 'jssc-2.9.2.jar')
 }
 
@@ -55,7 +55,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'ch.smartgridready'
-            artifactId = 'commhandler4modbus'
+            artifactId = 'easymodbus'
             version = '0.2.1'
 
             from components.java
