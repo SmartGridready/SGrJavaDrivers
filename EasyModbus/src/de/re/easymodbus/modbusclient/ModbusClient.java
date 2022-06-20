@@ -21,18 +21,26 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.re.easymodbus.modbusclient;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.*;
-import java.nio.ByteBuffer;
-import java.io.*;
-import java.util.*;
-
-
-
 import java.io.InputStream;
-import jssc.*;
-import de.re.easymodbus.datatypes.*;
-import de.re.easymodbus.exceptions.ModbusException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import de.re.easymodbus.datatypes.Parity;
+import de.re.easymodbus.datatypes.RegisterOrder;
+import de.re.easymodbus.datatypes.StopBits;
+import jssc.SerialPort;
+import jssc.SerialPortException;
+import jssc.SerialPortTimeoutException;
 
 
 
