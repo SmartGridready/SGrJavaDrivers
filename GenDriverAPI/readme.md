@@ -3,7 +3,7 @@
 
 The Generic Device Driver API makes the SGr communication handler (CommHandler4Modbus) independent from the device driver implementation. The communication handler can uses the same interface to communicate with any modbus driver (EasyModbus, 3rdPartyDriver).
 
-![UML Generic Device Driver](SGrGenericDeviceDriver.drawio "UML Generic Device Driver")
+![UML Generic Device Driver](SGrGenericDeviceDriver.png "UML Generic Device Driver")
 
 
 #### Component: Communicator
