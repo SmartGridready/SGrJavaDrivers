@@ -1,15 +1,15 @@
-<style>
-    table, th, td {
-        border: 1px solid black;        
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }   
-    td {
-        padding: 8px;
-    }
-</style>
+# <style>
+#    table, th, td {
+#        border: 1px solid black;        
+#    }
+#    table {
+#        width: 100%;
+#        border-collapse: collapse;
+#    }   
+#    td {
+#        padding: 8px;
+#    }
+# </style>
 
 ### Generic Device Driver API
 
