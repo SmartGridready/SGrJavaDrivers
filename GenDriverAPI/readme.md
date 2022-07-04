@@ -1,15 +1,3 @@
-<style>
-    table, th, td {
-        border: 1px solid black;        
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }   
-    td {
-        padding: 8px;
-    }
-</style>
 
 ### Generic Device Driver API
 
@@ -33,7 +21,7 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 
 ##### Component: SGrDevice
 <table valign="top">
-    <tr><td><b>Implementor:</b></td><td>SGr core development teamr</td></tr>
+    <tr><td><b>Implementor:</b></td><td>SGr core development team</td></tr>
     <tr><td valign="top"><b>Responsibilities:</b></td><td>
                 <p>P</p>
                 <p>Instantiates SGrDevice (provided by the <b>commhandler4Modbus</b> library)</p>
