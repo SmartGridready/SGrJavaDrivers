@@ -30,6 +30,34 @@ dependencies {
     // none yet
 }
 
+
+publishing {
+    repositories {
+        maven {
+            name = "Github"
+            url = uri("https://maven.pkg.github.com/SmartgridReady/SGrJavaPackages")
+            credentials {
+                username = findProperty("github.username")
+                password = findProperty("github.token")
+            }
+        }
+    }
+
+    publications {
+        impl(MavenPublication) {
+            groupId = 'ch.smartgridready'
+            artifactId = 'sgr-driver-api'
+            version = '0.2.1'
+
+            from components.java
+            pom {
+                url.set("https://github.com/SmartgridReady/SGrJavaPackages.git")
+            }
+        }
+    }
+}
+
+/*
 publishing {
     publications {
         api(MavenPublication) {
@@ -41,3 +69,4 @@ publishing {
         }
     }
 }
+*/
