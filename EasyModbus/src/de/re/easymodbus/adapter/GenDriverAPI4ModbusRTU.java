@@ -22,25 +22,14 @@ use their own Modbus RTU drivers
  */
 
 
-/**
- * <!-- begin-user-doc -->
-
- * <!-- end-user-doc -->
- * @generated NOT
- * 
- * 
-**/
-
-import java.io.IOException;
-
 import communicator.common.runtime.GenDriverAPI4Modbus;
 import communicator.common.runtime.GenDriverException;
+import communicator.common.runtime.GenDriverModbusException;
+import communicator.common.runtime.GenDriverSocketException;
 import de.re.easymodbus.datatypes.Parity;
 import de.re.easymodbus.datatypes.StopBits;
-import de.re.easymodbus.exceptions.ModbusException;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import jssc.SerialPortException;
-import jssc.SerialPortTimeoutException;
 
 public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 	
@@ -80,75 +69,60 @@ public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 	   mbRTU.setUnitIdentifier(unitIdentifier);
     }
     
-    public int[] ReadHoldingRegisters(int startingAddress, int quantity) throws GenDriverException
+    public int[] ReadHoldingRegisters(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {    	
-    	try {
-			return mbRTU.ReadHoldingRegisters(startingAddress,quantity);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read holding registers failed.", e);
-		} 
+    	return new ModbusCallHandler<>(
+    			mbRTU, 
+    			mbRTU::ReadHoldingRegisters).read(startingAddress, quantity);
     }
 
-    public int[] ReadInputRegisters(int startingAddress, int quantity) throws GenDriverException
+    public int[] ReadInputRegisters(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {
-    	try {
-			return mbRTU.ReadInputRegisters(startingAddress,quantity);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read input registers failed.", e);			
-		}
+    	return new ModbusCallHandler<>(
+    			mbRTU, 
+    			mbRTU::ReadInputRegisters).read(startingAddress, quantity); 
     }
 
-    public boolean[] ReadDiscreteInputs(int startingAddress, int quantity) throws GenDriverException
+    public boolean[] ReadDiscreteInputs(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {  
-	    try {
-			return mbRTU.ReadDiscreteInputs(startingAddress,quantity);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read discrete inputs failed.", e);
-	    }
+    	return new ModbusCallHandler<>(
+    			mbRTU, 
+    			mbRTU::ReadDiscreteInputs).read(startingAddress, quantity);     	
     }
 
-    public boolean[] ReadCoils(int startingAddress, int quantity) throws GenDriverException
+    public boolean[] ReadCoils(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {   
-		try {
-			return mbRTU.ReadCoils(startingAddress,quantity);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read coils failed.", e);
-		}
-    }    
+       	return new ModbusCallHandler<>(
+    			mbRTU, 
+    			mbRTU::ReadCoils).read(startingAddress, quantity);     
+    }
 
-    public void  WriteMultipleCoils(int startingAdress, boolean[] values) throws GenDriverException 
+    public void  WriteMultipleCoils(int startingAdress, boolean[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException 
     {    	
-    	try {
-			mbRTU.WriteMultipleCoils(startingAdress,values);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Write multiple coils failed.", e);
-		}  
+    	new ModbusCallHandler<>(
+    			mbRTU,
+    			mbRTU::WriteMultipleCoils).write(startingAdress, values);
     }
     
-    public void  WriteSingleCoil(int startingAdress, boolean value) throws GenDriverException 
+    public void  WriteSingleCoil(int startingAdress, boolean value) throws GenDriverException, GenDriverSocketException, GenDriverModbusException 
     {
-    	try {
-			mbRTU.WriteSingleCoil(startingAdress, value);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Write single coil failed.", e);
-		}
+    	new ModbusCallHandler<>(
+    			mbRTU,
+    			mbRTU::WriteSingleCoil).write(startingAdress, value);
     }
 
-     public void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException 
+     public void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException 
      {
-    	 try {
-			mbRTU.WriteMultipleRegisters(startingAdress, values);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Write multiple registers failed.", e);		} 
+     	new ModbusCallHandler<>(
+    			mbRTU,
+    			mbRTU::WriteMultipleRegisters).write(startingAdress, values);
      }
      
-     public void WriteSingleRegister(int startingAdress, int value) throws GenDriverException
+     public void WriteSingleRegister(int startingAdress, int value) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
      {
-    	 try {
-			mbRTU.WriteSingleRegister(startingAdress, value);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Write single register failed.", e);
-		}       	 
+      	new ModbusCallHandler<>(
+    			mbRTU,
+    			mbRTU::WriteSingleRegister).write(startingAdress, value);
      }
      
 	 public void disconnect() throws GenDriverException 

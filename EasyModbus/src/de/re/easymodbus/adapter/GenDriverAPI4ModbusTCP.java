@@ -32,22 +32,22 @@ import java.io.IOException;
 
 import communicator.common.runtime.GenDriverAPI4Modbus;
 import communicator.common.runtime.GenDriverException;
-import de.re.easymodbus.exceptions.ModbusException;
+import communicator.common.runtime.GenDriverModbusException;
+import communicator.common.runtime.GenDriverSocketException;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import jssc.SerialPortException;
-import jssc.SerialPortTimeoutException;
 
 /*   AUTHOR: IBT / Chris Broennimann for Verein SmartGridready
  * This file hosts the interface from the CommHandler4Modbus implementation into any modbus driver linked to 
  */
 
 public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
-
-
-	ModbusClient mbDevice = new ModbusClient();
 	
+	private ModbusClient mbDevice = new ModbusClient();
+	
+	@Override
 	public void initDevice(String sIP4Address, int iPort) throws GenDriverException
-	{		
+	{						
 		try {
 			mbDevice.Connect(sIP4Address,iPort);
 		} catch (IOException e) {
@@ -55,42 +55,42 @@ public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
 		}
 	}
 
-    public int[] ReadHoldingRegisters(int startingAddress, int quantity) throws GenDriverException
-    {   
-    	try {
-			return mbDevice.ReadHoldingRegisters(startingAddress,quantity);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read holding registers failed.", e);
-		}
-    	
+	@Override
+    public int[] ReadHoldingRegisters(int startingAddress, int quantity) 
+    		throws GenDriverException, GenDriverSocketException, GenDriverModbusException
+    {
+		return new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::ReadHoldingRegisters,
+			mbDevice::Connect).read(startingAddress, quantity);    	
     }
 	
-    public int[] ReadInputRegisters(int startingAddress, int quantity) throws GenDriverException
+    public int[] ReadInputRegisters(int startingAddress, int quantity)
+    		throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {   
-		try {
-			return mbDevice.ReadInputRegisters(startingAddress,quantity);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read input registers failed.", e);
-		}
+		return new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::ReadInputRegisters,
+			mbDevice::Connect).read(startingAddress, quantity);
     }
     
 
-    public boolean[] ReadDiscreteInputs(int startingAddress, int quantity) throws GenDriverException
+    public boolean[] ReadDiscreteInputs(int startingAddress, int quantity)
+    		throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {   
-    	try {
-			return mbDevice.ReadDiscreteInputs(startingAddress,quantity);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read discrete inputs failed.", e);			
-		}
+		return new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::ReadDiscreteInputs,
+			mbDevice::Connect).read(startingAddress, quantity);
     }
 
-    public boolean[] ReadCoils(int startingAddress, int quantity) throws GenDriverException
+    public boolean[] ReadCoils(int startingAddress, int quantity)
+    		throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {   
-		try {
-			return mbDevice.ReadCoils(startingAddress,quantity);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read coils failed.", e);
-		}
+		return new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::ReadCoils,
+			mbDevice::Connect).read(startingAddress, quantity);
     }
 	
     /*
@@ -107,47 +107,46 @@ public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
 		}
     }
 
-    public void  WriteMultipleCoils(int startingAdress, boolean[] values) throws GenDriverException 
+    public void  WriteMultipleCoils(int startingAdress, boolean[] values)
+    		throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {
-        try {
-			mbDevice.WriteMultipleCoils(startingAdress,values);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Write multiple coils failed.", e);
-		}  
+    	new ModbusCallHandler<>(
+   			 mbDevice,
+   			 mbDevice::WriteMultipleCoils, 
+   			 mbDevice::Connect).write(startingAdress, values);
     }
     
-    public void  WriteSingleCoil(int startingAdress, boolean value) throws GenDriverException 
+    public void  WriteSingleCoil(int startingAdress, boolean value)
+    		throws GenDriverException, GenDriverSocketException, GenDriverModbusException
     {
-        try {
-			mbDevice.WriteSingleCoil(startingAdress, value);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Read coils failed.", e);
-		}
+    	new ModbusCallHandler<>(
+  			 mbDevice,
+  			 mbDevice::WriteSingleCoil, 
+  			 mbDevice::Connect).write(startingAdress, value);
     }
 
-     public void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException 
+     public void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
      {
-		 try {
-			mbDevice.WriteMultipleRegisters(startingAdress, values);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Write multiple registers failed.", e);
-		} 
+    	new ModbusCallHandler<>(
+			 mbDevice,
+			 mbDevice::WriteMultipleRegisters, 
+			 mbDevice::Connect).write(startingAdress, values);
+    	
      }
      
-     public void WriteSingleRegister(int startingAdress, int value) throws GenDriverException
+     public void WriteSingleRegister(int startingAdress, int value)
+    		 throws GenDriverException, GenDriverSocketException, GenDriverModbusException
      {
-		try {
-			mbDevice.WriteSingleRegister(startingAdress, value);
-		} catch (ModbusException | IOException | SerialPortException | SerialPortTimeoutException e) {
-			throw new GenDriverException("Write single register failed.", e);
-		}   
+     	new ModbusCallHandler<>(
+   			 mbDevice,
+   			 mbDevice::WriteSingleRegister, 
+   			 mbDevice::Connect).write(startingAdress, value);
      }
-     
+        
      /*
      public void 
 		mbDevice.setConnectionTimeout(0);   ;
 		mbDevice.setLogFileName(null);   ;
 		boolean mbDevice.isConnected()   ;
-     */
-	
+     */     
 }

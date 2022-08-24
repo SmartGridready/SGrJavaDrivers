@@ -23,7 +23,9 @@ apply plugin: 'maven-publish'
 
 
 sourceSets {
-     main.java.srcDirs = ['src']                  
+     main.java.srcDirs = ['src']
+     test.java.srcDirs = ['test']
+     main.resources.srcDirs = ['resources']
 }
 
 java {
@@ -36,8 +38,16 @@ configurations {
 }
 
 dependencies {
-    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '0.2.1'	
+    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '0.2.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.18.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.18.0'
 	implementation fileTree(dir: 'bin', include: 'jssc-2.9.2.jar')
+	
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.0'
+    
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.7.0'
 }
 
 jar {
@@ -46,6 +56,7 @@ jar {
 	
 	archiveName 'easymodbus.jar'
 
+    duplicatesStrategy='exclude'
     from {
             configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
     }

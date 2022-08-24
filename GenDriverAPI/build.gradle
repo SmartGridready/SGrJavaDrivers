@@ -30,6 +30,10 @@ dependencies {
     // none yet
 }
 
+jar {
+    from sourceSets.main.allSource
+}
+
 publishing {
     publications {
         api(MavenPublication) {
