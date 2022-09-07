@@ -6,15 +6,14 @@
 package sgralphapackage;
 
 import java.io.IOException;
-import java.math.BigInteger;
 
+import de.re.easymodbus.datatypes.Parity;
+import de.re.easymodbus.datatypes.StopBits;
+import de.re.easymodbus.exceptions.ModbusException;
+import de.re.easymodbus.modbusclient.ModbusClient;
 //import jssc.SerialPort;
 import jssc.SerialPortException;
 import jssc.SerialPortTimeoutException;
-
-import de.re.easymodbus.exceptions.*;
-import de.re.easymodbus.modbusclient.*;
-import de.re.easymodbus.datatypes.*;
 
 
 public class testJavaCommunicator {
