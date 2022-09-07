@@ -1,4 +1,3 @@
-
 ## Generic Device Driver API
 
 The Generic Device Driver API makes the SGr communication handler (CommHandler4Modbus) independent from the device driver implementation. The communication handler uses the same interface to communicate with any modbus driver (EasyModbus, 3rdPartyDriver).
