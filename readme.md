@@ -1,8 +1,8 @@
 # SGrJavaDrivers
 
 ## Index
-[Summary](##-summary)
-[Project Setup](##-project-setup)
+[Summary](##summary)<br>
+[Project Setup](##project-setup)<br>
 
 ## Summary
 
