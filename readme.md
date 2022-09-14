@@ -1,8 +1,8 @@
-# Index
-
-
-
 # SGrJavaDrivers
+
+## Index
+[Summary](##-summary)
+[Project Setup](##-project-setup)
 
 ## Summary
 
@@ -115,4 +115,4 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 </table>
 
 
-# Project Setup
+## Project Setup
