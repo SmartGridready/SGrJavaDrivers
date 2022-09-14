@@ -1,3 +1,20 @@
+# Index
+
+
+
+# SGrJavaDrivers
+
+## Summary
+
+SGrJavaDrivers contains libraries  that adapt the commhandler's generic device interface to device specific (communications-) transport layer.
+
+List of current library projects:
+- <b>SGrGenDriverAPI4Modbus</b>: Provides the generic driver API definitions for Modbus (as used by the SGr communication handler).
+- <b>EasyModbus</b>: Consists of the Modbus driver provideded by 'Copyright (c) 2018-2020 Rossmann-Engineering' together with the SGr generic driver API adapters for ModbusRTU and ModbusTCP.
+
+The chapters following chapters describe the architecture of the device adapters in detail.
+To support their own Modbus drivers within SmartgridReady, third party providers can implement their own adapters that implement the SGrGenDriverAPI4Modbus interface.
+
 ## Generic Device Driver API
 
 The Generic Device Driver API makes the SGr communication handler (CommHandler4Modbus) independent from the device driver implementation. The communication handler uses the same interface to communicate with any modbus driver (EasyModbus, 3rdPartyDriver).
@@ -96,3 +113,6 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
        <p>Receive commands from the 3rdPartyAdapter.</p>
     </td></tr>
 </table>
+
+
+# Project Setup
