@@ -144,6 +144,8 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 
 
 ## Build and publish a release
+- Obtain a Github access token for your Github account. This has to be done once before you can  publish to GitHub. See [Obtaining a GitHub token for publishing](#obtaining-a-github-token-for-publishing)
+
 - Change to the local ```{project-root}/SGrJavaDrivers/GenDriverAPI``` directory.
 - Check that the ```build.gradle``` file has the correct version number for the ```sgr-driver-api.jar``` file:
     ```
@@ -159,10 +161,13 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
         }
     }
     ```
+    <b>Rem:</b> GitHub will not accept publishing a version that already exists within the repository. If you want to override published version you must delete the existing package of the library first.
+
 - Run the command:
     ```
     bash>gradle publishAllPublicationsToGitHubRepository
     ```
+
 - Change to the local ```{project-root}/SGrJavaDrivers/EasyModbus``` dirctory.
 - Check that the ```build.gradle``` file has the correct version number for the 
     ```easy-modbus. jar``` file:
@@ -188,6 +193,37 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 <p>The steps above will compile, build the library jar's and publish the libraries to the  Maven repository on GitHub. The libaries are now published on GitHub, therefore public and can be used by integrators of SGr communicators.</p> 
 
 <p><b>Rem:</b> The SGr starter projects/code samples use the driver libraries from GitHub (see: https://github.com/SmartgridReady/SGrJavaSamples)
+
+
+## Obtaining a GitHub token for publishing
+
+### Creating the token on GitHub
+- Go to your GitHub profile settings page: https://github.com/settings/profile
+- On the left menu scroll down and select [<>Developer settings]
+- On the left menu select [<>Personal access tokens]
+- Select [Generate new token] on the top right.
+- When asked, enter your GitHub password
+- Fill in the new token form: 
+    - give the token a name for example 'TOKEN_4_GRADLE_PUBLISH'
+    - choose an expiry date
+    - check only the packages:write and packages:read permissions
+    - push the [Generate token] button on the bottom right.
+
+### Use the GitHub token on the local machine for publishing
+- On Windows go to ```c:\users\<username>\.gradle``` directory.
+- On Unix go to to your ```~/.gradle``` directory.
+- Create a file called ```gradle.properties```
+- Add the following entries in ```gradle.properties```:
+```
+github.username=ergo-furrer
+github.token=<-- add your GitHub publising token here-->
+```
+
+
+
+
+
+
 
 
 
