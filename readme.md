@@ -2,7 +2,9 @@
 
 ## Index
 [Summary](#summary)<br>
-[Project Setup](#project-setup)<br>
+[Project setup for developers](#project-setup)<br>
+[Build and publish for development](#build-and-publish-for-development)<br>
+[Build and publish a release](#build-and-publish-a-release)<br>
 
 ## Summary
 
@@ -116,3 +118,78 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 
 
 ## Project Setup
+
+### Prerquisites
+- Gradle version >= 7.3.3. Note: If no IDE with Gradle integration is used, Gradle must first be installed locally: https://gradle.org/install/
+- Java JDK version >= Java 1.8
+
+### Clone from GitHub
+- Clone this repo to your local machine: https://github.com/SmartgridReady/SGrJavaDrivers.git
+
+## Build and publish for development
+- Change to the local ```{project-root}/SGrJavaDrivers/GenDriverAPI``` directory.
+- Run the command:
+    ```
+    bash>gradle publishToMavenLocal
+    ```
+- Change to the local ```{project-root}/SGrJavaDrivers/EasyModbus``` dirctory.
+- Run the command:
+    ```
+    bash>gradle publishToMavenLocal
+    ```
+<p>When using an IDE (Intellij/Eclipse...) you can also use the IDE's Gradle integration to run 'publishToMavenLocal'. </p>
+
+<p>The steps above will compile, build the library jar's and publish the libraries to the local Maven repository. 
+<p><b>Rem:</b>The libraries are the most current and used for SGr core development such as the communication handler ( see https://github.com/SmartgridReady/SGrJava ).
+
+
+## Build and publish a release
+- Change to the local ```{project-root}/SGrJavaDrivers/GenDriverAPI``` directory.
+- Check that the ```build.gradle``` file has the correct version number for the ```sgr-driver-api.jar``` file:
+    ```
+    publishing {
+        publications {
+            api(MavenPublication) {
+                groupId = 'ch.smartgridready'
+                artifactId = 'sgr-driver-api'
+                version = '<correct-version>'
+
+                from components.java        
+            }
+        }
+    }
+    ```
+- Run the command:
+    ```
+    bash>gradle publishAllPublicationsToGitHubRepository
+    ```
+- Change to the local ```{project-root}/SGrJavaDrivers/EasyModbus``` dirctory.
+- Check that the ```build.gradle``` file has the correct version number for the 
+    ```easy-modbus. jar``` file:
+    ```
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = 'ch.smartgridready'
+                artifactId = 'easymodbus'
+                version = '<correct-version>'
+
+                from components.java
+            }
+        }
+    }
+    ```
+
+- Run the command:
+    ```
+    bash>gradle publishAllPublicationsToGitHubRepository
+    ```
+
+<p>The steps above will compile, build the library jar's and publish the libraries to the  Maven repository on GitHub. The libaries are now published on GitHub, therefore public and can be used by integrators of SGr communicators.</p> 
+
+<p><b>Rem:</b> The SGr starter projects/code samples use the driver libraries from GitHub (see: https://github.com/SmartgridReady/SGrJavaSamples)
+
+
+
+
+
