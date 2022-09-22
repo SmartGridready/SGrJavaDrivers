@@ -37,7 +37,7 @@ configurations {
 
 dependencies {
     implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '0.2.1'	
-	implementation fileTree(dir: 'bin', include: 'jssc-2.9.2.jar')
+    implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.2'
 }
 
 jar {
