@@ -57,6 +57,23 @@ publishing {
     }
 }
 
+
+tasks.register('publish2MavenLocal') {
+    group '!_smartgridready_publishing_!'            
+    description 'Publish to the local Maven repository for development'
+    
+    dependsOn ':publishToMavenLocal'
+}
+
+
+tasks.register('publish2GitHub') {
+    group '!_smartgridready_publishing_!'            
+    description 'Publish public release to the GitHub repository'
+    
+    dependsOn ':publishAllPublicationsToGithubRepository'
+}
+
+
 /*
 publishing {
     publications {
