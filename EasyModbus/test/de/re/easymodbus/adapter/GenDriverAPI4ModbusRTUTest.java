@@ -17,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 
 import communicator.common.runtime.GenDriverAPI4Modbus;
 import communicator.common.runtime.GenDriverException;
+import de.re.easymodbus.datatypes.StopBits;
+import de.re.easymodbus.datatypes.Parity;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import jssc.SerialPortException;
 
@@ -64,20 +66,78 @@ class GenDriverAPI4ModbusRTUTest {
 	}
 	
 
+	@Test
+	void initTrspServiceModbusRTU() throws Exception {
+		
+		// 1. overload
+		GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusRTU();		
+		driver.initTrspService("COM1");
+		
+		ModbusClient modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
+		assertEquals("COM1", modbusClient.getSerialPort());
+		assertEquals(9200, modbusClient.getBaudrate());
+		assertEquals(Parity.Even, modbusClient.getParity());
+		assertEquals(StopBits.One, modbusClient.getStopBits());
+		
+		// 2. overload
+		driver = new GenDriverAPI4ModbusRTU();
+		driver.initTrspService("COM2", 19200);
+		
+		modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
+		assertEquals("COM2", modbusClient.getSerialPort());
+		assertEquals(19200, modbusClient.getBaudrate());
+		assertEquals(Parity.Even, modbusClient.getParity());
+		assertEquals(StopBits.One, modbusClient.getStopBits());
+		
+		// 3. overload
+		driver = new GenDriverAPI4ModbusRTU();
+		driver.initTrspService("COM1", 2400, communicator.common.runtime.Parity.ODD);
+		
+		modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
+		assertEquals("COM1", modbusClient.getSerialPort());
+		assertEquals(2400, modbusClient.getBaudrate());
+		assertEquals(Parity.Odd, modbusClient.getParity());
+		assertEquals(StopBits.One, modbusClient.getStopBits());
+		
+		// 4. overload
+		driver = new GenDriverAPI4ModbusRTU();
+		driver.initTrspService("COM1", 2400, 
+				communicator.common.runtime.Parity.ODD, 
+				communicator.common.runtime.StopBits.ONE_AND_HALF);
+		
+		modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
+		assertEquals("COM1", modbusClient.getSerialPort());
+		assertEquals(2400, modbusClient.getBaudrate());
+		assertEquals(Parity.Odd, modbusClient.getParity());
+		assertEquals(StopBits.OnePointFive, modbusClient.getStopBits());						
+	}
+	
 	private void reportResult(String testCase, int[] result) {
 		StringBuffer sbuf = new StringBuffer();
 		Arrays.stream(result).boxed().forEach( b -> sbuf.append(String.format("%x, ", b)));		
 		LOG.info(testCase + " - result: {}", sbuf.toString());			
 	}
-	
-	
+			
 	private void setFieldByReflection(Object object, String fieldName, Object value) 
 			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
-		Field f1 = object.getClass().getDeclaredField(fieldName);
-		
+		Field f1 = getAccessibleField(object, fieldName);		
 		f1.setAccessible(true);
 		f1.set(object, value);
 	}
+	
+	private Object getFieldByReflection(Object object, String fieldName) 
+			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		
+		Field f1 = getAccessibleField(object, fieldName);
+		return f1.get(object);
+	}
+
+	private Field getAccessibleField(Object object, String fieldName) throws NoSuchFieldException {		
+		Field f1 = object.getClass().getDeclaredField(fieldName);		
+		f1.setAccessible(true);
+		return f1;
+	}
+	
 	
 }

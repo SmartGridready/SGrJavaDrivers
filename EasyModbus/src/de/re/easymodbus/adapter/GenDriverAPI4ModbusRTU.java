@@ -26,24 +26,42 @@ import communicator.common.runtime.GenDriverAPI4Modbus;
 import communicator.common.runtime.GenDriverException;
 import communicator.common.runtime.GenDriverModbusException;
 import communicator.common.runtime.GenDriverSocketException;
-import de.re.easymodbus.datatypes.Parity;
-import de.re.easymodbus.datatypes.StopBits;
+import communicator.common.runtime.Parity;
+import communicator.common.runtime.StopBits;
 import de.re.easymodbus.modbusclient.ModbusClient;
+import de.re.easymodbus.util.ParityMapper;
+import de.re.easymodbus.util.StopbitMapper;
 import jssc.SerialPortException;
 
 public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 	
 	ModbusClient mbRTU = new ModbusClient();
 	
-	public boolean initTrspService(String sCOM)
+	@Override
+	public boolean initTrspService(String comPort) throws GenDriverException {
+		return initTrspService(comPort, 9200 );
+	}
+	
+	@Override
+	public boolean initTrspService(String comPort, int baudRate) throws GenDriverException {
+		return initTrspService(comPort, baudRate, Parity.EVEN);
+	}
+	
+	@Override
+	public boolean initTrspService(String comPort, int baudRate, Parity parity) throws GenDriverException {
+		return initTrspService(comPort, baudRate, parity, StopBits.ONE);
+	}	
+	
+	@Override
+	public boolean initTrspService(String sCOM, int baudRate, Parity parity, StopBits stopBit)
 	{
 	    try 
 	    {          
 	    	mbRTU.setSerialFlag(true);
 	    	mbRTU.setSerialPort(sCOM);
-	    	mbRTU.setBaudrate(19200);
-	    	mbRTU.setParity(Parity.Even);
-	    	mbRTU.setStopBits(StopBits.One);
+	    	mbRTU.setBaudrate(baudRate);
+	    	mbRTU.setParity(ParityMapper.map(parity));
+	    	mbRTU.setStopBits(StopbitMapper.map(stopBit));
 	    	// mbRTU.setLogFileName("easyModebusRTULogger.txt",true);   
 	    	// REMARK: to set datalogging active by setting the second parameter to true
 	    	mbRTU.Connect(sCOM);
