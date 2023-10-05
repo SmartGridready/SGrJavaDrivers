@@ -47,7 +47,7 @@ publishing {
         impl(MavenPublication) {
             groupId = 'ch.smartgridready'
             artifactId = 'sgr-driver-api'
-            version = '0.2.1'
+            version = '1.0.0'
 
             from components.java
             pom {

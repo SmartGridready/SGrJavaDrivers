@@ -42,7 +42,7 @@ configurations {
 }
 
 dependencies {
-    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '0.2.1'	
+    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '1.0.0'	
     implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.2'
     
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.18.0'
@@ -83,7 +83,7 @@ publishing {
         impl(MavenPublication) {
             groupId = 'ch.smartgridready'
             artifactId = 'easymodbus'
-            version = '0.2.1'
+            version = '1.0.0'
 
             from components.java
             pom {
@@ -107,18 +107,3 @@ tasks.register('publish2GitHub') {
     
     dependsOn ':publishAllPublicationsToGithubRepository'
 }
-
-
-/*
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'ch.smartgridready'
-            artifactId = 'easymodbus'
-            version = '0.2.1'
-
-            from components.java
-        }
-    }
-}
-*/
