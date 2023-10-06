@@ -70,11 +70,11 @@ jar {
 publishing {
     repositories {
         maven {
-            name = "Github"
-            url = uri("https://maven.pkg.github.com/SmartgridReady/SGrJavaPackages")
+            name = "Nexus"
+            url = uri("https://nexus.library.smartgridready.ch/repository/maven-releases/")
             credentials {
-                username = findProperty("github.username")
-                password = findProperty("github.token")
+                username = findProperty("nexus.username")
+                password = findProperty("nexus.password")
             }
         }
     }
@@ -101,9 +101,9 @@ tasks.register('publish2MavenLocal') {
 }
 
 
-tasks.register('publish2GitHub') {
+tasks.register('publish2Nexus') {
     group '!_smartgridready_publishing_!'            
-    description 'Publish public release to the GitHub repository'
+    description 'Publish public release to the Nexus repository'
     
-    dependsOn ':publishAllPublicationsToGithubRepository'
+    dependsOn ':publishAllPublicationsToNexusRepository'
 }

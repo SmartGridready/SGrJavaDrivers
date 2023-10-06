@@ -34,11 +34,11 @@ dependencies {
 publishing {
     repositories {
         maven {
-            name = "Github"
-            url = uri("https://maven.pkg.github.com/SmartgridReady/SGrJavaPackages")
+            name = "Nexus"
+            url = uri("https://nexus.library.smartgridready.ch/repository/maven-releases/")
             credentials {
-                username = findProperty("github.username")
-                password = findProperty("github.token")
+                username = findProperty("nexus.username")
+                password = findProperty("nexus.password")
             }
         }
     }
@@ -59,31 +59,16 @@ publishing {
 
 
 tasks.register('publish2MavenLocal') {
-    group '!_smartgridready_publishing_!'            
+    group '!_smartgridready_publishing_!'
     description 'Publish to the local Maven repository for development'
-    
+
     dependsOn ':publishToMavenLocal'
 }
 
 
-tasks.register('publish2GitHub') {
-    group '!_smartgridready_publishing_!'            
-    description 'Publish public release to the GitHub repository'
-    
-    dependsOn ':publishAllPublicationsToGithubRepository'
+tasks.register('publishToNexus') {
+    group '!_smartgridready_publishing_!'
+    description 'Publish public release to the Nexus repository'
+
+    dependsOn ':publishAllPublicationsToNexusRepository'
 }
-
-
-/*
-publishing {
-    publications {
-        api(MavenPublication) {
-            groupId = 'ch.smartgridready'
-            artifactId = 'sgr-driver-api'
-            version = '0.2.1'
-
-            from components.java        
-        }
-    }
-}
-*/
