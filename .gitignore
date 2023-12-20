@@ -1,2 +1,6 @@
 *.log
 *.idea
+.DS_Store
+.vscode
+bin
+build

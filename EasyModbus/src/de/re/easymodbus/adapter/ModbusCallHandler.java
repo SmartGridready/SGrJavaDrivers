@@ -1,4 +1,5 @@
 package de.re.easymodbus.adapter;
+
 /**
 *Copyright(c) 2021 Verein SmartGridready Switzerland
 * @generated NOT
@@ -23,9 +24,7 @@ use their own Modbus TCP drivers
 
 import java.io.IOException;
 import java.net.SocketException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.logging.Logger;
 
 import communicator.common.runtime.GenDriverException;
 import communicator.common.runtime.GenDriverModbusException;
@@ -36,33 +35,33 @@ import jssc.SerialPortException;
 import jssc.SerialPortTimeoutException;
 
 public class ModbusCallHandler<T, U, R> {
-	
-	private static final Logger LOG = LogManager.getLogger(ModbusCallHandler.class);
-	
+
+	private static Logger LOG = Logger.getLogger(ModbusCallHandler.class.getName());
+
 	private static final int MAX_RETRY = 1;
-	
+
 	private final ModbusClient modbusClient;
 	private final ModbusReadFunction<T, U, R> readFunction;
 	private final ModbusWriteFunction<T, U> writeFunction;
 	private final ModbusConnectFunctionTCP connectFunction;
-	
+
 	private int retryCredit = MAX_RETRY;
-	
+
 	@FunctionalInterface
-	public interface ModbusReadFunction<T, U, R> {	  
-	    R read(T t, U u) throws ModbusException, IOException, SerialPortException, SerialPortTimeoutException;
+	public interface ModbusReadFunction<T, U, R> {
+		R read(T t, U u) throws ModbusException, IOException, SerialPortException, SerialPortTimeoutException;
 	}
-	
+
 	@FunctionalInterface
 	public interface ModbusWriteFunction<T, U> {
 		void write(T t, U u) throws ModbusException, IOException, SerialPortException, SerialPortTimeoutException;
 	}
-	
+
 	@FunctionalInterface
 	public interface ModbusConnectFunctionTCP {
 		void apply(String ipAddress, int port) throws IOException;
 	}
-	
+
 	public ModbusCallHandler(
 			ModbusClient modbusClient,
 			ModbusReadFunction<T, U, R> readFunction) {
@@ -71,7 +70,7 @@ public class ModbusCallHandler<T, U, R> {
 		this.writeFunction = null;
 		this.connectFunction = null;
 	}
-	
+
 	public ModbusCallHandler(
 			ModbusClient modbusClient,
 			ModbusWriteFunction<T, U> writeFunction) {
@@ -79,96 +78,99 @@ public class ModbusCallHandler<T, U, R> {
 		this.readFunction = null;
 		this.writeFunction = writeFunction;
 		this.connectFunction = null;
-	}	
-	
+	}
+
 	public ModbusCallHandler(
 			ModbusClient modbusClient,
-			ModbusReadFunction<T, U, R> readFunction, 
+			ModbusReadFunction<T, U, R> readFunction,
 			ModbusConnectFunctionTCP connectFunction) {
 		this.modbusClient = modbusClient;
 		this.readFunction = readFunction;
 		this.writeFunction = null;
 		this.connectFunction = connectFunction;
 	}
-	
+
 	public ModbusCallHandler(
 			ModbusClient modbusClient,
-			ModbusWriteFunction<T, U> writeFunction, 
+			ModbusWriteFunction<T, U> writeFunction,
 			ModbusConnectFunctionTCP connectFunction) {
 		this.modbusClient = modbusClient;
 		this.readFunction = null;
 		this.writeFunction = writeFunction;
 		this.connectFunction = connectFunction;
-	}	
+	}
 
-	public R read(T address, U parameter) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
-	{
+	public R read(T address, U parameter)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		String msgTemplate = "Modbus read error: %s";
-				
+
 		try {
 			return readFunction.read(address, parameter);
-		} catch ( SocketException e) {
+		} catch (SocketException e) {
 			if ((connectFunction == null) || (retryCredit <= 0)) {
 				throw new GenDriverSocketException(errorReport(msgTemplate, e), e);
 			} else {
 				retryCredit--;
 				return retryRead(address, parameter);
 			}
-		} catch (ModbusException e) {			
+		} catch (ModbusException e) {
 			throw new GenDriverModbusException(errorReport(msgTemplate, e), e);
 		} catch (IOException | SerialPortException | SerialPortTimeoutException e) {
 			throw new GenDriverException(errorReport(msgTemplate, e), e);
 		}
 	}
-	
-	public void write(T address, U parameter) throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
-		
+
+	public void write(T address, U parameter)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+
 		String msgTemplate = "Modbus write error: %s";
-		
+
 		try {
 			writeFunction.write(address, parameter);
-		} catch ( SocketException e) {
+		} catch (SocketException e) {
 			if ((connectFunction == null) || (retryCredit <= 0)) {
 				throw new GenDriverSocketException(errorReport(msgTemplate, e), e);
-			}
-			else {
+			} else {
 				retryCredit--;
 				retryWrite(address, parameter);
 			}
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException(errorReport(msgTemplate, e), e);
-		} catch ( IOException | SerialPortException | SerialPortTimeoutException e) {
+		} catch (IOException | SerialPortException | SerialPortTimeoutException e) {
 			throw new GenDriverException(errorReport(msgTemplate, e), e);
-		}		
+		}
 	}
-	
-	private R retryRead(T startingAddress, U parameter ) throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+
+	private R retryRead(T startingAddress, U parameter)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		LOG.info("Reconnecting and retrying modbus read.");
 		tryConnect();
 		R result = read(startingAddress, parameter);
 		LOG.info("Reconnect and retry modbus write succeeded.");
 		return result;
 	}
-	
-	private void retryWrite(T startingAddress, U parameter) throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+
+	private void retryWrite(T startingAddress, U parameter)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		LOG.info("Reconnecting and retrying modbus write.");
 		tryConnect();
 		write(startingAddress, parameter);
 		LOG.info("Reconnect and retry modbus write succeeded.");
 	}
-	
+
 	private void tryConnect() throws GenDriverException {
-		
+
 		try {
 			connectFunction.apply(modbusClient.getipAddress(), modbusClient.getPort());
 		} catch (IOException e) {
-			throw new GenDriverException("Retry: Unable to re-connect to ipAddr=" + modbusClient.getipAddress() + " port=" + modbusClient.getPort(), e);
-		}				
+			throw new GenDriverException("Retry: Unable to re-connect to ipAddr=" + modbusClient.getipAddress()
+					+ " port=" + modbusClient.getPort(), e);
+		}
 	}
-	
+
 	private String errorReport(String messageTemplate, Exception e) {
 		String msg = String.format(messageTemplate, e.getMessage());
-		LOG.error(msg, e);
+		LOG.warning(msg);
 		return msg;
 	}
 }

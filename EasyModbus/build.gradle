@@ -42,11 +42,15 @@ configurations {
 }
 
 dependencies {
-    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '1.0.0'	
-    implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.2'
+    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '1.0.0'
+    implementation("io.github.java-native:jssc:2.9.6") {
+        exclude module: 'slf4j-api'
+    }
+
+    //implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.2'
     
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.18.0'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.18.0'	
+    testImplementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.18.0'
+    testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.18.0'	
     
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'

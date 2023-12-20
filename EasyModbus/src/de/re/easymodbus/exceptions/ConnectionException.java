@@ -27,16 +27,11 @@ package de.re.easymodbus.exceptions;
  * @author Stefan Roßmann
  */
 @SuppressWarnings("serial")
-public class ConnectionException extends de.re.easymodbus.exceptions.ModbusException
-{
-  public ConnectionException()
-  {
+public class ConnectionException extends de.re.easymodbus.exceptions.ModbusException {
+  public ConnectionException() {
   }
 
-  public ConnectionException( String s )
-  {
-    super( s );
+  public ConnectionException(String s) {
+    super(s);
   }
 }
-
-
