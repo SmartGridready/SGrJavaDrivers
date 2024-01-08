@@ -1,29 +1,28 @@
 package de.re.easymodbus.adapter;
 
+import communicator.common.runtime.GenDriverAPI4Modbus;
+import communicator.common.runtime.GenDriverException;
+import de.re.easymodbus.datatypes.Parity;
+import de.re.easymodbus.datatypes.StopBits;
+import de.re.easymodbus.modbusclient.ModbusClient;
+import jssc.SerialPortException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import communicator.common.runtime.GenDriverAPI4Modbus;
-import communicator.common.runtime.GenDriverException;
-import de.re.easymodbus.datatypes.StopBits;
-import de.re.easymodbus.datatypes.Parity;
-import de.re.easymodbus.modbusclient.ModbusClient;
-import jssc.SerialPortException;
-
 class GenDriverAPI4ModbusRTUTest {
-	private static final Logger LOG = LogManager.getLogger(GenDriverAPI4ModbusRTUTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GenDriverAPI4ModbusRTUTest.class);
 	
 	private final int[] EXPECTED_RESPONSE = new int[] {0xAA, 2};
 	

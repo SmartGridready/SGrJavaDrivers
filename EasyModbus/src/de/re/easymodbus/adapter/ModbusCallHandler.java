@@ -24,7 +24,6 @@ use their own Modbus TCP drivers
 
 import java.io.IOException;
 import java.net.SocketException;
-import java.util.logging.Logger;
 
 import communicator.common.runtime.GenDriverException;
 import communicator.common.runtime.GenDriverModbusException;
@@ -33,10 +32,12 @@ import de.re.easymodbus.exceptions.ModbusException;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import jssc.SerialPortException;
 import jssc.SerialPortTimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModbusCallHandler<T, U, R> {
 
-	private static Logger LOG = Logger.getLogger(ModbusCallHandler.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(ModbusCallHandler.class);
 
 	private static final int MAX_RETRY = 1;
 
@@ -170,7 +171,7 @@ public class ModbusCallHandler<T, U, R> {
 
 	private String errorReport(String messageTemplate, Exception e) {
 		String msg = String.format(messageTemplate, e.getMessage());
-		LOG.warning(msg);
+		LOG.warn(msg);
 		return msg;
 	}
 }
