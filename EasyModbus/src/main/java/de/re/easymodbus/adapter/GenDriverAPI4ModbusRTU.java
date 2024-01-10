@@ -1,5 +1,5 @@
 package de.re.easymodbus.adapter;
-/**
+/*
 *Copyright(c) 2021 Verein SmartGridready Switzerland
 * @generated NOT
 * 
@@ -31,11 +31,10 @@ import communicator.common.runtime.StopBits;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import de.re.easymodbus.util.ParityMapper;
 import de.re.easymodbus.util.StopbitMapper;
-import jssc.SerialPortException;
 
 public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
-	
-	ModbusClient mbRTU = new ModbusClient();
+
+	private final ModbusClient mbRTU = new ModbusClient();
 	
 	@Override
 	public boolean initTrspService(String comPort) throws GenDriverException {
@@ -53,7 +52,7 @@ public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 	}	
 	
 	@Override
-	public boolean initTrspService(String sCOM, int baudRate, Parity parity, StopBits stopBit)
+	public boolean initTrspService(String sCOM, int baudRate, Parity parity, StopBits stopBit) throws GenDriverException
 	{
 	    try 
 	    {          
@@ -62,27 +61,17 @@ public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 	    	mbRTU.setBaudrate(baudRate);
 	    	mbRTU.setParity(ParityMapper.map(parity));
 	    	mbRTU.setStopBits(StopbitMapper.map(stopBit));
-	    	// mbRTU.setLogFileName("easyModebusRTULogger.txt",true);   
-	    	// REMARK: to set datalogging active by setting the second parameter to true
 	    	mbRTU.Connect(sCOM);
 	    	mbRTU.setConnectionTimeout(1500);
-	         
 	    } 
-	   	   
-        catch (SerialPortException ex) 
+		catch (Exception e)
 	    {
-            System.out.println(ex);
-            return false;
-        }
-        catch (Exception e)
-	    {
-          e.printStackTrace();
-          return false;
-         }
+			throw new GenDriverException("Connect to serial port failed.", e);
+		}
 	    return true;
     }
 	
-    
+    @Override
     public void setUnitIdentifier(short unitIdentifier) {
 	   mbRTU.setUnitIdentifier(unitIdentifier);
     }
@@ -150,35 +139,7 @@ public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new GenDriverException("Disconnect failed.", e);
 	 	}
 	 }
-	 
-    public void test()
-    {
-    	 int[] responseint;
-    	 try
-    	 {
-         mbRTU.setUnitIdentifier((byte)11);
-         responseint = mbRTU.ReadHoldingRegisters(23308,16);
-         System.out.println("ABBMeter I[L1] = " + (((responseint[0]*65536) +responseint[1])/100.0)+" A"); 
-         System.out.println("ABBMeter I[L2] = " + (((responseint[2]*65536) + responseint[3])/100.0)+" A"); 
-         System.out.println("ABBMeter I[L3] = " + (((responseint[4]*65536) + responseint[5])/100.0)+" A"); 
-         //System.out.println("ABBMeter I[N]  = " + (((responseint[6]*65536) + responseint[7])/100.0)+" A"); 
-         //System.out.println("ABBMeter P[tot]= " + (((responseint[8]*65536) +  Math.abs(responseint[9])/100.0))+" W"); 
-         System.out.println("ABBMeter P[L1] = " + (((responseint[10]*65536) +  Math.abs(responseint[11]))/100.0)+" W"); 
-         System.out.println("ABBMeter P[L2] = " + (((responseint[12]*65536) +  Math.abs(responseint[13]))/100.0)+" W"); 
-         System.out.println("ABBMeter P[L3] = " + (((responseint[14]*65536) +  Math.abs(responseint[15]))/100.0)+" W");
-    	 }
-    	 
-         catch (SerialPortException ex) 
- 	     {
-             System.out.println(ex);
-         }
-         catch (Exception e)
- 	     {
-           e.printStackTrace();
-         }
-    }	 
 }

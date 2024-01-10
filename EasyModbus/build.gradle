@@ -22,8 +22,8 @@ apply plugin: 'maven-publish'
 
 
 sourceSets {
-     main.java.srcDirs = ['src']                  
-     test.java.srcDirs = ['test']
+     main.java.srcDirs = ['src/main/java']
+     test.java.srcDirs = ['src/test/java']
      
      // Remove this after project folder cleanup
      main.java.exclude 'ModbusRTU'
@@ -50,8 +50,12 @@ dependencies {
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.19.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.0'    
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.7.0'
+}
+
+test {
+    useJUnitPlatform() // needed to run JUnit 5 test with gradle
 }
 
 jar {
@@ -106,3 +110,18 @@ tasks.register('publish2Nexus') {
     
     dependsOn ':publishAllPublicationsToNexusRepository'
 }
+
+
+/*
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'ch.smartgridready'
+            artifactId = 'easymodbus'
+            version = '0.2.1'
+
+            from components.java
+        }
+    }
+}
+*/

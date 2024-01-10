@@ -1,5 +1,5 @@
 package de.re.easymodbus.adapter;
-/**
+/*
 *Copyright(c) 2021 Verein SmartGridready Switzerland
 * @generated NOT
 * 
@@ -21,13 +21,6 @@ It includes completely manually generated code. It is the Interface of the Modbu
 use their own Modbus TCP drivers
  */
 
-
-/**
-* <!-- begin-user-doc -->
-* <!-- end-user-doc -->
-* @generated NOT
-**/
-
 import java.io.IOException;
 
 import communicator.common.runtime.GenDriverAPI4Modbus;
@@ -43,7 +36,7 @@ import jssc.SerialPortException;
 
 public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
 	
-	private ModbusClient mbDevice = new ModbusClient();
+	private final ModbusClient mbDevice = new ModbusClient();
 	
 	@Override
 	public void initDevice(String sIP4Address, int iPort) throws GenDriverException
@@ -142,11 +135,4 @@ public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
    			 mbDevice::WriteSingleRegister, 
    			 mbDevice::Connect).write(startingAdress, value);
      }
-        
-     /*
-     public void 
-		mbDevice.setConnectionTimeout(0);   ;
-		mbDevice.setLogFileName(null);   ;
-		boolean mbDevice.isConnected()   ;
-     */     
 }

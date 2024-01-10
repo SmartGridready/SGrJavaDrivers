@@ -3,7 +3,7 @@
  *
  */
 
-package sgralphapackage;
+package de.re.easymodbus.client;
 
 import java.io.IOException;
 
@@ -27,16 +27,7 @@ public class testJavaCommunicator {
     	System.out.println("starting sample communication handler for the JAVA based alpha test of the SmartGridready appplication layer interoparability solution ....");
 
     	// Reading Modbus device definitions
-    	
     	// ABB SmartMeter
-                    
-
-        
-      
-    	
-  
-    	
-    	
     	// starting the communication handler
     	
     	
@@ -111,7 +102,7 @@ public class testJavaCommunicator {
        	   mbRTU.setBaudrate(19200);
        	   mbRTU.setParity(Parity.Even);
        	   mbRTU.setStopBits(StopBits.One);
-       	   //mbRTU.setLogFileName("easyModebusRTULogger.txt");   // der Logger läuft, wirft aber eine exception
+       	   //mbRTU.setLogFileName("easyModebusRTULogger.txt");   // der Logger lï¿½uft, wirft aber eine exception
            mbRTU.Connect("COM6");
            Thread.sleep(1000); 
            System.out.println("Modbus Client opened");
@@ -125,7 +116,7 @@ public class testJavaCommunicator {
  	         + responseint[3] +":"+ responseint[4] +":"+ responseint[5]);
              mbRTU.setUnitIdentifier((byte)16); 
   	         responseint = mbRTU.ReadInputRegisters(822, 4);
-  	         System.out.println("RTU SupercalMeter Temp high="+(((responseint[1]*65536) + responseint[0])/100.0)+" C°  low=" + (((responseint[3]*65535) + responseint[2])/100.0)+ " C°");
+  	         System.out.println("RTU SupercalMeter Temp high="+(((responseint[1]*65536) + responseint[0])/100.0)+" Cï¿½  low=" + (((responseint[3]*65535) + responseint[2])/100.0)+ " Cï¿½");
   	         Thread.sleep(1000);  */
              mbRTU.setUnitIdentifier((byte)11);
  	         responseint = mbRTU.ReadHoldingRegisters(23308,16);

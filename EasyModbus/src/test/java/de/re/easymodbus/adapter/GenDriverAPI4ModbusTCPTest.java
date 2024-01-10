@@ -1,5 +1,5 @@
 package de.re.easymodbus.adapter;
-/**
+/*
 *Copyright(c) 2021 Verein SmartGridready Switzerland
 * @generated NOT
 * 
@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 import communicator.common.runtime.GenDriverAPI4Modbus;
 
-public class GenDriverAPI4ModbusTCPTest {
+class GenDriverAPI4ModbusTCPTest {
 	
 	private static final Logger LOG = LogManager.getLogger(GenDriverAPI4ModbusTCPTest.class);
 	
@@ -48,16 +48,16 @@ public class GenDriverAPI4ModbusTCPTest {
 		driver.initDevice("127.0.0.1", 9099);				
 		
 		int[] result = driver.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1] );
-		reportResult("Successful read register", result);
+		reportResult(result);
 		assertArrayEquals(EXPECTED_RESPONSE, result);
 		
 		server.disconnect();
 	}
 
-	private void reportResult(String testCase, int[] result) {
+	private void reportResult(int[] result) {
 		StringBuffer sbuf = new StringBuffer();
 		Arrays.stream(result).boxed().forEach( b -> sbuf.append(String.format("%x, ", b)));		
-		LOG.info(testCase + " - result: {}", sbuf.toString());			
+		LOG.info("Successful read register - result: {}", sbuf.toString());
 	}
 	
 }

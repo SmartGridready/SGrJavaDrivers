@@ -9,6 +9,7 @@ import jssc.SerialPortException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class GenDriverAPI4ModbusRTUTest {
@@ -69,52 +71,50 @@ class GenDriverAPI4ModbusRTUTest {
 	void initTrspServiceModbusRTU() throws Exception {
 		
 		// 1. overload
-		GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusRTU();		
+		GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusRTU();
+		setFieldByReflection(driver, "mbRTU", modbusClient);
 		driver.initTrspService("COM1");
-		
+
 		ModbusClient modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
-		assertEquals("COM1", modbusClient.getSerialPort());
-		assertEquals(9200, modbusClient.getBaudrate());
-		assertEquals(Parity.Even, modbusClient.getParity());
-		assertEquals(StopBits.One, modbusClient.getStopBits());
-		
+		verify(modbusClient).setSerialPort("COM1");
+		verify(modbusClient).setBaudrate(9200);
+		verify(modbusClient).setParity(Parity.Even);
+		verify(modbusClient).setStopBits(StopBits.One);
+		Mockito.reset(modbusClient);
+
 		// 2. overload
-		driver = new GenDriverAPI4ModbusRTU();
 		driver.initTrspService("COM2", 19200);
-		
-		modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
-		assertEquals("COM2", modbusClient.getSerialPort());
-		assertEquals(19200, modbusClient.getBaudrate());
-		assertEquals(Parity.Even, modbusClient.getParity());
-		assertEquals(StopBits.One, modbusClient.getStopBits());
+		verify(modbusClient).setSerialPort("COM2");
+		verify(modbusClient).setBaudrate(19200);
+		verify(modbusClient).setParity(Parity.Even);
+		verify(modbusClient).setStopBits(StopBits.One);
+		Mockito.reset(modbusClient);
 		
 		// 3. overload
-		driver = new GenDriverAPI4ModbusRTU();
 		driver.initTrspService("COM1", 2400, communicator.common.runtime.Parity.ODD);
 		
 		modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
-		assertEquals("COM1", modbusClient.getSerialPort());
-		assertEquals(2400, modbusClient.getBaudrate());
-		assertEquals(Parity.Odd, modbusClient.getParity());
-		assertEquals(StopBits.One, modbusClient.getStopBits());
+		verify(modbusClient).setSerialPort("COM1");
+		verify(modbusClient).setBaudrate(2400);
+		verify(modbusClient).setParity(Parity.Odd);
+		verify(modbusClient).setStopBits(StopBits.One);
+		Mockito.reset(modbusClient);
 		
 		// 4. overload
-		driver = new GenDriverAPI4ModbusRTU();
 		driver.initTrspService("COM1", 2400, 
 				communicator.common.runtime.Parity.ODD, 
 				communicator.common.runtime.StopBits.ONE_AND_HALF);
-		
-		modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
-		assertEquals("COM1", modbusClient.getSerialPort());
-		assertEquals(2400, modbusClient.getBaudrate());
-		assertEquals(Parity.Odd, modbusClient.getParity());
-		assertEquals(StopBits.OnePointFive, modbusClient.getStopBits());						
+
+		verify(modbusClient).setSerialPort("COM1");
+		verify(modbusClient).setBaudrate(2400);
+		verify(modbusClient).setParity(Parity.Odd);
+		verify(modbusClient).setStopBits(StopBits.OnePointFive);
 	}
 	
 	private void reportResult(String testCase, int[] result) {
 		StringBuffer sbuf = new StringBuffer();
 		Arrays.stream(result).boxed().forEach( b -> sbuf.append(String.format("%x, ", b)));		
-		LOG.info(testCase + " - result: {}", sbuf.toString());			
+		LOG.info(testCase + " - result: {}", sbuf);
 	}
 			
 	private void setFieldByReflection(Object object, String fieldName, Object value) 
@@ -137,6 +137,4 @@ class GenDriverAPI4ModbusRTUTest {
 		f1.setAccessible(true);
 		return f1;
 	}
-	
-	
 }
