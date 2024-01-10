@@ -1,6 +1,5 @@
 package de.re.easymodbus.adapter;
-
-/**
+/*
 *Copyright(c) 2021 Verein SmartGridready Switzerland
 * @generated NOT
 * 

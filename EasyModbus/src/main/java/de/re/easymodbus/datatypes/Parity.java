@@ -6,9 +6,9 @@ public enum Parity
 	Even (2),
 	Odd(1);
 	
-	private int value;
+	private final int value;
     
-    private Parity(int value) 
+    Parity(int value)
     {
         this.value = value;
     }

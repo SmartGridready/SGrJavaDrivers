@@ -1,5 +1,5 @@
 package de.re.easymodbus.adapter;
-/**
+/*
 *Copyright(c) 2021 Verein SmartGridready Switzerland
 * @generated NOT
 * 
@@ -20,13 +20,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 It includes completely manually generated code. It is the Interface of the Modbus RTU inside the CommHandler and its purpose is to enable 3rd party programmers to
 use their own Modbus TCP drivers
  */
-
-
-/**
-* <!-- begin-user-doc -->
-* <!-- end-user-doc -->
-* @generated NOT
-**/
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -128,11 +121,10 @@ class ModbusCallHandlerTest {
 				
 		// when		
 		GenDriverSocketException expectedException = assertThrows( GenDriverSocketException.class,
-				() -> { 
-					new ModbusCallHandler<>(
-					mbDevice,
-					mbDevice::ReadHoldingRegisters,
-					mbDevice::Connect).read(MODBUS_START_ADDR, READ_REG_QUANTITY); });	
+				() -> new ModbusCallHandler<>(
+				mbDevice,
+				mbDevice::ReadHoldingRegisters,
+				mbDevice::Connect).read(MODBUS_START_ADDR, READ_REG_QUANTITY));
 		
 		// then		
 		assertEquals("Modbus read error: Connection reset by peer.", expectedException.getMessage());
@@ -153,11 +145,10 @@ class ModbusCallHandlerTest {
 				
 		// when		
 		GenDriverModbusException expectedException = assertThrows( GenDriverModbusException.class,
-				() -> { 
-					new ModbusCallHandler<>(
-					mbDevice,
-					mbDevice::ReadHoldingRegisters,
-					mbDevice::Connect).read(MODBUS_START_ADDR, READ_REG_QUANTITY); });	
+				() -> new ModbusCallHandler<>(
+				mbDevice,
+				mbDevice::ReadHoldingRegisters,
+				mbDevice::Connect).read(MODBUS_START_ADDR, READ_REG_QUANTITY));
 		
 		// then		
 		assertEquals("Modbus read error: Bus address invalid.", expectedException.getMessage());
@@ -178,11 +169,10 @@ class ModbusCallHandlerTest {
 				
 		// when		
 		GenDriverException expectedException = assertThrows( GenDriverException.class,
-				() -> { 
-					new ModbusCallHandler<>(
-					mbDevice,
-					mbDevice::ReadHoldingRegisters,
-					mbDevice::Connect).read(MODBUS_START_ADDR, READ_REG_QUANTITY); });	
+				() -> new ModbusCallHandler<>(
+				mbDevice,
+				mbDevice::ReadHoldingRegisters,
+				mbDevice::Connect).read(MODBUS_START_ADDR, READ_REG_QUANTITY));
 		
 		// then		
 		assertEquals("Modbus read error: Device not reachable.", expectedException.getMessage());
@@ -203,10 +193,9 @@ class ModbusCallHandlerTest {
 				
 		// when		
 		GenDriverSocketException expectedException = assertThrows( GenDriverSocketException.class,
-				() -> { 
-					new ModbusCallHandler<>(
-					mbDevice,
-					mbDevice::ReadHoldingRegisters).read(MODBUS_START_ADDR, READ_REG_QUANTITY); });	
+				() -> new ModbusCallHandler<>(
+				mbDevice,
+				mbDevice::ReadHoldingRegisters).read(MODBUS_START_ADDR, READ_REG_QUANTITY));
 		
 		// then		
 		assertEquals("Modbus read error: Connection reset by peer.", expectedException.getMessage());
