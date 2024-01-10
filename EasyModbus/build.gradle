@@ -41,16 +41,16 @@ configurations {
 }
 
 dependencies {
-    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '0.2.1'	
-    implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.2'
-    
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.18.0'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.18.0'	
-    
+    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '1.0.0'
+    implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.6'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.10'
+
+    testImplementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.19.0'
+    testImplementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
+    testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.19.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.0'
-    
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.7.0'
 }
 
@@ -73,11 +73,11 @@ jar {
 publishing {
     repositories {
         maven {
-            name = "Github"
-            url = uri("https://maven.pkg.github.com/SmartgridReady/SGrJavaPackages")
+            name = "Nexus"
+            url = uri("https://nexus.library.smartgridready.ch/repository/maven-releases/")
             credentials {
-                username = findProperty("github.username")
-                password = findProperty("github.token")
+                username = findProperty("nexus.username")
+                password = findProperty("nexus.password")
             }
         }
     }
@@ -86,7 +86,7 @@ publishing {
         impl(MavenPublication) {
             groupId = 'ch.smartgridready'
             artifactId = 'easymodbus'
-            version = '0.2.1'
+            version = '1.0.1'
 
             from components.java
             pom {
@@ -104,9 +104,24 @@ tasks.register('publish2MavenLocal') {
 }
 
 
-tasks.register('publish2GitHub') {
+tasks.register('publish2Nexus') {
     group '!_smartgridready_publishing_!'            
-    description 'Publish public release to the GitHub repository'
+    description 'Publish public release to the Nexus repository'
     
-    dependsOn ':publishAllPublicationsToGithubRepository'
+    dependsOn ':publishAllPublicationsToNexusRepository'
 }
+
+
+/*
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'ch.smartgridready'
+            artifactId = 'easymodbus'
+            version = '0.2.1'
+
+            from components.java
+        }
+    }
+}
+*/
