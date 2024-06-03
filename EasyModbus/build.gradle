@@ -6,14 +6,14 @@
  */
 
  plugins {
-	id 'java'
-	id 'maven-publish'
+    id 'java'
+    id 'maven-publish'
 }
- 
- 
-repositories { 
-	mavenLocal()
-    mavenCentral() 
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
     gradlePluginPortal()
 }
 
@@ -24,20 +24,20 @@ apply plugin: 'maven-publish'
 sourceSets {
      main.java.srcDirs = ['src/main/java']
      test.java.srcDirs = ['src/test/java']
-     
+
      // Remove this after project folder cleanup
      main.java.exclude 'ModbusRTU'
      main.java.exclude 'sgralphapackage'
-     main.java.exclude '_archive'  
+     main.java.exclude '_archive'
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8      
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 configurations {
-	extraLibs.extendsFrom implementation
+    extraLibs.extendsFrom implementation
 }
 
 dependencies {
@@ -59,9 +59,9 @@ test {
 }
 
 jar {
-	from sourceSets.main.allSource
-	
-	archiveName 'easymodbus.jar'
+    from sourceSets.main.allSource
+
+    archiveName 'easymodbus.jar'
 
     duplicatesStrategy='exclude'
     from {
@@ -97,17 +97,17 @@ publishing {
 }
 
 tasks.register('publish2MavenLocal') {
-    group '!_smartgridready_publishing_!'            
+    group '!_smartgridready_publishing_!'
     description 'Publish to the local Maven repository for development'
-    
+
     dependsOn ':publishToMavenLocal'
 }
 
 
 tasks.register('publish2Nexus') {
-    group '!_smartgridready_publishing_!'            
+    group '!_smartgridready_publishing_!'
     description 'Publish public release to the Nexus repository'
-    
+
     dependsOn ':publishAllPublicationsToNexusRepository'
 }
 

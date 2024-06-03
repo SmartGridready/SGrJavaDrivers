@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.re.easymodbus.datatypes.DataBits;
 import de.re.easymodbus.datatypes.Parity;
 import de.re.easymodbus.datatypes.RegisterOrder;
 import de.re.easymodbus.datatypes.StopBits;
@@ -75,6 +76,7 @@ public class ModbusClient
     private int numberOfRetries = 3;				//Number of retries in case of serial connection
     private int baudrate = 9600;
     private Parity parity = Parity.Even;
+	private DataBits dataBits = DataBits.Eight;
     private StopBits stopBits = StopBits.One;
     private boolean debug=false;
 	
@@ -135,7 +137,7 @@ public class ModbusClient
 
 
 				serialPort.setParams(this.baudrate,
-									8,
+									this.dataBits.getValue(),
 									this.stopBits.getValue(),
 									this.parity.getValue());
 
@@ -182,7 +184,7 @@ public class ModbusClient
 	    serialPort.openPort();
 
 	    serialPort.setParams(this.baudrate,
-	                         8,
+	                         this.dataBits.getValue(),
 	                         this.stopBits.getValue(),
 	                         this.parity.getValue());
 
@@ -2278,9 +2280,27 @@ public class ModbusClient
     {
     	return this.parity;
     }
+
+	/**
+     * sets the Databits for serial connection (Modbus RTU)
+     * @param dataBits sets the Databits for serial connection (Modbus RTU)
+     */
+    public void setDataBits(DataBits dataBits)
+    {
+    	this.dataBits = dataBits;
+    }
+
+	/**
+     * returns the Databits for serial connection (Modbus RTU)
+     * @return returns the Databits for serial connection (Modbus RTU)
+     */
+    public DataBits getDataBits()
+    {
+    	return this.dataBits;
+    }
     
     /**
-     * sets the stopbots for serial connection (Modbus RTU)
+     * sets the Stopbits for serial connection (Modbus RTU)
      * @param stopBits sets the Stopbits for serial connection (Modbus RTU)
      */
     public void setStopBits(StopBits stopBits)

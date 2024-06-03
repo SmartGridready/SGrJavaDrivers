@@ -28,7 +28,9 @@ import communicator.common.runtime.GenDriverModbusException;
 import communicator.common.runtime.GenDriverSocketException;
 import communicator.common.runtime.Parity;
 import communicator.common.runtime.StopBits;
+import communicator.common.runtime.DataBits;
 import de.re.easymodbus.modbusclient.ModbusClient;
+import de.re.easymodbus.util.DatabitMapper;
 import de.re.easymodbus.util.ParityMapper;
 import de.re.easymodbus.util.StopbitMapper;
 
@@ -48,11 +50,16 @@ public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 	
 	@Override
 	public boolean initTrspService(String comPort, int baudRate, Parity parity) throws GenDriverException {
-		return initTrspService(comPort, baudRate, parity, StopBits.ONE);
-	}	
+		return initTrspService(comPort, baudRate, parity, DataBits.EIGHT);
+	}
+
+	@Override
+	public boolean initTrspService(String comPort, int baudRate, Parity parity, DataBits dataBits) throws GenDriverException {
+		return initTrspService(comPort, baudRate, parity, dataBits, StopBits.ONE);
+	}
 	
 	@Override
-	public boolean initTrspService(String sCOM, int baudRate, Parity parity, StopBits stopBit) throws GenDriverException
+	public boolean initTrspService(String sCOM, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) throws GenDriverException
 	{
 	    try 
 	    {          
@@ -60,7 +67,8 @@ public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 	    	mbRTU.setSerialPort(sCOM);
 	    	mbRTU.setBaudrate(baudRate);
 	    	mbRTU.setParity(ParityMapper.map(parity));
-	    	mbRTU.setStopBits(StopbitMapper.map(stopBit));
+			mbRTU.setDataBits(DatabitMapper.map(dataBits));
+	    	mbRTU.setStopBits(StopbitMapper.map(stopBits));
 	    	mbRTU.Connect(sCOM);
 	    	mbRTU.setConnectionTimeout(1500);
 	    } 
