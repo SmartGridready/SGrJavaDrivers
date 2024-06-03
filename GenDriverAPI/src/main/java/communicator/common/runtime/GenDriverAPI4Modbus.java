@@ -28,8 +28,10 @@ public interface GenDriverAPI4Modbus {
 	default boolean initTrspService(String comPort, int baudRate) throws GenDriverException {return true; }
 	
 	default boolean initTrspService(String comPort, int baudRate, Parity parity) throws GenDriverException { return true; }
+
+    default boolean initTrspService(String comPort, int baudRate, Parity parity, DataBits dataBits) throws GenDriverException { return true; }
 	
-	default boolean initTrspService(String comPort, int baudRate, Parity parity, StopBits stopBits) throws GenDriverException { return true; }
+	default boolean initTrspService(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) throws GenDriverException { return true; }
 
 	default void initDevice(String ipAddress, int port) throws GenDriverException {}
 }

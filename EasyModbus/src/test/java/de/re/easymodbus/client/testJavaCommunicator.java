@@ -7,6 +7,7 @@ package de.re.easymodbus.client;
 
 import java.io.IOException;
 
+import de.re.easymodbus.datatypes.DataBits;
 import de.re.easymodbus.datatypes.Parity;
 import de.re.easymodbus.datatypes.StopBits;
 import de.re.easymodbus.exceptions.ModbusException;
@@ -101,6 +102,7 @@ public class testJavaCommunicator {
            mbRTU.setSerialPort("COM6");
        	   mbRTU.setBaudrate(19200);
        	   mbRTU.setParity(Parity.Even);
+		   mbRTU.setDataBits(DataBits.Eight);
        	   mbRTU.setStopBits(StopBits.One);
        	   //mbRTU.setLogFileName("easyModebusRTULogger.txt");   // der Logger l�uft, wirft aber eine exception
            mbRTU.Connect("COM6");

@@ -2,6 +2,7 @@ package de.re.easymodbus.adapter;
 
 import communicator.common.runtime.GenDriverAPI4Modbus;
 import communicator.common.runtime.GenDriverException;
+import de.re.easymodbus.datatypes.DataBits;
 import de.re.easymodbus.datatypes.Parity;
 import de.re.easymodbus.datatypes.StopBits;
 import de.re.easymodbus.modbusclient.ModbusClient;
@@ -79,6 +80,7 @@ class GenDriverAPI4ModbusRTUTest {
 		verify(modbusClient).setSerialPort("COM1");
 		verify(modbusClient).setBaudrate(9200);
 		verify(modbusClient).setParity(Parity.Even);
+		verify(modbusClient).setDataBits(DataBits.Eight);
 		verify(modbusClient).setStopBits(StopBits.One);
 		Mockito.reset(modbusClient);
 
@@ -87,6 +89,7 @@ class GenDriverAPI4ModbusRTUTest {
 		verify(modbusClient).setSerialPort("COM2");
 		verify(modbusClient).setBaudrate(19200);
 		verify(modbusClient).setParity(Parity.Even);
+		verify(modbusClient).setDataBits(DataBits.Eight);
 		verify(modbusClient).setStopBits(StopBits.One);
 		Mockito.reset(modbusClient);
 		
@@ -97,17 +100,20 @@ class GenDriverAPI4ModbusRTUTest {
 		verify(modbusClient).setSerialPort("COM1");
 		verify(modbusClient).setBaudrate(2400);
 		verify(modbusClient).setParity(Parity.Odd);
+		verify(modbusClient).setDataBits(DataBits.Eight);
 		verify(modbusClient).setStopBits(StopBits.One);
 		Mockito.reset(modbusClient);
 		
 		// 4. overload
 		driver.initTrspService("COM1", 2400, 
-				communicator.common.runtime.Parity.ODD, 
+				communicator.common.runtime.Parity.ODD,
+				communicator.common.runtime.DataBits.SEVEN,
 				communicator.common.runtime.StopBits.ONE_AND_HALF);
 
 		verify(modbusClient).setSerialPort("COM1");
 		verify(modbusClient).setBaudrate(2400);
 		verify(modbusClient).setParity(Parity.Odd);
+		verify(modbusClient).setDataBits(DataBits.Seven);
 		verify(modbusClient).setStopBits(StopBits.OnePointFive);
 	}
 	

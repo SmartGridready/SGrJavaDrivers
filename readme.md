@@ -121,7 +121,7 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 
 ### Prerquisites
 - Gradle version >= 7.3.3. Note: If no IDE with Gradle integration is used, Gradle must first be installed locally: https://gradle.org/install/
-- Java JDK version >= Java 1.8
+- Java JDK version >= Java 11
 
 ### Clone from GitHub
 - Clone this repo to your local machine: https://github.com/SmartgridReady/SGrJavaDrivers.git
