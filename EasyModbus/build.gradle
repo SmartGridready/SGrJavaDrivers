@@ -5,7 +5,7 @@
  * Learn how to create Gradle builds at https://guides.gradle.org/creating-new-gradle-builds
  */
 
- plugins {
+plugins {
     id 'java'
     id 'maven-publish'
 }
@@ -48,24 +48,29 @@ dependencies {
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.19.0'
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.19.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.10.2'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.12.0'
 }
 
 test {
     useJUnitPlatform() // needed to run JUnit 5 test with gradle
+    // this workaround is required to run some tests under JDKs > 17.
+    // otherwise EqualsBuilder.reflectionEquals(...) may fail due to inaccessible fields, e.g. serialVersionUID.
+    doFirst {
+        jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED")
+    }
 }
 
 jar {
     from sourceSets.main.allSource
 
-    archiveName 'easymodbus.jar'
+    archiveFileName = 'easymodbus.jar'
 
-    duplicatesStrategy='exclude'
+    duplicatesStrategy = 'exclude'
     from {
-            configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
