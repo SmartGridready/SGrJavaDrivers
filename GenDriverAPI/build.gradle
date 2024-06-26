@@ -10,6 +10,7 @@ plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java'
     id 'maven-publish'
+    id 'com.palantir.git-version' version '3.1.0'
 }
 
 java {
@@ -30,6 +31,14 @@ dependencies {
     // none yet
 }
 
+def versionDetails = versionDetails()
+
+def snapshot =
+        (versionDetails.commitDistance > 0
+                || ! versionDetails.isCleanTag
+                ||  "master" != versionDetails.branchName) ? "-SNAPSHOT" : ""
+
+version = versionDetails.lastTag + snapshot
 
 publishing {
     repositories {
@@ -47,7 +56,6 @@ publishing {
         impl(MavenPublication) {
             groupId = 'ch.smartgridready'
             artifactId = 'sgr-driver-api'
-            version = '1.0.0'
 
             from components.java
             pom {
@@ -57,18 +65,3 @@ publishing {
     }
 }
 
-
-tasks.register('publish2MavenLocal') {
-    group '!_smartgridready_publishing_!'
-    description 'Publish to the local Maven repository for development'
-
-    dependsOn ':publishToMavenLocal'
-}
-
-
-tasks.register('publishToNexus') {
-    group '!_smartgridready_publishing_!'
-    description 'Publish public release to the Nexus repository'
-
-    dependsOn ':publishAllPublicationsToNexusRepository'
-}
