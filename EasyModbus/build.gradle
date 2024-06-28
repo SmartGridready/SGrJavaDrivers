@@ -8,6 +8,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'com.palantir.git-version' version '3.1.0'
 }
 
 
@@ -20,6 +21,14 @@ repositories {
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
+def versionDetails = versionDetails()
+
+def snapshot =
+        (versionDetails.commitDistance > 0
+                || ! versionDetails.isCleanTag
+                ||  "master" != versionDetails.branchName) ? "-SNAPSHOT" : ""
+
+version = versionDetails.lastTag + snapshot
 
 sourceSets {
      main.java.srcDirs = ['src/main/java']
@@ -91,7 +100,6 @@ publishing {
         impl(MavenPublication) {
             groupId = 'ch.smartgridready'
             artifactId = 'easymodbus'
-            version = '1.0.1'
 
             from components.java
             pom {
@@ -101,32 +109,3 @@ publishing {
     }
 }
 
-tasks.register('publish2MavenLocal') {
-    group '!_smartgridready_publishing_!'
-    description 'Publish to the local Maven repository for development'
-
-    dependsOn ':publishToMavenLocal'
-}
-
-
-tasks.register('publish2Nexus') {
-    group '!_smartgridready_publishing_!'
-    description 'Publish public release to the Nexus repository'
-
-    dependsOn ':publishAllPublicationsToNexusRepository'
-}
-
-
-/*
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'ch.smartgridready'
-            artifactId = 'easymodbus'
-            version = '0.2.1'
-
-            from components.java
-        }
-    }
-}
-*/
