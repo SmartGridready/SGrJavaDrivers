@@ -32,11 +32,13 @@ jobs:
     - name: Build GenDriverAPI
       run: |
         cd ./GenDriverAPI
+        chmod +x gradlew
         ./gradlew build publishImplPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }}
 
     - name: Build EasyModbus
       run: |
         cd ./EasyModbus
+        chmod +x gradlew
         ./gradlew build publishImplPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }}
        
 
