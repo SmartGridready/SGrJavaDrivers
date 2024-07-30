@@ -1,4 +1,4 @@
-package com.smartgridready.driver.http.api;
+package com.smartgridready.driver.api.http;
 
 import java.io.IOException;
 import java.net.URI;

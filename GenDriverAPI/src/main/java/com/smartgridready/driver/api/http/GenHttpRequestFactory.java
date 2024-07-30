@@ -17,7 +17,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 
-package com.smartgridready.driver.http.api;
+package com.smartgridready.driver.api.http;
 
 public interface GenHttpRequestFactory {
 	GenHttpRequest create();

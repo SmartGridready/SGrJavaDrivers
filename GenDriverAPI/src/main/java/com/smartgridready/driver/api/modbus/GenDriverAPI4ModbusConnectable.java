@@ -1,4 +1,6 @@
-package com.smartgridready.driver.modbus.api;
+package com.smartgridready.driver.api.modbus;
+
+import com.smartgridready.driver.api.common.GenDriverException;
 
 /**
  * Adds generic connect functionality to Modbus driver.

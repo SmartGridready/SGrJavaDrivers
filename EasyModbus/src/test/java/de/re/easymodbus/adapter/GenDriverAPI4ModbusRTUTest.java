@@ -1,7 +1,7 @@
 package de.re.easymodbus.adapter;
 
-import com.smartgridready.driver.modbus.api.GenDriverAPI4Modbus;
-import com.smartgridready.driver.modbus.api.GenDriverException;
+import com.smartgridready.driver.api.modbus.GenDriverAPI4Modbus;
+import com.smartgridready.driver.api.common.GenDriverException;
 import de.re.easymodbus.datatypes.DataBits;
 import de.re.easymodbus.datatypes.Parity;
 import de.re.easymodbus.datatypes.StopBits;
@@ -94,7 +94,7 @@ class GenDriverAPI4ModbusRTUTest {
 		Mockito.reset(modbusClient);
 		
 		// 3. overload
-		driver.initTrspService("COM1", 2400, com.smartgridready.driver.modbus.api.Parity.ODD);
+		driver.initTrspService("COM1", 2400, com.smartgridready.driver.api.modbus.Parity.ODD);
 		
 		modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
 		verify(modbusClient).setSerialPort("COM1");
@@ -106,9 +106,9 @@ class GenDriverAPI4ModbusRTUTest {
 		
 		// 4. overload
 		driver.initTrspService("COM1", 2400,
-				com.smartgridready.driver.modbus.api.Parity.ODD,
-				com.smartgridready.driver.modbus.api.DataBits.SEVEN,
-				com.smartgridready.driver.modbus.api.StopBits.ONE_AND_HALF);
+				com.smartgridready.driver.api.modbus.Parity.ODD,
+				com.smartgridready.driver.api.modbus.DataBits.SEVEN,
+				com.smartgridready.driver.api.modbus.StopBits.ONE_AND_HALF);
 
 		verify(modbusClient).setSerialPort("COM1");
 		verify(modbusClient).setBaudrate(2400);

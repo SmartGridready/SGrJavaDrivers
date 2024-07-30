@@ -1,4 +1,4 @@
-package com.smartgridready.driver.http.api;
+package com.smartgridready.driver.api.http;
 
 public enum HttpMethod {
     GET,

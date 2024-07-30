@@ -1,4 +1,4 @@
-package com.smartgridready.driver.modbus.api;
+package com.smartgridready.driver.api.modbus;
 
 public enum StopBits {	
 	ONE,

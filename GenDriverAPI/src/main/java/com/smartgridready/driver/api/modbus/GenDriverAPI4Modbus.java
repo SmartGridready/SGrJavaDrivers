@@ -1,10 +1,12 @@
-package com.smartgridready.driver.modbus.api;
+package com.smartgridready.driver.api.modbus;
+
+import com.smartgridready.driver.api.common.GenDriverException;
 
 public interface GenDriverAPI4Modbus {
 	
 	default void setUnitIdentifier( short ident ) {};
 	
-    int[] ReadInputRegisters(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException;        
+    int[] ReadInputRegisters(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException;
     
     int[] ReadHoldingRegisters(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException;
         
