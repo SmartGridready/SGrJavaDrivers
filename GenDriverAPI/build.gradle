@@ -21,7 +21,19 @@ java {
 repositories {
     mavenLocal()
     mavenCentral() 
-    gradlePluginPortal()  
+    gradlePluginPortal()
+
+    maven {
+        url "https://nexus.library.smartgridready.ch/repository/maven-releases/"
+    }
+    maven {
+        url "https://nexus.library.smartgridready.ch/repository/maven-snapshots/"
+    }
+}
+
+dependencies {
+    implementation group: 'com.smartgridready', name: 'sgr-specification', version: '1.1.0-SNAPSHOT'
+    implementation group: 'io.vavr', name: 'vavr', version: '0.10.4'
 }
 
 apply plugin: 'java'
@@ -59,11 +71,12 @@ publishing {
     }
 
     publications {
-        impl(MavenPublication) {
+        mavenJava(MavenPublication) {
+            from components.java
+
             groupId = 'com.smartgridready'
             artifactId = 'sgr-driver-api'
 
-            from components.java
             pom {
                 url.set("https://github.com/SmartgridReady/SGrJavaPackages.git")
             }
