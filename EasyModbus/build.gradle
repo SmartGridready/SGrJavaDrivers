@@ -95,7 +95,7 @@ publishing {
     }
 
     publications {
-        impl(MavenPublication) {
+        mavenJava(MavenPublication) {
             groupId = 'com.smartgridready'
             artifactId = 'easymodbus'
 
