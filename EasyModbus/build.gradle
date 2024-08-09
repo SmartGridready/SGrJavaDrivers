@@ -16,6 +16,13 @@ repositories {
     mavenLocal()
     mavenCentral()
     gradlePluginPortal()
+
+    maven {
+        url "https://nexus.library.smartgridready.ch/repository/maven-releases/"
+    }
+    maven {
+        url "https://nexus.library.smartgridready.ch/repository/maven-snapshots/"
+    }
 }
 
 apply plugin: 'java'
@@ -33,11 +40,6 @@ version = versionDetails.lastTag + snapshot
 sourceSets {
      main.java.srcDirs = ['src/main/java']
      test.java.srcDirs = ['src/test/java']
-
-     // Remove this after project folder cleanup
-     main.java.exclude 'ModbusRTU'
-     main.java.exclude 'sgralphapackage'
-     main.java.exclude '_archive'
 }
 
 java {
@@ -45,12 +47,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-configurations {
-    extraLibs.extendsFrom implementation
-}
-
 dependencies {
-    implementation group: 'ch.smartgridready', name: 'sgr-driver-api', version: '1.0.0'
+    implementation group: 'com.smartgridready', name: 'sgr-driver-api', version: '1.1.0-SNAPSHOT'
     implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.6'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.10'
 
@@ -74,13 +72,7 @@ test {
 
 jar {
     from sourceSets.main.allSource
-
     archiveFileName = 'easymodbus.jar'
-
-    duplicatesStrategy = 'exclude'
-    from {
-        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
-    }
 }
 
 
@@ -88,7 +80,13 @@ publishing {
     repositories {
         maven {
             name = "Nexus"
-            url = uri("https://nexus.library.smartgridready.ch/repository/maven-releases/")
+
+            if (rootProject.version.toString().contains('SNAPSHOT')) {
+                url = uri("https://nexus.library.smartgridready.ch/repository/maven-snapshots/")
+            } else {
+                url = uri("https://nexus.library.smartgridready.ch/repository/maven-releases")
+            }
+
             credentials {
                 username = findProperty("nexus.username")
                 password = findProperty("nexus.password")
@@ -97,8 +95,8 @@ publishing {
     }
 
     publications {
-        impl(MavenPublication) {
-            groupId = 'ch.smartgridready'
+        mavenJava(MavenPublication) {
+            groupId = 'com.smartgridready'
             artifactId = 'easymodbus'
 
             from components.java

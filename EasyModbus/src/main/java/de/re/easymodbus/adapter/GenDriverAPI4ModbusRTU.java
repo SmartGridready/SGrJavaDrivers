@@ -21,14 +21,13 @@ It includes completely manually generated code. It is the Interface of the Modbu
 use their own Modbus RTU drivers
  */
 
-
-import communicator.common.runtime.GenDriverAPI4Modbus;
-import communicator.common.runtime.GenDriverException;
-import communicator.common.runtime.GenDriverModbusException;
-import communicator.common.runtime.GenDriverSocketException;
-import communicator.common.runtime.Parity;
-import communicator.common.runtime.StopBits;
-import communicator.common.runtime.DataBits;
+import com.smartgridready.driver.api.modbus.GenDriverAPI4Modbus;
+import com.smartgridready.driver.api.common.GenDriverException;
+import com.smartgridready.driver.api.modbus.GenDriverModbusException;
+import com.smartgridready.driver.api.modbus.GenDriverSocketException;
+import com.smartgridready.driver.api.modbus.Parity;
+import com.smartgridready.driver.api.modbus.StopBits;
+import com.smartgridready.driver.api.modbus.DataBits;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import de.re.easymodbus.util.DatabitMapper;
 import de.re.easymodbus.util.ParityMapper;

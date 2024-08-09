@@ -1,4 +1,4 @@
-package communicator.common.runtime;
+package com.smartgridready.driver.api.modbus;
 
 public class GenDriverSocketException extends Exception {
 

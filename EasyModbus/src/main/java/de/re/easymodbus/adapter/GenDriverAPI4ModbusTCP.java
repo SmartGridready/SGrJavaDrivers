@@ -23,10 +23,10 @@ use their own Modbus TCP drivers
 
 import java.io.IOException;
 
-import communicator.common.runtime.GenDriverAPI4Modbus;
-import communicator.common.runtime.GenDriverException;
-import communicator.common.runtime.GenDriverModbusException;
-import communicator.common.runtime.GenDriverSocketException;
+import com.smartgridready.driver.api.modbus.GenDriverAPI4Modbus;
+import com.smartgridready.driver.api.common.GenDriverException;
+import com.smartgridready.driver.api.modbus.GenDriverModbusException;
+import com.smartgridready.driver.api.modbus.GenDriverSocketException;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import jssc.SerialPortException;
 

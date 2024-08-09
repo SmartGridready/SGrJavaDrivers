@@ -5,11 +5,11 @@
 # This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
 
-name: Gradle Package
+name: CI
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [ '**' ]
 
 jobs:
   build:
@@ -29,18 +29,17 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: build
-        build-root-directory: GenDriverAPI
+    - name: Build GenDriverAPI
+      run: |
+        cd ./GenDriverAPI
+        chmod +x gradlew
+        ./gradlew build publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }}
 
-    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
-    - name: Publish to GitHub Packages
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: publish
-      env:
-        username: ${{ github.actor }}
-        password: ${{ secrets.TOKEN_4_GRADLE_PUBLISH }}
+    - name: Build EasyModbus
+      run: |
+        cd ./EasyModbus
+        chmod +x gradlew
+        ./gradlew build publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }}
+       
+
+
