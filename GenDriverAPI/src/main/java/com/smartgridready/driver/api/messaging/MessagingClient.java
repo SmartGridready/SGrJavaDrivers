@@ -26,8 +26,10 @@ public interface MessagingClient extends Closeable {
      * Subscribes to a topic and returns a completable future that provides
      * the next message from the given topic.
      * Used to receive the response message of a read-value message/command.
-     *
-     * @param inMessageTopic The topic to read the value from.
+     * @param readCmdMessageTopic The topic to issue a read command that triggers a response message
+     * @param readCmdMessage The read command message that triggers the response message
+     * @param inMessageTopic The topic that receives the response message
+     * @param messageFilter An optional filter that filters messages received on the {@code inMessageTopic}
      * @return Either the message received or a Throwable if an error occurred.
      */
     Either<Throwable, Message> readSync(
@@ -54,6 +56,7 @@ public interface MessagingClient extends Closeable {
      * Subscribes to a topic for receiving a stream of messages.
      *
      * @param topic The topic to subscribe to
+     * @param messageFilter An optional filter to filter messages received on the {@code topic}
      * @param callback The callback method that handles the incoming messages.
      */
     void subscribe(String topic, MessageFilter messageFilter, Consumer<Either<Throwable, Message>> callback) throws GenDriverException;
