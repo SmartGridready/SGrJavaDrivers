@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  * Interface to be used by smartgridready messaging client implementations.
  */
 @SuppressWarnings("unused")
-public interface MessagingClient extends Closeable {
+public interface GenMessagingClient extends Closeable {
 
     /**
      * This method publishes a message to the given topic. The method is blocking
