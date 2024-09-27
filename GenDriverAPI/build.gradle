@@ -32,7 +32,6 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'com.smartgridready', name: 'sgr-specification', version: '1.1.0-SNAPSHOT'
     implementation group: 'io.vavr', name: 'vavr', version: '0.10.4'
 }
 

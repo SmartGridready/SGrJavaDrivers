@@ -1,7 +1,9 @@
 package com.smartgridready.driver.api.messaging;
 
-import com.smartgridready.ns.v0.MessageFilter;
+
 import com.smartgridready.driver.api.common.GenDriverException;
+import com.smartgridready.driver.api.messaging.model.Message;
+import com.smartgridready.driver.api.messaging.model.filter.MessageFilter;
 import io.vavr.control.Either;
 
 import java.io.Closeable;
