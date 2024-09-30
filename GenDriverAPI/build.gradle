@@ -48,7 +48,7 @@ def versionSuffix =
         (versionDetails.commitDistance == 0
                 && versionDetails.isCleanTag
                 && (versionDetails.branchName == 'master'
-                      || versionDetails.branchName ==~ /^v[0-9]+.[0-9]+.x$/)) ? '' : '-JAXB-SNAPSHOT'
+                      || versionDetails.branchName ==~ /^v[0-9]+.[0-9]+.x$/)) ? '' : '-SNAPSHOT'
 
 version = versionDetails.lastTag + versionSuffix
 
@@ -57,7 +57,7 @@ publishing {
         maven {
             name = "Nexus"
 
-            if (rootProject.version.toString().contains('SNAPSHOT')) {
+            if (version.toString().contains('SNAPSHOT')) {
                 url = uri("https://nexus.library.smartgridready.ch/repository/maven-snapshots/")
             } else {
                 url = uri("https://nexus.library.smartgridready.ch/repository/maven-releases")
