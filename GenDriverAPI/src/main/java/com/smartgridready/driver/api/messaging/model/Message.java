@@ -1,4 +1,4 @@
-package com.smartgridready.driver.api.messaging;
+package com.smartgridready.driver.api.messaging.model;
 
 /**
  * Represents a message within the smartgridready messaging API

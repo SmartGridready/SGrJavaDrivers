@@ -1,10 +1,11 @@
 package com.smartgridready.driver.api.messaging;
 
-import com.smartgridready.ns.v0.MessagingInterfaceDescription;
+import com.smartgridready.driver.api.messaging.model.MessagingInterfaceDescription;
 
 /**
  * Interface to be used to create smartgridready messaging clients.
  */
+@SuppressWarnings("unused")
 public interface GenMessagingClientFactory {
 
     /**
