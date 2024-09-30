@@ -5,47 +5,41 @@
 # This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
 
-name: CI
+name: CI Build
 
 on:
+  workflow_dispatch:
   push:
     branches: [ '**' ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{github.ref}}
-    
-    - name: Fetch Tags
-      run: git fetch --prune --unshallow --tags
+        fetch-tags: true
+        fetch-depth: 0
 
     - name: Set up JDK 11
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '11'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-    - name: Build GenDriverAPI
+    - name: Build and Publish GenDriverAPI
+      working-directory: GenDriverAPI
       run: |
-        cd ./GenDriverAPI
-        chmod +x gradlew
-        ./gradlew build publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }}
+        chmod +x ./gradlew
+        ./gradlew clean build publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }} --no-daemon
 
-    - name: Build EasyModbus
+    - name: Build and Publish EasyModbus
+      working-directory: EasyModbus
       run: |
-        cd ./EasyModbus
-        chmod +x gradlew
-        ./gradlew build publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }}
-       
-
-
+        chmod +x ./gradlew
+        ./gradlew clean build publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }} --no-daemon

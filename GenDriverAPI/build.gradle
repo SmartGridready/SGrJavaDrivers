@@ -44,19 +44,20 @@ dependencies {
 
 def versionDetails = versionDetails()
 
-def snapshot =
-        (versionDetails.commitDistance > 0
-                || ! versionDetails.isCleanTag
-                ||  "master" != versionDetails.branchName) ? "-SNAPSHOT" : ""
+def versionSuffix =
+        (versionDetails.commitDistance == 0
+                && versionDetails.isCleanTag
+                && (versionDetails.branchName == 'master'
+                      || versionDetails.branchName ==~ /^v[0-9]+.[0-9]+.x$/)) ? '' : '-SNAPSHOT'
 
-version = versionDetails.lastTag + snapshot
+version = versionDetails.lastTag + versionSuffix
 
 publishing {
     repositories {
         maven {
             name = "Nexus"
 
-            if (rootProject.version.toString().contains('SNAPSHOT')) {
+            if (version.toString().contains('SNAPSHOT')) {
                 url = uri("https://nexus.library.smartgridready.ch/repository/maven-snapshots/")
             } else {
                 url = uri("https://nexus.library.smartgridready.ch/repository/maven-releases")
