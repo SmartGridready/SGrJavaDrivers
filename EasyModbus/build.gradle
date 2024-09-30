@@ -30,12 +30,13 @@ apply plugin: 'maven-publish'
 
 def versionDetails = versionDetails()
 
-def snapshot =
-        (versionDetails.commitDistance > 0
-                || ! versionDetails.isCleanTag
-                ||  "master" != versionDetails.branchName) ? "-SNAPSHOT" : ""
+def versionSuffix =
+        (versionDetails.commitDistance == 0
+                && versionDetails.isCleanTag
+                && (versionDetails.branchName == 'master'
+                      || versionDetails.branchName ==~ /^v[0-9]+.[0-9]+.x$/)) ? '' : '-JAXB-SNAPSHOT'
 
-version = versionDetails.lastTag + snapshot
+version = versionDetails.lastTag + versionSuffix
 
 sourceSets {
      main.java.srcDirs = ['src/main/java']
