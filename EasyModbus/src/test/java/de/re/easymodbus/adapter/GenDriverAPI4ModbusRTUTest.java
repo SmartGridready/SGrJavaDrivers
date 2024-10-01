@@ -78,7 +78,7 @@ class GenDriverAPI4ModbusRTUTest {
 		driver.connect();
 		driver.disconnect();
 
-		TODO implement these tests in a different way
+		// TODO implement these tests in a different way
 
 		/*
 		ModbusClient modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
