@@ -10,7 +10,6 @@ plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java'
     id 'maven-publish'
-    id 'com.palantir.git-version' version '3.1.0'
 }
 
 java {
@@ -41,16 +40,6 @@ apply plugin: 'maven-publish'
 dependencies {
     // none yet
 }
-
-def versionDetails = versionDetails()
-
-def versionSuffix =
-        (versionDetails.commitDistance == 0
-                && versionDetails.isCleanTag
-                && (versionDetails.branchName == 'master'
-                      || versionDetails.branchName ==~ /^v[0-9]+.[0-9]+.x$/)) ? '' : '-SNAPSHOT'
-
-version = versionDetails.lastTag + versionSuffix
 
 publishing {
     repositories {
@@ -83,4 +72,3 @@ publishing {
         }
     }
 }
-
