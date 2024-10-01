@@ -52,6 +52,7 @@ class GenDriverAPI4ModbusRTUTest {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	void readInputRegisters_throws_SerialPortException() throws Exception {
 						
