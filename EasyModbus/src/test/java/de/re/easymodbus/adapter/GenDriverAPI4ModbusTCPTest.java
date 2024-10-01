@@ -44,8 +44,8 @@ class GenDriverAPI4ModbusTCPTest {
 		TestSocketServer server = new TestSocketServer();
 		server.start();
 		
-		GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusTCP();
-		driver.initDevice("127.0.0.1", 9099);				
+		GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusTCP("127.0.0.1", 9099);
+		driver.connect();				
 		
 		int[] result = driver.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1] );
 		reportResult(result);
