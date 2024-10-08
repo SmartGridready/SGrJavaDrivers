@@ -38,7 +38,7 @@ java {
 }
 
 dependencies {
-    implementation group: 'com.smartgridready', name: 'sgr-driver-api', version: '2.0.0-SNAPSHOT'
+    implementation group: 'com.smartgridready', name: 'sgr-driver-api', version: '2.0.0'
     implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.6'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.10'
 
