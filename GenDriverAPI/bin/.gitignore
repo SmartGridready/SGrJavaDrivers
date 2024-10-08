@@ -1,9 +1,0 @@
-/.gradle/
-/bin/
-/build/
-
-# Eclipse
-.classpath
-.project
-.settings/
-/.gradle/

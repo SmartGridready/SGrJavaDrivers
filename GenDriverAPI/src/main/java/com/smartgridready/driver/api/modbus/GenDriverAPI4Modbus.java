@@ -3,6 +3,12 @@ package com.smartgridready.driver.api.modbus;
 import com.smartgridready.driver.api.common.GenDriverException;
 
 public interface GenDriverAPI4Modbus {
+
+    boolean connect() throws GenDriverException;
+
+    void disconnect() throws GenDriverException;
+
+    boolean isConnected();
 	
 	default void setUnitIdentifier( short ident ) {};
 	
@@ -11,7 +17,6 @@ public interface GenDriverAPI4Modbus {
     int[] ReadHoldingRegisters(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException;
         
     boolean[] ReadDiscreteInputs(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException;
- 
 
     boolean[] ReadCoils(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException;
        
@@ -22,18 +27,4 @@ public interface GenDriverAPI4Modbus {
     void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException; 
      
     void WriteSingleRegister(int startingAdress, int value) throws GenDriverException, GenDriverSocketException, GenDriverModbusException;
-
-    void disconnect() throws GenDriverException;
-
-	default boolean initTrspService(String comPort) throws GenDriverException { return true; }
-	
-	default boolean initTrspService(String comPort, int baudRate) throws GenDriverException {return true; }
-	
-	default boolean initTrspService(String comPort, int baudRate, Parity parity) throws GenDriverException { return true; }
-
-    default boolean initTrspService(String comPort, int baudRate, Parity parity, DataBits dataBits) throws GenDriverException { return true; }
-	
-	default boolean initTrspService(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) throws GenDriverException { return true; }
-
-	default void initDevice(String ipAddress, int port) throws GenDriverException {}
 }

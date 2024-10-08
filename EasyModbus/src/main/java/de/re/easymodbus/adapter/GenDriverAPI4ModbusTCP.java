@@ -21,14 +21,11 @@ It includes completely manually generated code. It is the Interface of the Modbu
 use their own Modbus TCP drivers
  */
 
-import java.io.IOException;
-
 import com.smartgridready.driver.api.modbus.GenDriverAPI4Modbus;
 import com.smartgridready.driver.api.common.GenDriverException;
 import com.smartgridready.driver.api.modbus.GenDriverModbusException;
 import com.smartgridready.driver.api.modbus.GenDriverSocketException;
 import de.re.easymodbus.modbusclient.ModbusClient;
-import jssc.SerialPortException;
 
 /*   AUTHOR: IBT / Chris Broennimann for Verein SmartGridready
  * This file hosts the interface from the CommHandler4Modbus implementation into any modbus driver linked to 
@@ -36,16 +33,12 @@ import jssc.SerialPortException;
 
 public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
 	
-	private final ModbusClient mbDevice = new ModbusClient();
-	
-	@Override
-	public void initDevice(String sIP4Address, int iPort) throws GenDriverException
-	{						
-		try {
-			mbDevice.Connect(sIP4Address,iPort);
-		} catch (IOException e) {
-			throw new GenDriverException("Init device failed.", e);
-		}
+	private final ModbusClient mbDevice;
+
+	public GenDriverAPI4ModbusTCP(String sIP4Address, int iPort) {
+		mbDevice = new ModbusClient();
+		mbDevice.setipAddress(sIP4Address);
+		mbDevice.setPort(iPort);
 	}
 
 	@Override
@@ -85,20 +78,6 @@ public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
 			mbDevice::ReadCoils,
 			mbDevice::Connect).read(startingAddress, quantity);
     }
-	
-    /*
-		mbDevice.ReadWriteMultipleRegisters(startingAddress,quantity, writingAddress, responseint)
-	
-	*/
-    
-    public void disconnect() throws GenDriverException
-    {
-    	try {
-			mbDevice.Disconnect();
-		} catch (IOException | SerialPortException e) {
-			throw new GenDriverException("Disconnect failed.", e);
-		}
-    }
 
     public void  WriteMultipleCoils(int startingAdress, boolean[] values)
     		throws GenDriverException, GenDriverSocketException, GenDriverModbusException
@@ -118,21 +97,47 @@ public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
   			 mbDevice::Connect).write(startingAdress, value);
     }
 
-     public void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
-     {
-    	new ModbusCallHandler<>(
-			 mbDevice,
-			 mbDevice::WriteMultipleRegisters, 
-			 mbDevice::Connect).write(startingAdress, values);
-    	
-     }
+	public void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
+	{
+		new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::WriteMultipleRegisters, 
+			mbDevice::Connect).write(startingAdress, values);
+	
+	}
      
-     public void WriteSingleRegister(int startingAdress, int value)
-    		 throws GenDriverException, GenDriverSocketException, GenDriverModbusException
-     {
-     	new ModbusCallHandler<>(
-   			 mbDevice,
-   			 mbDevice::WriteSingleRegister, 
-   			 mbDevice::Connect).write(startingAdress, value);
-     }
+	public void WriteSingleRegister(int startingAdress, int value)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException
+	{
+		new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::WriteSingleRegister, 
+			mbDevice::Connect).write(startingAdress, value);
+	}
+
+	@Override
+	public boolean connect() throws GenDriverException
+	{
+		try {
+			mbDevice.Connect();
+			return mbDevice.isConnected();
+		} catch (Exception e) {
+			throw new GenDriverException("Connect failed.", e);
+	 	}
+	}
+	
+	public void disconnect() throws GenDriverException
+	{
+		try {
+			mbDevice.Disconnect();
+		} catch (Exception e) {
+			throw new GenDriverException("Disconnect failed.", e);
+		}
+	}
+
+	@Override
+	public boolean isConnected()
+	{
+		return mbDevice.isConnected();
+	}
 }

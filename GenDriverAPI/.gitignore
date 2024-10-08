@@ -6,4 +6,9 @@
 .classpath
 .project
 .settings/
-/.gradle/
+
+# IntelliJ
+.idea
+
+# VS Code
+.vscode

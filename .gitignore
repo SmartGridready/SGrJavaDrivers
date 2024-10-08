@@ -1,6 +1,14 @@
-*.log
-*.idea
-.DS_Store
+/.gradle/
+/bin/
+/build/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+.idea
+
+# VS Code
 .vscode
-bin
-build
