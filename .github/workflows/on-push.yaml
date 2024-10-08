@@ -10,7 +10,6 @@ name: CI Build
 on:
   workflow_dispatch:
   push:
-    branches: [ '**' ]
 
 jobs:
   build:
@@ -32,14 +31,30 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Build and Publish GenDriverAPI
+    - name: Build GenDriverAPI
       working-directory: GenDriverAPI
       run: |
         chmod +x ./gradlew
-        ./gradlew clean build publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }} --no-daemon
+        ./gradlew clean build --no-daemon
 
-    - name: Build and Publish EasyModbus
+    - name: Publish GenDriverAPI
+      # publish after committing to master or creating tag driver-api-{version}
+      if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/driver-api-'))
+      working-directory: GenDriverAPI
+      run: |
+        chmod +x ./gradlew
+        ./gradlew publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }} --no-daemon
+
+    - name: Build EasyModbus
       working-directory: EasyModbus
       run: |
         chmod +x ./gradlew
-        ./gradlew clean build publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }} --no-daemon
+        ./gradlew clean build --no-daemon
+
+    - name: Publish EasyModbus
+      # publish after committing to master or creating tag easymodbus-{version}
+      if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/easymodbus-'))
+      working-directory: EasyModbus
+      run: |
+        chmod +x ./gradlew
+        ./gradlew publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }} --no-daemon
