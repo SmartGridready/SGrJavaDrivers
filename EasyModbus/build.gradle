@@ -6,10 +6,9 @@
  */
 
 plugins {
-    id 'java'
+    id 'java-library'
     id 'maven-publish'
 }
-
 
 repositories {
     mavenLocal()
@@ -18,14 +17,17 @@ repositories {
 
     maven {
         url "https://nexus.library.smartgridready.ch/repository/maven-releases/"
+        mavenContent {
+            releasesOnly()
+        }
     }
     maven {
         url "https://nexus.library.smartgridready.ch/repository/maven-snapshots/"
+        mavenContent {
+            snapshotsOnly()
+        }
     }
 }
-
-apply plugin: 'java'
-apply plugin: 'maven-publish'
 
 sourceSets {
      main.java.srcDirs = ['src/main/java']
@@ -37,8 +39,20 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+// use release versions by default (no suffix)
+def sgr_driver_suffix = ''
+
+// use snapshots by setting property on commandline, e.g. -Psnapshots=sgr-specification,sgr-driver-api
+if (project.hasProperty("snapshots")) {
+    def snapList = project.getProperty("snapshots").split(',')
+    if (snapList.contains("sgr-driver-api")) {
+        println "using snapshots of sgr-driver-api"
+        sgr_driver_suffix = '-SNAPSHOT'
+    }
+}
+
 dependencies {
-    implementation group: 'com.smartgridready', name: 'sgr-driver-api', version: '2.0.0'
+    api group: 'com.smartgridready', name: 'sgr-driver-api', version: "2.0.0${sgr_driver_suffix}"
     implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.6'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.10'
 
@@ -59,12 +73,6 @@ test {
         jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED")
     }
 }
-
-jar {
-    from sourceSets.main.allSource
-    archiveFileName = 'easymodbus.jar'
-}
-
 
 publishing {
     repositories {
@@ -90,9 +98,6 @@ publishing {
             artifactId = 'easymodbus'
 
             from components.java
-            pom {
-                url.set("https://github.com/SmartgridReady/SGrJavaPackages.git")
-            }
         }
     }
 }

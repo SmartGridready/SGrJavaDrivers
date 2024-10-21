@@ -6,10 +6,9 @@
  */
 
 plugins {
-    id 'java'
+    id 'java-library'
     id 'maven-publish'
 }
-
 
 repositories {
     mavenLocal()
@@ -18,14 +17,17 @@ repositories {
 
     maven {
         url "https://nexus.library.smartgridready.ch/repository/maven-releases/"
+        mavenContent {
+            releasesOnly()
+        }
     }
     maven {
         url "https://nexus.library.smartgridready.ch/repository/maven-snapshots/"
+        mavenContent {
+            snapshotsOnly()
+        }
     }
 }
-
-apply plugin: 'java'
-apply plugin: 'maven-publish'
 
 sourceSets {
      main.java.srcDirs = ['src/main/java']
@@ -37,7 +39,7 @@ java {
 }
 
 dependencies {
-    implementation group: 'io.vavr', name: 'vavr', version: '0.10.4'
+    api group: 'io.vavr', name: 'vavr', version: '0.10.5'
 }
 
 publishing {
@@ -64,9 +66,6 @@ publishing {
             artifactId = 'sgr-driver-api'
 
             from components.java
-            pom {
-                url.set("https://github.com/SmartgridReady/SGrJavaPackages.git")
-            }
         }
     }
 }
