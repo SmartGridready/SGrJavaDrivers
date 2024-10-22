@@ -41,6 +41,10 @@ public class GenDriverAPI4ModbusTCP implements GenDriverAPI4Modbus {
 		mbDevice.setPort(iPort);
 	}
 
+	public GenDriverAPI4ModbusTCP(String sIP4Address) {
+		this(sIP4Address, 502);
+	}
+
 	@Override
     public int[] ReadHoldingRegisters(int startingAddress, int quantity) 
     		throws GenDriverException, GenDriverSocketException, GenDriverModbusException
