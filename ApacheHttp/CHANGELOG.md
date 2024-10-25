@@ -9,4 +9,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- implemented REST driver based on Apache libraries.
+- ported REST driver over from CommHandler code base.
+- added URI builder.

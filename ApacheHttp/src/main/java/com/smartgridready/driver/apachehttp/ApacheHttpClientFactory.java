@@ -19,12 +19,21 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.smartgridready.driver.apachehttp;
 
 import com.smartgridready.driver.api.http.GenHttpRequest;
-import com.smartgridready.driver.api.http.GenHttpRequestFactory;
+import com.smartgridready.driver.api.http.GenUriBuilder;
 
-public class ApacheHttpRequestFactory implements GenHttpRequestFactory {
+import java.net.URISyntaxException;
+
+import com.smartgridready.driver.api.http.GenHttpClientFactory;
+
+public class ApacheHttpClientFactory implements GenHttpClientFactory {
 
 	@Override
-	public GenHttpRequest create() {
+	public GenHttpRequest createHttpRequest() {
 		return new ApacheHttpRequest();
+	}
+
+	@Override
+	public GenUriBuilder createUriBuilder(String baseUri) throws URISyntaxException {
+		return new ApacheUriBuilder(baseUri);
 	}
 }
