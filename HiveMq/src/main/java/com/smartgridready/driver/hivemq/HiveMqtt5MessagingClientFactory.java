@@ -1,5 +1,8 @@
 package com.smartgridready.driver.hivemq;
 
+import java.util.Collections;
+import java.util.Set;
+
 import com.smartgridready.driver.api.messaging.GenMessagingClient;
 import com.smartgridready.driver.api.messaging.GenMessagingClientFactory;
 import com.smartgridready.driver.api.messaging.model.MessagingInterfaceDescription;
@@ -7,6 +10,7 @@ import com.smartgridready.driver.api.messaging.model.MessagingPlatformType;
 
 public class HiveMqtt5MessagingClientFactory implements GenMessagingClientFactory {
 
+    @Override
     public GenMessagingClient create(MessagingInterfaceDescription interfaceDescription) {
 
         if (interfaceDescription.getMessagingPlatformType() == null) {
@@ -24,5 +28,10 @@ public class HiveMqtt5MessagingClientFactory implements GenMessagingClientFactor
                             interfaceDescription.getMessagingPlatformType().name());
         }
         return new HiveMqtt5MessagingClient(interfaceDescription);
+    }
+
+    @Override
+    public Set<MessagingPlatformType> getSupportedPlatforms() {
+        return Collections.singleton(MessagingPlatformType.MQTT5);
     }
 }
