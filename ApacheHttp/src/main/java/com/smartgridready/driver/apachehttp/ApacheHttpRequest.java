@@ -12,8 +12,12 @@ import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +31,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ApacheHttpRequest implements GenHttpRequest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpRequest.class);
 
     private HttpMethod httpMethod;
 
@@ -89,8 +95,17 @@ public class ApacheHttpRequest implements GenHttpRequest {
                 String content = IOUtils.toString(is, contentType.getCharset());
                 return GenHttpResponse.of(content, httpResp.getCode(), httpResp.getReasonPhrase());
             }
+        } else {
+            var response = (ClassicHttpResponse)httpResp;
+            var errorMsg = "";
+            try {
+                errorMsg = String.format("%s: %s", httpResp.getReasonPhrase(), response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "");
+            } catch (ParseException e) {
+                errorMsg = String.format("%s: %s: %s", httpResp.getReasonPhrase(), "Parse error while parsing error response from http server", e.getMessage());
+            }
+            LOG.error("Http Server response error: {}", errorMsg);
+            return GenHttpResponse.of("", httpResp.getCode(), errorMsg);
         }
-        return GenHttpResponse.of("", httpResp.getCode(), httpResp.getReasonPhrase());
     }
 
     @Override
