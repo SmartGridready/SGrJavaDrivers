@@ -25,18 +25,20 @@ use their own Modbus RTU drivers
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TestSocketServer {
+public class TestUdpSocketServer {
 	
-	private static final Logger LOG = LogManager.getLogger(TestSocketServer.class);
+	private static final Logger LOG = LogManager.getLogger(TestUdpSocketServer.class);
 
-	private ServerSocket serverSocket;
+	private DatagramSocket serverSocket;
 	private boolean closeFlag = false;
 	private boolean stopFlag = false;
 
@@ -59,55 +61,40 @@ public class TestSocketServer {
 		@Override
 		public void run() {							
 			try {
-				serverSocket = new ServerSocket(9099);
+				serverSocket = new DatagramSocket(9099);
 				
 				while(!stopFlag) {
-					Socket socket = serverSocket.accept();				
-					Thread handler = new ClientHandler(socket);
-					handler.start();
+					handleMessage();
 				}
 				serverSocket.close();
 			} catch (Exception e) {
 				LOG.info("Server socket closed.");
 			}
-		}		
-	}
-		
+		}
 
-	class ClientHandler extends Thread {
-		
-		final InputStream is;
-		final OutputStream os;
-		final Socket s;
-
-		// Constructor
-		public ClientHandler(Socket s) throws Exception {
-			this.s = s;
-			this.is = s.getInputStream();
-			this.os = s.getOutputStream();
-		}				
-
-		@Override
-	    public void run() 
-	    {
+		private void handleMessage() {
 			final int buflen = 1024;
 			ByteBuffer bbuf = ByteBuffer.wrap(new byte[buflen+1]);
+			byte[] buf = new byte[buflen];
+			
 			try {
-				byte[] buf = new byte[buflen];				
-				int count;			
-				while ((count = is.read(buf)) >= 0 && !closeFlag && !stopFlag) {
-					bbuf.put(new byte[] {0});
-					bbuf.put(buf, 0, count);
-					os.write(bbuf.array(), 0, count+1);
-				}				
-				if(closeFlag) {
-					LOG.info("Client socket forcefully closed.");
-				}
-				s.close();
+				DatagramPacket inPacket = new DatagramPacket(buf, buf.length);
+				serverSocket.receive(inPacket);
+				
+				InetAddress srcAddress = inPacket.getAddress();
+				int srcPort = inPacket.getPort();
+				int srcLen = inPacket.getLength();
+
+				bbuf.put(new byte[] {0});
+				bbuf.put(inPacket.getData(), 0, srcLen);
+
+				DatagramPacket outPacket = new DatagramPacket(bbuf.array(), srcLen+1, srcAddress, srcPort);
+				serverSocket.send(outPacket);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	    }
-	}	
+		}
+	}
 }
 

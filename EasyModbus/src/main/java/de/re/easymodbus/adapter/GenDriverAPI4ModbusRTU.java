@@ -21,31 +21,24 @@ It includes completely manually generated code. It is the Interface of the Modbu
 use their own Modbus RTU drivers
  */
 
-import com.smartgridready.driver.api.modbus.GenDriverAPI4Modbus;
-import com.smartgridready.driver.api.common.GenDriverException;
-import com.smartgridready.driver.api.modbus.GenDriverModbusException;
-import com.smartgridready.driver.api.modbus.GenDriverSocketException;
 import com.smartgridready.driver.api.modbus.Parity;
 import com.smartgridready.driver.api.modbus.StopBits;
 import com.smartgridready.driver.api.modbus.DataBits;
-import de.re.easymodbus.modbusclient.ModbusClient;
 import de.re.easymodbus.util.DatabitMapper;
 import de.re.easymodbus.util.ParityMapper;
 import de.re.easymodbus.util.StopbitMapper;
 
-public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
-
-	private final ModbusClient mbRTU;
+public class GenDriverAPI4ModbusRTU extends GenDriverAPI4ModbusBase {
 
 	public GenDriverAPI4ModbusRTU(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) {
-		mbRTU = new ModbusClient();
-		mbRTU.setSerialFlag(true);
-		mbRTU.setSerialPort(comPort);
-		mbRTU.setBaudrate(baudRate);
-		mbRTU.setParity(ParityMapper.map(parity));
-		mbRTU.setDataBits(DatabitMapper.map(dataBits));
-		mbRTU.setStopBits(StopbitMapper.map(stopBits));
-		mbRTU.setConnectionTimeout(1500);
+		super();
+		mbDevice.setSerialFlag(true);
+		mbDevice.setSerialPort(comPort);
+		mbDevice.setBaudrate(baudRate);
+		mbDevice.setParity(ParityMapper.map(parity));
+		mbDevice.setDataBits(DatabitMapper.map(dataBits));
+		mbDevice.setStopBits(StopbitMapper.map(stopBits));
+		mbDevice.setConnectionTimeout(1500);
 	}
 
 	public GenDriverAPI4ModbusRTU(String comPort, int baudRate, Parity parity, DataBits dataBits) {
@@ -62,101 +55,5 @@ public class GenDriverAPI4ModbusRTU implements GenDriverAPI4Modbus {
 
 	public GenDriverAPI4ModbusRTU(String comPort) {
 		this(comPort, 9600);
-	}
-	
-    @Override
-    public void setUnitIdentifier(short unitIdentifier) {
-	   mbRTU.setUnitIdentifier(unitIdentifier);
-    }
-    
-	@Override
-    public int[] ReadHoldingRegisters(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
-    {    	
-    	return new ModbusCallHandler<>(
-    			mbRTU, 
-    			mbRTU::ReadHoldingRegisters).read(startingAddress, quantity);
-    }
-
-	@Override
-    public int[] ReadInputRegisters(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
-    {
-    	return new ModbusCallHandler<>(
-    			mbRTU, 
-    			mbRTU::ReadInputRegisters).read(startingAddress, quantity); 
-    }
-
-	@Override
-    public boolean[] ReadDiscreteInputs(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
-    {  
-    	return new ModbusCallHandler<>(
-    			mbRTU, 
-    			mbRTU::ReadDiscreteInputs).read(startingAddress, quantity);     	
-    }
-
-	@Override
-    public boolean[] ReadCoils(int startingAddress, int quantity) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
-    {   
-       	return new ModbusCallHandler<>(
-    			mbRTU, 
-    			mbRTU::ReadCoils).read(startingAddress, quantity);     
-    }
-
-	@Override
-    public void  WriteMultipleCoils(int startingAdress, boolean[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException 
-    {    	
-    	new ModbusCallHandler<>(
-    			mbRTU,
-    			mbRTU::WriteMultipleCoils).write(startingAdress, values);
-    }
-    
-	@Override
-    public void  WriteSingleCoil(int startingAdress, boolean value) throws GenDriverException, GenDriverSocketException, GenDriverModbusException 
-    {
-    	new ModbusCallHandler<>(
-    			mbRTU,
-    			mbRTU::WriteSingleCoil).write(startingAdress, value);
-    }
-
-	@Override
-    public void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException 
-    {
-        new ModbusCallHandler<>(
-    			mbRTU,
-    			mbRTU::WriteMultipleRegisters).write(startingAdress, values);
-    }
-
-	@Override
-    public void WriteSingleRegister(int startingAdress, int value) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
-    {
-      	new ModbusCallHandler<>(
-    			mbRTU,
-    			mbRTU::WriteSingleRegister).write(startingAdress, value);
-    }
-
-	@Override
-	public boolean connect() throws GenDriverException
-	{
-		try {
-			mbRTU.Connect();
-			return mbRTU.isConnected();
-		} catch (Exception e) {
-			throw new GenDriverException("Connect failed.", e);
-	 	}
-	}
-
-	@Override
-	public void disconnect() throws GenDriverException 
-	{
-		try {
-			mbRTU.Disconnect();
-		} catch (Exception e) {
-			throw new GenDriverException("Disconnect failed.", e);
-	 	}
-	}
-
-	@Override
-	public boolean isConnected()
-	{
-		return mbRTU.isConnected();
 	}
 }

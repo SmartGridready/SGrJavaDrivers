@@ -42,4 +42,14 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
     public GenDriverAPI4Modbus createTcpTransport(String ipAddress, int port) {
         return new GenDriverAPI4ModbusTCP(ipAddress, port);
     }
+
+    @Override
+    public GenDriverAPI4Modbus createUdpTransport(String ipAddress) {
+        return new GenDriverAPI4ModbusUDP(ipAddress);
+    }
+
+    @Override
+    public GenDriverAPI4Modbus createUdpTransport(String ipAddress, int port) {
+        return new GenDriverAPI4ModbusUDP(ipAddress, port);
+    }
 }
