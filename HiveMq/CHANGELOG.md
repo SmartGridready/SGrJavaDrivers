@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - ported HiveMQ driver over from CommHandler code base.
+- supports ServiceLoader
