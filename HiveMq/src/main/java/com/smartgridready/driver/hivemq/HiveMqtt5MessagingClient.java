@@ -13,8 +13,8 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
 import com.hivemq.client.mqtt.mqtt5.message.subscribe.suback.Mqtt5SubAck;
 import com.hivemq.client.mqtt.mqtt5.message.unsubscribe.unsuback.Mqtt5UnsubAck;
 import com.smartgridready.driver.api.messaging.GenMessagingClient;
+import com.smartgridready.driver.api.messaging.MessageFilterHandler;
 import com.smartgridready.driver.api.messaging.model.Message;
-import com.smartgridready.driver.api.messaging.model.filter.MessageFilter;
 import com.smartgridready.driver.hivemq.helper.JsonHelper;
 import com.smartgridready.driver.hivemq.security.NonValidatingHostnameVerifier;
 import com.smartgridready.driver.hivemq.security.NonValidatingTrustManagerFactory;
@@ -38,8 +38,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.hivemq.client.mqtt.MqttGlobalPublishFilter.ALL;
 
@@ -91,14 +89,16 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
             String  readCmdMessageTopic,
             Message readCmdMessage,
             String inMessageTopic,
-            MessageFilter messageFilter,
+            MessageFilterHandler messageFilterHandler,
             long timeoutMs) {
 
         // Validate the message payload filter.
-        try {
-            validateMessagePayloadFilter(messageFilter);
-        } catch (OperationNotSupportedException | IllegalArgumentException e) {
-            return (Either.left(e));
+        if (messageFilterHandler != null) {
+            try {
+                messageFilterHandler.validate();
+            } catch (OperationNotSupportedException e) {
+                return (Either.left(e));
+            }
         }
 
         // Subscribe to the inMessageTopic
@@ -108,7 +108,7 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
         }
         // Prepare future for receiving the response message.
         CompletableFuture<Either<Throwable, Message>> readFuture = CompletableFuture.supplyAsync(
-                () -> receiveResponseMessage(inMessageTopic, messageFilter, timeoutMs, syncClient));
+                () -> receiveResponseMessage(inMessageTopic, messageFilterHandler, timeoutMs, syncClient));
 
         // Now send the read command message
         sendSync(readCmdMessageTopic, readCmdMessage, syncClient);
@@ -127,7 +127,7 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
         }
     }
 
-    private Either<Throwable, Message> receiveResponseMessage(String topic, MessageFilter messageFilter, long timeoutSec, Mqtt5BlockingClient syncClient) {
+    private Either<Throwable, Message> receiveResponseMessage(String topic, MessageFilterHandler messageFilterHandler, long timeoutSec, Mqtt5BlockingClient syncClient) {
 
         try (Mqtt5BlockingClient.Mqtt5Publishes publishes = syncClient.publishes(MqttGlobalPublishFilter.ALL, true)) {
 
@@ -143,7 +143,7 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
 
                     mqtt5Publish = received
                             .filter(publish -> publish.getTopic().equals(MqttTopic.of(topic)))
-                            .filter(publish -> isMessagePayloadFilterMatch(publish, messageFilter))
+                            .filter(publish -> (messageFilterHandler == null) || isMessagePayloadFilterMatch(publish, messageFilterHandler))
                             .orElse(null);
 
                     if (mqtt5Publish != null) {
@@ -184,7 +184,7 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
     }
 
     @Override
-    public void subscribe(String topic, MessageFilter messageFilter, Consumer<Either<Throwable, Message>> callback) throws GenDriverException {
+    public void subscribe(String topic, MessageFilterHandler messageFilterHandler, Consumer<Either<Throwable, Message>> callback) throws GenDriverException {
 
         CompletableFuture<Mqtt5SubAck> asyncRes = asyncClient.subscribeWith()
                 .topicFilter(topic)
@@ -201,12 +201,12 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
                                     logReceivedMessage(publish);
                                     Optional.of(publish)
                                             .filter(p -> MqttTopic.of(topic).equals(p.getTopic()))
-                                            .filter(p -> isMessagePayloadFilterMatch(publish, messageFilter))
+                                            .filter(p -> (messageFilterHandler == null) || isMessagePayloadFilterMatch(p, messageFilterHandler))
                                             .ifPresent(p -> {
                                                 if (LOG.isDebugEnabled()) {
-                                                    LOG.debug("Topic={} did match topic={}", publish.getTopic(), topic);
+                                                    LOG.debug("Topic={} did match topic={}", p.getTopic(), topic);
                                                 }
-                                                String receivedMessage = new String(publish.getPayloadAsBytes(), StandardCharsets.UTF_8);
+                                                String receivedMessage = new String(p.getPayloadAsBytes(), StandardCharsets.UTF_8);
                                                 callback.accept(Either.right(Message.of(receivedMessage)));
                                             });
                                 });
@@ -237,9 +237,10 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
         }
     }
 
-    private boolean isMessagePayloadFilterMatch(Mqtt5Publish publish, MessageFilter messageFilter) {
+    private boolean isMessagePayloadFilterMatch(Mqtt5Publish publish, MessageFilterHandler messageFilterHandler) {
+        if (messageFilterHandler == null) return true;
         String payload = new String(publish.getPayloadAsBytes(), StandardCharsets.UTF_8);
-        return isMessagePayloadFilterMatch(payload, messageFilter);
+        return messageFilterHandler.isFilterMatch(payload);
     }
 
     private Mqtt5Client createClient() {
@@ -282,52 +283,6 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
         }
 
         return clientBuilder.build();
-    }
-
-    /**
-     * Checks if a message payload filter is present and returns true if no filter is present
-     * or the message matches the filter criteria.
-     *
-     * @param payload The received message payload
-     * @param messageFilter Payload filter for messages to be processed.
-     * @return {@code true} if the message payload matches the filter.
-     */
-    static boolean isMessagePayloadFilterMatch(String payload, MessageFilter messageFilter) {
-
-        if (messageFilter == null) {
-            return true;    // always match
-        }
-        if (payload == null) {
-            return false;    // no match
-        }
-
-        String regex = ".";
-        if (messageFilter.getJmespathFilter() != null) {
-            try {
-                var filter = messageFilter.getJmespathFilter();
-                regex = filter.getMatchesRegex();
-                payload = JsonHelper.parseJsonResponse(filter.getQuery(), payload);
-            } catch (GenDriverException e) {
-                return false; // no match
-            }
-        }
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(payload);
-        return matcher.find();
-    }
-
-    static void validateMessagePayloadFilter(MessageFilter messageFilter) throws OperationNotSupportedException {
-
-        if (messageFilter == null) {
-            return; // null means no-filter, that's fine
-        }
-        if (messageFilter.getRegexFilter() != null) {
-            throw new OperationNotSupportedException("Regex message filter not supported yet.");
-        }
-        if (messageFilter.getXpapathFilter() != null) {
-            throw new OperationNotSupportedException("Xpath message filter not supported yet.");
-        }
     }
 
     private void logReceivedMessage(Mqtt5Publish publish) {
