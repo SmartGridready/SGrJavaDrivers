@@ -76,6 +76,10 @@ test {
 }
 
 publishing {
+    java {
+        withSourcesJar()
+    }
+
     repositories {
         maven {
             name = "Nexus"
