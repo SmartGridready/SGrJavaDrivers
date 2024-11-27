@@ -5,14 +5,14 @@
 # This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
 
-name: Build and Publish EasyModbus
+name: Build and Publish ApacheHttp
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows/easymodbus-ci.yaml'
-      - 'EasyModbus/**'
+      - '.github/workflows/apachehttp-ci.yaml'
+      - 'ApacheHttp/**'
 
 jobs:
   build-job:
@@ -31,16 +31,16 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Build SGrJavaDrivers EasyModbus
-        working-directory: EasyModbus
+      - name: Build SGrJavaDrivers ApacheHttp
+        working-directory: ApacheHttp
         run: |
           chmod +x ./gradlew
           ./gradlew clean build --no-daemon
 
-      - name: Publish SGrJavaDrivers EasyModbus
-        # publish after committing to master or creating tag easymodbus-{version}
-        if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/easymodbus-'))
-        working-directory: EasyModbus
+      - name: Publish SGrJavaDrivers ApacheHttp
+        # publish after committing to master or creating tag apachehttp-{version}
+        if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/apachehttp-'))
+        working-directory: ApacheHttp
         run: |
           chmod +x ./gradlew
           ./gradlew publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }} --no-daemon

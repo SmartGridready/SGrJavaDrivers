@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- supports ServiceLoader
+- supports Modbus UDP
+
 ### Changed
 
 - uses `java-library` plugin in build.
 - added build parameter to use snapshots of SGr dependencies.
 - set libraries as `api` dependencies, when they are exposed in interfaces.
+- refactored driver classes
+- fixed license (should be GPL v3, not BSD)
 
 
 ## [2.0.0] - 2024-10-08

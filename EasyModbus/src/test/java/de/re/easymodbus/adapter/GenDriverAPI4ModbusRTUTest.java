@@ -17,6 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +46,7 @@ class GenDriverAPI4ModbusRTUTest {
 						
 		
 		GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusRTU("COM9");
-		setFieldByReflection(driver, "mbRTU", modbusClient);
+		setFieldByReflection(driver, "mbDevice", modbusClient);
 		
 		when(modbusClient.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenReturn(EXPECTED_RESPONSE);
 				
@@ -58,7 +62,7 @@ class GenDriverAPI4ModbusRTUTest {
 						
 		
 		GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusRTU("COM9");
-		setFieldByReflection(driver, "mbRTU", modbusClient);
+		setFieldByReflection(driver, "mbDevice", modbusClient);
 		
 		when(modbusClient.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenThrow(new SerialPortException("COM9", "write", SerialPortException.TYPE_PORT_NOT_OPENED));
 				
@@ -74,14 +78,14 @@ class GenDriverAPI4ModbusRTUTest {
 		
 		// 1. overload
 		GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusRTU("COM1");
-		setFieldByReflection(driver, "mbRTU", modbusClient);
+		setFieldByReflection(driver, "mbDevice", modbusClient);
 		driver.connect();
 		driver.disconnect();
 
 		// TODO implement these tests in a different way
 
 		/*
-		ModbusClient modbusClient = (ModbusClient) getFieldByReflection(driver, "mbRTU");
+		ModbusClient modbusClient = (ModbusClient) getFieldByReflection(driver, "mbDevice");
 		verify(modbusClient).setSerialPort("COM1");
 		verify(modbusClient).setBaudrate(9200);
 		verify(modbusClient).setParity(Parity.Even);
@@ -92,7 +96,7 @@ class GenDriverAPI4ModbusRTUTest {
 
 		// 2. overload
 		driver = new GenDriverAPI4ModbusRTU("COM2", 19200);
-		setFieldByReflection(driver, "mbRTU", modbusClient);
+		setFieldByReflection(driver, "mbDevice", modbusClient);
 		driver.connect();
 		driver.disconnect();
 
@@ -107,7 +111,7 @@ class GenDriverAPI4ModbusRTUTest {
 		
 		// 3. overload
 		driver = new GenDriverAPI4ModbusRTU("COM1", 2400, com.smartgridready.driver.api.modbus.Parity.ODD);
-		setFieldByReflection(driver, "mbRTU", modbusClient);
+		setFieldByReflection(driver, "mbDevice", modbusClient);
 		driver.connect();
 		driver.disconnect();
 
@@ -125,7 +129,7 @@ class GenDriverAPI4ModbusRTUTest {
 				com.smartgridready.driver.api.modbus.Parity.ODD,
 				com.smartgridready.driver.api.modbus.DataBits.SEVEN,
 				com.smartgridready.driver.api.modbus.StopBits.ONE_AND_HALF);
-		setFieldByReflection(driver, "mbRTU", modbusClient);
+		setFieldByReflection(driver, "mbDevice", modbusClient);
 		driver.connect();
 		driver.disconnect();
 
@@ -160,8 +164,18 @@ class GenDriverAPI4ModbusRTUTest {
 	}
 
 	private Field getAccessibleField(Object object, String fieldName) throws NoSuchFieldException {		
-		Field f1 = object.getClass().getDeclaredField(fieldName);		
-		f1.setAccessible(true);
-		return f1;
+		Optional<Field> field = Stream.concat(
+			Arrays.asList(object.getClass().getDeclaredFields()).stream(),
+			Arrays.asList(object.getClass().getSuperclass().getDeclaredFields()).stream()
+		)
+		.filter(f -> f.getName().equals(fieldName))
+		.findFirst();
+		
+		if (field.isEmpty()) {
+			throw new NoSuchFieldException(String.format("Field %s not found", fieldName));
+		}
+
+		field.get().setAccessible(true);
+		return field.get();
 	}
 }
