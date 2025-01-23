@@ -143,7 +143,7 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
 
                     mqtt5Publish = received
                             .filter(publish -> publish.getTopic().equals(MqttTopic.of(topic)))
-                            .filter(publish -> (messageFilterHandler == null) || isMessagePayloadFilterMatch(publish, messageFilterHandler))
+                            .filter(publish -> isMessagePayloadFilterMatch(publish, messageFilterHandler))
                             .orElse(null);
 
                     if (mqtt5Publish != null) {
@@ -201,7 +201,7 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
                                     logReceivedMessage(publish);
                                     Optional.of(publish)
                                             .filter(p -> MqttTopic.of(topic).equals(p.getTopic()))
-                                            .filter(p -> (messageFilterHandler == null) || isMessagePayloadFilterMatch(p, messageFilterHandler))
+                                            .filter(p -> isMessagePayloadFilterMatch(p, messageFilterHandler))
                                             .ifPresent(p -> {
                                                 if (LOG.isDebugEnabled()) {
                                                     LOG.debug("Topic={} did match topic={}", p.getTopic(), topic);
@@ -257,7 +257,6 @@ public class HiveMqtt5MessagingClient implements GenMessagingClient {
         if (interfaceDescription.getClientId() != null) {
             clientBuilder = clientBuilder.identifier(interfaceDescription.getClientId());
         }
-
 
         if (messageBroker.isTls() && messageBroker.isTlsVerifyCertificate()) {
             // enable certificate verification with default trust manager
