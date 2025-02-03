@@ -11,12 +11,12 @@ import com.smartgridready.driver.api.common.GenDriverException;
 import com.smartgridready.driver.api.modbus.GenDriverModbusException;
 import com.smartgridready.driver.api.modbus.GenDriverSocketException;
 
-abstract class J2ModModbusClientBase implements GenDriverAPI4Modbus {
+public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDriverAPI4Modbus {
 
-	protected final AbstractModbusMaster mbDevice;
-	protected int unitIdentifier;
+	private final T mbDevice;
+	private int unitIdentifier;
 
-	protected J2ModModbusClientBase(AbstractModbusMaster mbDevice) {
+	public J2ModModbusClient(T mbDevice) {
 		this.mbDevice = mbDevice;
 		this.unitIdentifier = 0;
 	}
