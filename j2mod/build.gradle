@@ -100,7 +100,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId = 'com.smartgridready'
-            artifactId = 'j2mod'
+            artifactId = 'sgr-driver-j2mod'
 
             from components.java
         }
