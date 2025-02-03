@@ -54,7 +54,6 @@ if (project.hasProperty("snapshots")) {
 
 dependencies {
     api group: 'com.smartgridready', name: 'sgr-driver-api', version: "2.1.0${sgr_driver_suffix}"
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.10'
     implementation group: 'com.ghgande', name: 'j2mod', version: '3.2.1'
 
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.19.0'

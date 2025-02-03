@@ -45,11 +45,11 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
 
     @Override
     public GenDriverAPI4Modbus createUdpTransport(String ipAddress) {
-        throw new UnsupportedOperationException("j2mod does not support UDP");
+        return new J2ModModbusClientUdp(ipAddress);
     }
 
     @Override
     public GenDriverAPI4Modbus createUdpTransport(String ipAddress, int port) {
-        throw new UnsupportedOperationException("j2mod does not support UDP");
+        return new J2ModModbusClientUdp(ipAddress, port);
     }
 }
