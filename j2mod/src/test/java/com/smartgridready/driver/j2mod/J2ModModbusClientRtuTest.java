@@ -31,24 +31,22 @@ class J2ModModbusClientRtuTest {
 	@Test
 	void readInputRegisters_success() throws Exception {
 		GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
-		driver.setUnitIdentifier(UNIT_ID);
 
 		final Register[] EXPECTED_RESPONSE_REGS = J2ModModbusClient.convertValuesToRegisters(EXPECTED_RESPONSE);
 		when(modbusClient.readMultipleRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenReturn(EXPECTED_RESPONSE_REGS);
 
-		int[] result = driver.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]);
+		int[] result = driver.readHoldingRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]);
 		assertArrayEquals(EXPECTED_RESPONSE, result);
 	}
 
 	@Test
 	void readInputRegisters_throws_Exception() throws Exception {
 		GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
-		driver.setUnitIdentifier(UNIT_ID);
 
 		when(modbusClient.readMultipleRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenThrow(new ModbusException("Serial port not connected"));
 
 		GenDriverModbusException e = assertThrows(GenDriverModbusException.class, () ->
-			driver.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]));
+			driver.readHoldingRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]));
 
 		assertEquals("Error reading holding registers", e.getMessage());
 	}
@@ -56,7 +54,6 @@ class J2ModModbusClientRtuTest {
 	@Test
 	void initTrspServiceModbusRTU() throws Exception {
 		GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
-		driver.setUnitIdentifier(UNIT_ID);
 		driver.connect();
 		driver.disconnect();
 	}

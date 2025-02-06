@@ -41,7 +41,7 @@ java {
 }
 
 // use release versions by default (no suffix)
-def sgr_driver_suffix = ''
+def sgr_driver_suffix = '-SNAPSHOT'
 
 // use snapshots by setting property on commandline, e.g. -Psnapshots=sgr-specification,sgr-driver-api
 if (project.hasProperty("snapshots")) {
@@ -53,7 +53,7 @@ if (project.hasProperty("snapshots")) {
 }
 
 dependencies {
-    api group: 'com.smartgridready', name: 'sgr-driver-api', version: "2.1.0${sgr_driver_suffix}"
+    api group: 'com.smartgridready', name: 'sgr-driver-api', version: "2.2.0${sgr_driver_suffix}"
     implementation group: 'io.github.java-native', name: 'jssc', version: '2.9.6'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.10'
 

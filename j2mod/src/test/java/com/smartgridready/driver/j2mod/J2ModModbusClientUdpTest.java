@@ -27,7 +27,8 @@ class J2ModModbusClientUdpTest {
 	private final int REG_ADDR = 10000;
 	private final int[] EXPECTED_RESPONSE = new int[] { 0xAA, 2 };
 
-	private ModbusSlave slave;
+	@SuppressWarnings("unused")
+	private ModbusSlave slave = null;
 	
 	@BeforeEach
 	void setup() throws ModbusException {
@@ -43,11 +44,10 @@ class J2ModModbusClientUdpTest {
 	void testReadInputRegistersSuccess() throws Exception {
 
 		GenDriverAPI4Modbus driver = new J2ModModbusClient<>(new ModbusUDPMaster(Inet4Address.getLoopbackAddress().getHostAddress(), PORT));
-		driver.setUnitIdentifier(UNIT_ID);
 		driver.connect();
 		assertTrue(driver.isConnected());		
 		
-		int[] result = driver.ReadHoldingRegisters(REG_ADDR, 2);
+		int[] result = driver.readHoldingRegisters(UNIT_ID, REG_ADDR, 2);
 		assertArrayEquals(EXPECTED_RESPONSE, result);
 		
 		driver.disconnect();

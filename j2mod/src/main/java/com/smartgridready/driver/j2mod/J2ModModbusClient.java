@@ -14,23 +14,71 @@ import com.smartgridready.driver.api.modbus.GenDriverSocketException;
 public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDriverAPI4Modbus {
 
 	private final T mbDevice;
-	private int unitIdentifier;
+	private short unitId;
 
 	public J2ModModbusClient(T mbDevice) {
 		this.mbDevice = mbDevice;
-		this.unitIdentifier = 0;
+		this.unitId = 0;
 	}
 
 	@Override
-	public void setUnitIdentifier(short unitIdentifier) {
-		this.unitIdentifier = unitIdentifier;
+	public void setUnitIdentifier(short unitId) {
+		this.unitId = unitId;
 	}
 
 	@Override
 	public int[] ReadHoldingRegisters(int startingAddress, int quantity)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		return readHoldingRegisters(unitId, startingAddress, quantity);
+	}
+
+	@Override
+	public int[] ReadInputRegisters(int startingAddress, int quantity)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		return readInputRegisters(unitId, startingAddress, quantity);
+	}
+
+	@Override
+	public boolean[] ReadDiscreteInputs(int startingAddress, int quantity)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		return readDiscreteInputs(unitId, startingAddress, quantity);
+	}
+
+	@Override
+	public boolean[] ReadCoils(int startingAddress, int quantity)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		return readCoils(unitId, startingAddress, quantity);
+	}
+
+	@Override
+	public void WriteMultipleCoils(int startingAdress, boolean[] values)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		writeMultipleCoils(unitId, startingAdress, values);
+	}
+
+	@Override
+	public void WriteSingleCoil(int startingAdress, boolean value)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		writeSingleCoil(unitId, startingAdress, value);
+	}
+
+	@Override
+	public void WriteMultipleRegisters(int startingAdress, int[] values)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		writeMultipleRegisters(unitId, startingAdress, values);
+	}
+
+	@Override
+	public void WriteSingleRegister(int startingAdress, int value)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		writeSingleRegister(unitId, startingAdress, value);
+	}
+
+	@Override
+	public int[] readHoldingRegisters(short unitId, int startingAddress, int quantity)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		try {
-			Register[] res = mbDevice.readMultipleRegisters(unitIdentifier, startingAddress, quantity);
+			Register[] res = mbDevice.readMultipleRegisters(unitId, startingAddress, quantity);
 			return convertRegistersToValues(res);
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException("Error reading holding registers", e);
@@ -38,10 +86,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
 	}
 
 	@Override
-	public int[] ReadInputRegisters(int startingAddress, int quantity)
+	public int[] readInputRegisters(short unitId, int startingAddress, int quantity)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		try {
-			InputRegister[] res = mbDevice.readInputRegisters(unitIdentifier, startingAddress, quantity);
+			InputRegister[] res = mbDevice.readInputRegisters(unitId, startingAddress, quantity);
 			return convertRegistersToValues(res);
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException("Error reading input registers", e);
@@ -49,10 +97,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
 	}
 
 	@Override
-	public boolean[] ReadDiscreteInputs(int startingAddress, int quantity)
+	public boolean[] readDiscreteInputs(short unitId, int startingAddress, int quantity)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		try {
-			BitVector res = mbDevice.readInputDiscretes(unitIdentifier, startingAddress, quantity);
+			BitVector res = mbDevice.readInputDiscretes(unitId, startingAddress, quantity);
 			return convertBitVectorToValues(res);
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException("Error reading discrete inputs", e);
@@ -60,10 +108,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
 	}
 
 	@Override
-	public boolean[] ReadCoils(int startingAddress, int quantity)
+	public boolean[] readCoils(short unitId, int startingAddress, int quantity)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		try {
-			BitVector res = mbDevice.readCoils(unitIdentifier, startingAddress, quantity);
+			BitVector res = mbDevice.readCoils(unitId, startingAddress, quantity);
 			return convertBitVectorToValues(res);
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException("Error reading coils", e);
@@ -71,42 +119,42 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
 	}
 
 	@Override
-	public void WriteMultipleCoils(int startingAdress, boolean[] values)
+	public void writeMultipleCoils(short unitId, int startingAdress, boolean[] values)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		try {
 			BitVector bv = convertValuesToBitVector(values);
-			mbDevice.writeMultipleCoils(unitIdentifier, bv);
+			mbDevice.writeMultipleCoils(unitId, bv);
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException("Error writing coils", e);
 		}
 	}
 
 	@Override
-	public void WriteSingleCoil(int startingAdress, boolean value)
+	public void writeSingleCoil(short unitId, int startingAdress, boolean value)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		try {
-			mbDevice.writeCoil(unitIdentifier, startingAdress, value);
+			mbDevice.writeCoil(unitId, startingAdress, value);
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException("Error writing coil", e);
 		}
 	}
 
 	@Override
-	public void WriteMultipleRegisters(int startingAdress, int[] values)
+	public void writeMultipleRegisters(short unitId, int startingAdress, int[] values)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		try {
 			Register[] registers = convertValuesToRegisters(values);
-			mbDevice.writeMultipleRegisters(unitIdentifier, startingAdress, registers);
+			mbDevice.writeMultipleRegisters(unitId, startingAdress, registers);
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException("Error writing registers", e);
 		}
 	}
 
 	@Override
-	public void WriteSingleRegister(int startingAdress, int value)
+	public void writeSingleRegister(short unitId, int startingAdress, int value)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		try {
-			mbDevice.writeSingleRegister(unitIdentifier, startingAdress, new SimpleRegister(value));
+			mbDevice.writeSingleRegister(unitId, startingAdress, new SimpleRegister(value));
 		} catch (ModbusException e) {
 			throw new GenDriverModbusException("Error writing register", e);
 		}

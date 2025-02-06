@@ -48,11 +48,10 @@ class J2ModModbusClientTcpTest {
 	void testReadInputRegistersSuccess() throws Exception {
 
 		GenDriverAPI4Modbus driver = new J2ModModbusClient<>(new ModbusTCPMaster(ADDRESS.getHostAddress(), PORT));
-		driver.setUnitIdentifier(UNIT_ID);
 		driver.connect();
 		assertTrue(driver.isConnected());		
 		
-		int[] result = driver.ReadHoldingRegisters(REG_ADDR, 2);
+		int[] result = driver.readHoldingRegisters(UNIT_ID, REG_ADDR, 2);
 		assertArrayEquals(EXPECTED_RESPONSE, result);
 		
 		driver.disconnect();
