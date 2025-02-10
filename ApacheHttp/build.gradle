@@ -52,7 +52,7 @@ if (project.hasProperty("snapshots")) {
 }
 
 dependencies {
-    api group: 'com.smartgridready', name: 'sgr-driver-api', version: "2.1.0${sgr_driver_suffix}"
+    api group: 'com.smartgridready', name: 'sgr-driver-api', version: "2.2.0${sgr_driver_suffix}"
 
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.1.3'
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5-fluent', version: '5.1.3'
