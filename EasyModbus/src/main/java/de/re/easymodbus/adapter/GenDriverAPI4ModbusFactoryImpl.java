@@ -34,6 +34,14 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
     }
 
     @Override
+    public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits, boolean asciiEncoding) {
+        if (!asciiEncoding) {
+            return new GenDriverAPI4ModbusRTU(comPort, baudRate, parity, dataBits, stopBits);
+        }
+        throw new UnsupportedOperationException("ASCII encoding not supported");
+    }
+
+    @Override
     public GenDriverAPI4Modbus createTcpTransport(String ipAddress) {
         return new GenDriverAPI4ModbusTCP(ipAddress);
     }
