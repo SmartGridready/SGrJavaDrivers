@@ -25,6 +25,8 @@ import com.smartgridready.driver.api.modbus.GenDriverAPI4Modbus;
 import com.smartgridready.driver.api.common.GenDriverException;
 import com.smartgridready.driver.api.modbus.GenDriverModbusException;
 import com.smartgridready.driver.api.modbus.GenDriverSocketException;
+
+import de.re.easymodbus.exceptions.ModbusException;
 import de.re.easymodbus.modbusclient.ModbusClient;
 
 /*   AUTHOR: IBT / Chris Broennimann for Verein SmartGridready
@@ -85,7 +87,7 @@ abstract class GenDriverAPI4ModbusBase implements GenDriverAPI4Modbus {
 	}
 
 	@Override
-	public void  WriteMultipleCoils(int startingAdress, boolean[] values)
+	public void WriteMultipleCoils(int startingAdress, boolean[] values)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException
 	{
 		new ModbusCallHandler<>(
@@ -95,7 +97,7 @@ abstract class GenDriverAPI4ModbusBase implements GenDriverAPI4Modbus {
 	}
 
 	@Override
-	public void  WriteSingleCoil(int startingAdress, boolean value)
+	public void WriteSingleCoil(int startingAdress, boolean value)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException
 	{
 		new ModbusCallHandler<>(
@@ -105,19 +107,98 @@ abstract class GenDriverAPI4ModbusBase implements GenDriverAPI4Modbus {
 	}
 
 	@Override
-	public void  WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
+	public void WriteMultipleRegisters(int startingAdress, int[] values) throws GenDriverException, GenDriverSocketException, GenDriverModbusException
 	{
 		new ModbusCallHandler<>(
 			mbDevice,
 			mbDevice::WriteMultipleRegisters,
 			mbDevice::Connect).write(startingAdress, values);
-
 	}
 
 	@Override
 	public void WriteSingleRegister(int startingAdress, int value)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException
 	{
+		new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::WriteSingleRegister,
+			mbDevice::Connect).write(startingAdress, value);
+	}
+
+	@Override
+	public int[] readHoldingRegisters(short unitId, int startingAddress, int quantity)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		setUnitIdentifier(unitId);
+		return new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::ReadHoldingRegisters,
+			mbDevice::Connect).read(startingAddress, quantity);
+	}
+
+	@Override
+	public int[] readInputRegisters(short unitId, int startingAddress, int quantity)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		setUnitIdentifier(unitId);
+		return new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::ReadInputRegisters,
+			mbDevice::Connect).read(startingAddress, quantity);
+	}
+
+	@Override
+	public boolean[] readDiscreteInputs(short unitId, int startingAddress, int quantity)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		setUnitIdentifier(unitId);
+		return new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::ReadDiscreteInputs,
+			mbDevice::Connect).read(startingAddress, quantity);
+	}
+
+	@Override
+	public boolean[] readCoils(short unitId, int startingAddress, int quantity)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		setUnitIdentifier(unitId);
+		return new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::ReadCoils,
+			mbDevice::Connect).read(startingAddress, quantity);
+	}
+
+	@Override
+	public void writeMultipleCoils(short unitId, int startingAdress, boolean[] values)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		setUnitIdentifier(unitId);
+		new ModbusCallHandler<>(
+			 mbDevice,
+			 mbDevice::WriteMultipleCoils,
+			 mbDevice::Connect).write(startingAdress, values);
+	}
+
+	@Override
+	public void writeSingleCoil(short unitId, int startingAdress, boolean value)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		setUnitIdentifier(unitId);
+		new ModbusCallHandler<>(
+			 mbDevice,
+			 mbDevice::WriteSingleCoil,
+			 mbDevice::Connect).write(startingAdress, value);
+	}
+
+	@Override
+	public void writeMultipleRegisters(short unitId, int startingAdress, int[] values)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		setUnitIdentifier(unitId);
+		new ModbusCallHandler<>(
+			mbDevice,
+			mbDevice::WriteMultipleRegisters,
+			mbDevice::Connect).write(startingAdress, values);
+	}
+
+	@Override
+	public void writeSingleRegister(short unitId, int startingAdress, int value)
+			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
+		setUnitIdentifier(unitId);
 		new ModbusCallHandler<>(
 			mbDevice,
 			mbDevice::WriteSingleRegister,

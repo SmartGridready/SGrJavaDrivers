@@ -41,7 +41,7 @@ java {
 }
 
 // use release versions by default (no suffix)
-def sgr_driver_suffix = '-SNAPSHOT'
+def sgr_driver_suffix = ''
 
 // use snapshots by setting property on commandline, e.g. -Psnapshots=sgr-specification,sgr-driver-api
 if (project.hasProperty("snapshots")) {
