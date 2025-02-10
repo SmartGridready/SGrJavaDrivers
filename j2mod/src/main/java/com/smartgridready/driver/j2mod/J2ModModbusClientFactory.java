@@ -23,6 +23,7 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
     private static final boolean DEFAULT_RTU_OVER_TCP = false;  // not supported by SGr spec
     private static final boolean DEFAULT_ECHO = false;
     private static final int DEFAULT_BAUD = 19200;
+    private static final boolean DEFAULT_IS_ASCII = false;
 
     
     @Override
@@ -69,7 +70,17 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) {
         return new J2ModModbusClient<>(
             new ModbusSerialMaster(
-                getSerialParameters(comPort, baudRate, parity, dataBits, stopBits),
+                getSerialParameters(comPort, baudRate, parity, dataBits, stopBits, DEFAULT_IS_ASCII),
+                DEFAULT_TIMEOUT
+            )
+        );
+    }
+
+    @Override
+    public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits, boolean asciiEncoding) {
+        return new J2ModModbusClient<>(
+            new ModbusSerialMaster(
+                getSerialParameters(comPort, baudRate, parity, dataBits, stopBits, asciiEncoding),
                 DEFAULT_TIMEOUT
             )
         );
@@ -103,7 +114,7 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
-    private static SerialParameters getSerialParameters(String portName, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) {
+    private static SerialParameters getSerialParameters(String portName, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits, boolean asciiEncoding) {
 		SerialParameters params = new SerialParameters(
 			portName,
 			baudRate,
@@ -115,25 +126,24 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
 			DEFAULT_ECHO
 		);
 
-        // TODO option to set ASCII
-        params.setEncoding(Modbus.SERIAL_ENCODING_RTU);
+        params.setEncoding(asciiEncoding ? Modbus.SERIAL_ENCODING_ASCII : Modbus.SERIAL_ENCODING_RTU);
 
         return params;
 	}
 
     private static SerialParameters getSerialParameters(String portName, int baudRate, Parity parity, DataBits dataBits) {
-        return getSerialParameters(portName, baudRate, parity, dataBits, StopBits.ONE);
+        return getSerialParameters(portName, baudRate, parity, dataBits, StopBits.ONE, DEFAULT_IS_ASCII);
     }
 
     private static SerialParameters getSerialParameters(String portName, int baudRate, Parity parity) {
-        return getSerialParameters(portName, baudRate, parity, DataBits.EIGHT, StopBits.ONE);
+        return getSerialParameters(portName, baudRate, parity, DataBits.EIGHT, StopBits.ONE, DEFAULT_IS_ASCII);
     }
 
     private static SerialParameters getSerialParameters(String portName, int baudRate) {
-        return getSerialParameters(portName, baudRate, Parity.NONE, DataBits.EIGHT, StopBits.ONE);
+        return getSerialParameters(portName, baudRate, Parity.NONE, DataBits.EIGHT, StopBits.ONE, DEFAULT_IS_ASCII);
     }
 
     private static SerialParameters getSerialParameters(String portName) {
-        return getSerialParameters(portName, DEFAULT_BAUD, Parity.NONE, DataBits.EIGHT, StopBits.ONE);
+        return getSerialParameters(portName, DEFAULT_BAUD, Parity.NONE, DataBits.EIGHT, StopBits.ONE, DEFAULT_IS_ASCII);
     }
 }
