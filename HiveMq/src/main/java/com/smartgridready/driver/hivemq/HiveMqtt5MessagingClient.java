@@ -15,7 +15,6 @@ import com.hivemq.client.mqtt.mqtt5.message.unsubscribe.unsuback.Mqtt5UnsubAck;
 import com.smartgridready.driver.api.messaging.GenMessagingClient;
 import com.smartgridready.driver.api.messaging.MessageFilterHandler;
 import com.smartgridready.driver.api.messaging.model.Message;
-import com.smartgridready.driver.hivemq.helper.JsonHelper;
 import com.smartgridready.driver.hivemq.security.NonValidatingHostnameVerifier;
 import com.smartgridready.driver.hivemq.security.NonValidatingTrustManagerFactory;
 import com.smartgridready.driver.api.messaging.model.authentication.MessageBrokerAuthentication;
