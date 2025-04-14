@@ -1,11 +1,19 @@
 package com.smartgridready.driver.apachehttp;
 
 import com.smartgridready.driver.api.http.GenHttpResponse;
+import com.smartgridready.driver.apachehttp.security.NonValidatingHostnameVerifier;
 import com.smartgridready.driver.api.http.GenHttpRequest;
 import com.smartgridready.driver.api.http.HttpMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.fluent.Request;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpHeaders;
@@ -16,6 +24,8 @@ import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.apache.hc.core5.ssl.SSLInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +33,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -30,9 +43,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.net.ssl.SSLContext;
+
 public class ApacheHttpRequest implements GenHttpRequest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpRequest.class);
+
+    private HttpClientConnectionManager clientConnectionManager;
 
     private HttpMethod httpMethod;
 
@@ -57,6 +74,34 @@ public class ApacheHttpRequest implements GenHttpRequest {
 
         BODY_ENCODE_MAP.put(ContentType.TEXT_PLAIN.getMimeType(), ApacheHttpRequest::encodeStringBody);
         BODY_ENCODE_MAP.put(ContentType.APPLICATION_JSON.getMimeType(), ApacheHttpRequest::encodeStringBody);
+    }
+
+    public ApacheHttpRequest() {
+        this(true);
+    }
+
+    public ApacheHttpRequest(boolean verifyCertificate) {
+        this.clientConnectionManager = null;
+        try {
+			final SSLContext sslContext = verifyCertificate
+				? SSLContexts.createSystemDefault()
+				: SSLContexts.custom()
+			        .loadTrustMaterial(TrustAllStrategy.INSTANCE)
+			        .build();
+
+			final SSLConnectionSocketFactory sslFactory = verifyCertificate
+				? new SSLConnectionSocketFactory(sslContext)
+				: new SSLConnectionSocketFactory(sslContext, NonValidatingHostnameVerifier.getInstance());
+	
+            this.clientConnectionManager = PoolingHttpClientConnectionManagerBuilder
+				.create()
+                .useSystemProperties()
+				.setSSLSocketFactory(sslFactory)
+				.build();
+
+		} catch (SSLInitializationException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			LOG.error("SSL initialization error", e);
+		}
     }
 
     @Override
@@ -85,26 +130,30 @@ public class ApacheHttpRequest implements GenHttpRequest {
             bodyEncodeFunct.apply(httpReq, body, requestContentType);
         }
 
-        HttpResponse httpResp = httpReq.execute().returnResponse();
+        HttpResponse httpResp = httpReq.execute(buildClient()).returnResponse();
         if ((httpResp.getCode() >= HttpStatus.SC_OK) && (httpResp.getCode() < HttpStatus.SC_CLIENT_ERROR)) {
             try (InputStream is = ((ClassicHttpResponse)httpResp).getEntity().getContent()) {
 
                 String contentTypeStr = ((ClassicHttpResponse)httpResp).getEntity().getContentType();
                 ContentType contentType = (contentTypeStr != null) ? ContentType.parse(contentTypeStr) : ContentType.DEFAULT_TEXT;
-
+                
                 String content = IOUtils.toString(is, contentType.getCharset());
                 return GenHttpResponse.of(content, httpResp.getCode(), httpResp.getReasonPhrase());
             }
         } else {
             var response = (ClassicHttpResponse)httpResp;
             var errorMsg = "";
+            var statusCode = 0;
             try {
+                statusCode = httpResp.getCode();
                 errorMsg = String.format("%s: %s", httpResp.getReasonPhrase(), response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "");
             } catch (ParseException e) {
                 errorMsg = String.format("%s: %s: %s", httpResp.getReasonPhrase(), "Parse error while parsing error response from http server", e.getMessage());
+            } finally {
+                response.close();
             }
             LOG.error("Http Server response error: {}", errorMsg);
-            return GenHttpResponse.of("", httpResp.getCode(), errorMsg);
+            return GenHttpResponse.of("", statusCode, errorMsg);
         }
     }
 
@@ -150,6 +199,18 @@ public class ApacheHttpRequest implements GenHttpRequest {
         return requestContentType;
     }
 
+    private CloseableHttpClient buildClient() {
+        HttpClientBuilder builder = HttpClients
+            .custom()
+            .useSystemProperties();
+        
+        if (clientConnectionManager != null) {
+            builder = builder.setConnectionManager(clientConnectionManager);
+        }
+        
+        return builder.build();
+    }
+
     static Request encodeStringBody(Request httpReq, String content, ContentType contentType) {
         return httpReq.body(new StringEntity(content, contentType));
     }
@@ -159,5 +220,4 @@ public class ApacheHttpRequest implements GenHttpRequest {
     private interface Function31<A, B, C, R> {
         R apply(A a, B b, C c);
     }
-
 }

@@ -33,6 +33,11 @@ public class ApacheHttpClientFactory implements GenHttpClientFactory {
 	}
 
 	@Override
+	public GenHttpRequest createHttpRequest(boolean verifyCertificate) {
+		return new ApacheHttpRequest(verifyCertificate);
+	}
+
+	@Override
 	public GenUriBuilder createUriBuilder(String baseUri) throws URISyntaxException {
 		return new ApacheUriBuilder(baseUri);
 	}
