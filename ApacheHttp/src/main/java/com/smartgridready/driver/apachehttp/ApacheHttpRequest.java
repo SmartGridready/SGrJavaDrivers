@@ -95,7 +95,6 @@ public class ApacheHttpRequest implements GenHttpRequest {
 	
             this.clientConnectionManager = PoolingHttpClientConnectionManagerBuilder
 				.create()
-                .useSystemProperties()
 				.setSSLSocketFactory(sslFactory)
 				.build();
 
