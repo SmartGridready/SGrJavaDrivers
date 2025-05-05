@@ -5,6 +5,9 @@ import java.util.Map;
 
 import de.re.easymodbus.datatypes.Parity;
 
+/**
+ * Maps the {@code com.smartgridready.driver.api.modbus.Parity} enumerations to EasyModbus equivalent.
+ */
 public class ParityMapper {
 	
 	private static final Map<com.smartgridready.driver.api.modbus.Parity, Parity> PARITY_MAP = new HashMap<>();
@@ -17,6 +20,11 @@ public class ParityMapper {
 	
 	private ParityMapper() {};
 	
+	/**
+	 * Maps parity value.
+	 * @param genParity the parity value
+	 * @return an instance of {@code Parity}
+	 */
 	public static Parity map(com.smartgridready.driver.api.modbus.Parity genParity) {
 		return PARITY_MAP.getOrDefault(genParity, Parity.None);		
 	}

@@ -34,6 +34,9 @@ import jssc.SerialPortTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Implements a Modbus call handler.
+ */
 public class ModbusCallHandler<T, U, R> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ModbusCallHandler.class);

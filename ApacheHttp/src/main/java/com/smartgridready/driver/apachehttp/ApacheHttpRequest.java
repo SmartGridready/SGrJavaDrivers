@@ -45,6 +45,9 @@ import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLContext;
 
+/**
+ * Implements an HTTP request.
+ */
 public class ApacheHttpRequest implements GenHttpRequest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApacheHttpRequest.class);
@@ -76,10 +79,18 @@ public class ApacheHttpRequest implements GenHttpRequest {
         BODY_ENCODE_MAP.put(ContentType.APPLICATION_JSON.getMimeType(), ApacheHttpRequest::encodeStringBody);
     }
 
+    /**
+     * Construct.
+     */
     public ApacheHttpRequest() {
         this(true);
     }
 
+    /**
+     * Construct.
+     * Can turn SSL certificate verification off.
+     * @param verifyCertificate verify certificate if true, otherwise do not
+     */
     public ApacheHttpRequest(boolean verifyCertificate) {
         this.clientConnectionManager = null;
         try {
@@ -103,6 +114,11 @@ public class ApacheHttpRequest implements GenHttpRequest {
 		}
     }
 
+    /**
+     * Executes the request and delivers the response.
+     * @return a new instance of {@code GenHttpResponse}
+     * @throws IOException when the request failed
+     */
     @Override
     public GenHttpResponse execute() throws IOException {
 
@@ -156,27 +172,50 @@ public class ApacheHttpRequest implements GenHttpRequest {
         }
     }
 
+    /**
+     * Sets the request URI.
+     * @param uri the URI
+     * @return the same instance of {@code ApacheHttpRequest}
+     */
     @Override
     public GenHttpRequest setUri(URI uri) {
         this.uri = uri;
         return this;
     }
 
+    /**
+     * Sets the HTTP method.
+     * @param httpMethod the HTTP method
+     */
     @Override
     public void setHttpMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
     }
 
+    /**
+     * Adds a request header.
+     * @param key the header name
+     * @param value the header value
+     */
     @Override
     public void addHeader(String key, String value) {
         this.headers.put(key, value);
     }
 
+    /**
+     * Sets the request body.
+     * @param body the request body as string
+     */
     @Override
     public void setBody(String body) {
         this.body = body;
     }
 
+    /**
+     * Adds a form parameter to the request.
+     * @param key the parameter name
+     * @param value the parameter value
+     */
     @Override
     public void addFormParam(String key, String value ) {
         this.formParams.put(key, value);

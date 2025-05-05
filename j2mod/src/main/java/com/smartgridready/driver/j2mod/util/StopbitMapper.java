@@ -5,6 +5,9 @@ import java.util.Map;
 
 import com.ghgande.j2mod.modbus.net.AbstractSerialConnection;
 
+/**
+ * Maps the {@code com.smartgridready.driver.api.modbus.StopBits} enumerations to j2mod equivalent.
+ */
 public class StopbitMapper {
 
 	private static final Map<com.smartgridready.driver.api.modbus.StopBits, Integer> STOPBIT_MAP = new HashMap<>();
@@ -17,6 +20,11 @@ public class StopbitMapper {
 	
 	private StopbitMapper() {};
 	
+	/**
+	 * Maps stop bits value.
+	 * @param genStopBit the stop bits value
+	 * @return an integer
+	 */
 	public static Integer map(com.smartgridready.driver.api.modbus.StopBits genStopBit) {
 		return STOPBIT_MAP.getOrDefault(genStopBit, AbstractSerialConnection.ONE_STOP_BIT);
 	}

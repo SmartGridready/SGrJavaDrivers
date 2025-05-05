@@ -3,6 +3,9 @@ package com.smartgridready.driver.j2mod.util;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Maps the {@code com.smartgridready.driver.api.modbus.DataBits} enumerations to j2mod equivalent.
+ */
 public class DatabitMapper {
 
 	private static final Map<com.smartgridready.driver.api.modbus.DataBits, Integer> DATABIT_MAP = new HashMap<>();
@@ -14,6 +17,11 @@ public class DatabitMapper {
 	
 	private DatabitMapper() {};
 	
+	/**
+	 * Maps data bits value.
+	 * @param genDataBit the data bits value
+	 * @return an integer
+	 */
 	public static Integer map(com.smartgridready.driver.api.modbus.DataBits genDataBit) {
 		return DATABIT_MAP.getOrDefault(genDataBit, 8);
 	}

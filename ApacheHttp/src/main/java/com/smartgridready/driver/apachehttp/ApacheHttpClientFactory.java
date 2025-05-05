@@ -25,18 +25,42 @@ import java.net.URISyntaxException;
 
 import com.smartgridready.driver.api.http.GenHttpClientFactory;
 
+/**
+ * Implements an HTTP request factory.
+ */
 public class ApacheHttpClientFactory implements GenHttpClientFactory {
 
+	/**
+	 * Construct.
+	 */
+	public ApacheHttpClientFactory() {}
+
+	/**
+	 * Creates a new request.
+	 * @return a new instance of {@code ApacheHttpRequest}
+	 */
 	@Override
 	public GenHttpRequest createHttpRequest() {
 		return new ApacheHttpRequest();
 	}
 
+	/**
+	 * Creates a new request.
+	 * Can turn off HTTPS certificate verification.
+	 * @param verifyCertificate verify certificate if true, otherwise do not
+	 * @return a new instance of {@code ApacheHttpRequest}
+	 */
 	@Override
 	public GenHttpRequest createHttpRequest(boolean verifyCertificate) {
 		return new ApacheHttpRequest(verifyCertificate);
 	}
 
+	/**
+	 * Creates an URI builder.
+	 * @param baseUri the URI to begin with
+	 * @return a new instance of {@code ApacheUriBuilder}
+	 * @throws URISyntaxException when base URI is invalid
+	 */
 	@Override
 	public GenUriBuilder createUriBuilder(String baseUri) throws URISyntaxException {
 		return new ApacheUriBuilder(baseUri);

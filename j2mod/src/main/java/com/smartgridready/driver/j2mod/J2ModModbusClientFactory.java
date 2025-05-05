@@ -15,6 +15,9 @@ import com.smartgridready.driver.j2mod.util.DatabitMapper;
 import com.smartgridready.driver.j2mod.util.ParityMapper;
 import com.smartgridready.driver.j2mod.util.StopbitMapper;
 
+/**
+ * Implements a Modbus interface driver factory based on j2mod.
+ */
 public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
 
     private static final int DEFAULT_TIMEOUT = 5000;
@@ -25,7 +28,16 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
     private static final int DEFAULT_BAUD = 19200;
     private static final boolean DEFAULT_IS_ASCII = false;
 
-    
+    /**
+     * Construct.
+     */
+    public J2ModModbusClientFactory() {}
+
+    /**
+     * Creates a serial Modbus RTU transport.
+     * @param comPort the serial port name
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort) {
         return new J2ModModbusClient<>(
@@ -36,6 +48,12 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a serial Modbus RTU transport.
+     * @param comPort the serial port name
+     * @param baudRate the serial port baud rate
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate) {
         return new J2ModModbusClient<>(
@@ -46,6 +64,13 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a serial Modbus RTU transport.
+     * @param comPort the serial port name
+     * @param baudRate the serial port baud rate
+     * @param parity the serial port parity
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity) {
         return new J2ModModbusClient<>(
@@ -56,6 +81,14 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a serial Modbus RTU transport.
+     * @param comPort the serial port name
+     * @param baudRate the serial port baud rate
+     * @param parity the serial port parity
+     * @param dataBits the serial port data bits
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits) {
         return new J2ModModbusClient<>(
@@ -66,6 +99,15 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a serial Modbus RTU transport.
+     * @param comPort the serial port name
+     * @param baudRate the serial port baud rate
+     * @param parity the serial port parity
+     * @param dataBits the serial port data bits
+     * @param stopBits the serial port stop bits
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) {
         return new J2ModModbusClient<>(
@@ -76,6 +118,16 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a serial Modbus RTU transport.
+     * @param comPort the serial port name
+     * @param baudRate the serial port baud rate
+     * @param parity the serial port parity
+     * @param dataBits the serial port data bits
+     * @param stopBits the serial port stop bits
+     * @param asciiEncoding use ASCII encoding if true, otherwise RTU encoding
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits, boolean asciiEncoding) {
         return new J2ModModbusClient<>(
@@ -86,6 +138,11 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a Modbus TCP transport.
+     * @param ipAddress the IP address or host name
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createTcpTransport(String ipAddress) {
         return new J2ModModbusClient<>(
@@ -93,6 +150,12 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a Modbus TCP transport.
+     * @param ipAddress the IP address or host name
+     * @param port the TCP port
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createTcpTransport(String ipAddress, int port) {
         return new J2ModModbusClient<>(
@@ -100,6 +163,11 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a Modbus UDP transport.
+     * @param ipAddress the IP address or host name
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createUdpTransport(String ipAddress) {
         return new J2ModModbusClient<>(
@@ -107,6 +175,12 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
         );
     }
 
+    /**
+     * Creates a Modbus UDP transport.
+     * @param ipAddress the IP address or host name
+     * @param port the UDP port
+     * @return a new instance of {@code J2ModModbusClient}
+     */
     @Override
     public GenDriverAPI4Modbus createUdpTransport(String ipAddress, int port) {
         return new J2ModModbusClient<>(

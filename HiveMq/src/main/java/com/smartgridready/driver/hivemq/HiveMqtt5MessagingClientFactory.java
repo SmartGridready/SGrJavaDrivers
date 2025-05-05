@@ -8,8 +8,21 @@ import com.smartgridready.driver.api.messaging.GenMessagingClientFactory;
 import com.smartgridready.driver.api.messaging.model.MessagingInterfaceDescription;
 import com.smartgridready.driver.api.messaging.model.MessagingPlatformType;
 
+/**
+ * Implements a messaging client factory which provides HiveMQ MQTT clients.
+ */
 public class HiveMqtt5MessagingClientFactory implements GenMessagingClientFactory {
 
+    /**
+     * Construct.
+     */
+    public HiveMqtt5MessagingClientFactory() {}
+
+    /**
+     * Factory method to create a new instance of the messaging client.
+     * @param interfaceDescription Describes the messaging interface and it's parameters
+     * @return A new instance of {@code HiveMqtt5MessagingClient}
+     */
     @Override
     public GenMessagingClient create(MessagingInterfaceDescription interfaceDescription) {
 
@@ -30,6 +43,10 @@ public class HiveMqtt5MessagingClientFactory implements GenMessagingClientFactor
         return new HiveMqtt5MessagingClient(interfaceDescription);
     }
 
+    /**
+     * Gets the messaging platforms supported by the implementation.
+     * @return a set of {@code MessagingPlatformType}
+     */
     @Override
     public Set<MessagingPlatformType> getSupportedPlatforms() {
         return Collections.singleton(MessagingPlatformType.MQTT5);
