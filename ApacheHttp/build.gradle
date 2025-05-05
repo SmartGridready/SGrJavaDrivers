@@ -73,6 +73,7 @@ test {
 publishing {
     java {
         withSourcesJar()
+        withJavadocJar()
     }
 
     repositories {

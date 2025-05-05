@@ -173,8 +173,7 @@ public class ModbusClient
         /**
         * Connects to ModbusServer with serial connection
         * @param comPort  used Com-Port
-        * @throws UnknownHostException
-        * @throws IOException
+        * @throws SerialPortException
         */   
 	public void Connect(String comPort) throws SerialPortException
 	{
@@ -581,7 +580,7 @@ public class ModbusClient
 
    	/**
     * Converts a String to 16 - Bit Registers
-    * @param stringToConvert String to Convert<
+    * @param stringToConvert String to Convert
     * @return Converted String
     */
     public static int[] ConvertStringToRegisters(String stringToConvert)

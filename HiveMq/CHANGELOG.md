@@ -7,9 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- added Javadoc code documentation
+
 ### Changed
 
 - updated driver-api
+
+
+## [2.0.1] - 2025-04-14
+
+### Fixed
+
+- removed JSON dependency
 
 
 ## [2.0.0] - 2024-11-28
