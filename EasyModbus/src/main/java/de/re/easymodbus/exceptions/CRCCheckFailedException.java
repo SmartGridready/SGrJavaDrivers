@@ -23,16 +23,23 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package de.re.easymodbus.exceptions;
 
 /**
- *
+ * Implements a CRC check exception.
  * @author Stefan Roßmann
  */
 @SuppressWarnings("serial")
 public class CRCCheckFailedException extends de.re.easymodbus.exceptions.ModbusException
 {
+  /**
+   * Construct.
+   */
   public CRCCheckFailedException()
   {
   }
 
+  /**
+   * Construct.
+   * @param s the error message
+   */
   public CRCCheckFailedException( String s )
   {
     super( s );

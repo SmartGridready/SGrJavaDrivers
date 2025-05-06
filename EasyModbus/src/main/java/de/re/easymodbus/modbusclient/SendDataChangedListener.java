@@ -21,6 +21,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.re.easymodbus.modbusclient;
 
+/**
+ * Defines the interface of a listener for sent data.
+ */
 public interface SendDataChangedListener {
-	 void SendDataChanged();
+	
+	/**
+	 * Handles sent data.
+	 */
+	void SendDataChanged();
 }

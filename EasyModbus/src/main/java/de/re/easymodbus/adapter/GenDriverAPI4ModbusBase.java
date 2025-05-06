@@ -26,17 +26,25 @@ import com.smartgridready.driver.api.common.GenDriverException;
 import com.smartgridready.driver.api.modbus.GenDriverModbusException;
 import com.smartgridready.driver.api.modbus.GenDriverSocketException;
 
-import de.re.easymodbus.exceptions.ModbusException;
 import de.re.easymodbus.modbusclient.ModbusClient;
 
 /*   AUTHOR: IBT / Chris Broennimann for Verein SmartGridready
  * This file hosts the interface from the CommHandler4Modbus implementation into any modbus driver linked to
  */
 
+/**
+ * Implements the base class of Modbus driver implementations.
+ */
 abstract class GenDriverAPI4ModbusBase implements GenDriverAPI4Modbus {
 
+	/**
+	 * The EasyModbus client instance.
+	 */
 	protected final ModbusClient mbDevice;
 
+	/**
+	 * Construct.
+	 */
 	protected GenDriverAPI4ModbusBase() {
 		mbDevice = new ModbusClient();
 	}

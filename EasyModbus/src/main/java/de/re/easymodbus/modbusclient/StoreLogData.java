@@ -12,7 +12,6 @@ import java.io.StringWriter;
  * 
  * @author Stefan Rossmann
  */
-
 public class StoreLogData 
 {
 	
@@ -23,7 +22,7 @@ public class StoreLogData
 
     /**
     * Default constructor
-    * @throws IOException
+    * @throws IOException when an I/O error occurred
     */  	
 	private StoreLogData ()
 	{
@@ -92,6 +91,10 @@ public class StoreLogData
 		}	
 	}
 	
+	/**
+	 * Sets the store file name.
+	 * @param filename the file name
+	 */
 	public void setFilename(String filename)
 	{
 		this.filename = filename;
@@ -100,6 +103,7 @@ public class StoreLogData
 
     /**
     * Returns the instance of the class (Singleton)
+	* @return an instance of {@code StoreLogData}
     */  
 	public static synchronized StoreLogData getInstance ()
 	{

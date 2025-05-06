@@ -1,4 +1,12 @@
 package de.re.easymodbus.datatypes;
 
-public enum RegisterOrder { LowHigh, HighLow };
-
+/**
+ * Defines an enumeration of register order options.
+ */
+public enum RegisterOrder
+{
+    /** LSB first. */
+    LowHigh,
+    /** MSB first. */
+    HighLow
+}

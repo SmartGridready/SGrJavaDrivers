@@ -25,8 +25,16 @@ use their own Modbus TCP drivers
  * This file hosts the interface from the CommHandler4Modbus implementation into any modbus driver linked to 
  */
 
+/**
+ * Implements a Modbus UDP driver.
+ */
 public class GenDriverAPI4ModbusUDP extends GenDriverAPI4ModbusBase {
 
+	/**
+	 * Construct.
+	 * @param sIP4Address the IP address
+	 * @param iPort the UDP port
+	 */
 	public GenDriverAPI4ModbusUDP(String sIP4Address, int iPort) {
 		super();
 		mbDevice.setipAddress(sIP4Address);
@@ -34,6 +42,10 @@ public class GenDriverAPI4ModbusUDP extends GenDriverAPI4ModbusBase {
 		mbDevice.setUDPFlag(true);
 	}
 
+	/**
+	 * Construct.
+	 * @param sIP4Address the IP address
+	 */
 	public GenDriverAPI4ModbusUDP(String sIP4Address) {
 		this(sIP4Address, 502);
 	}

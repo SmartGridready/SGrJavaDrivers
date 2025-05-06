@@ -23,16 +23,23 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package de.re.easymodbus.exceptions;
 
 /**
- *
+ * Implements a Modbus protocol exception.
  * @author Stefan Rossmann
  */
 @SuppressWarnings("serial")
 public class ModbusException extends Exception
 {
+  /**
+   * Construct.
+   */
   public ModbusException()
   {
   }
 
+  /**
+   * Construct.
+   * @param s the error message
+   */
   public ModbusException( String s )
   {
     super( s );
