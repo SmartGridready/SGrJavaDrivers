@@ -379,7 +379,7 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
 	/**
 	 * Converts integer values to registers.
 	 * @param values an array of int
-	 * @return an array of {@code Register}
+	 * @return an array of {@link Register}
 	 */
 	protected static Register[] convertValuesToRegisters(int[] values) {
 		Register[] registers = new Register[values.length];
@@ -406,7 +406,7 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
 	/**
 	 * Converts boolean values to a bit vector.
 	 * @param values an array of boolean
-	 * @return an instance of {@code BitVector}
+	 * @return an instance of {@link BitVector}
 	 */
 	protected static BitVector convertValuesToBitVector(boolean[] values) {
 		int n = values.length;

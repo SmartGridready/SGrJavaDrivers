@@ -103,7 +103,7 @@ public class StoreLogData
 
     /**
     * Returns the instance of the class (Singleton)
-	* @return an instance of {@code StoreLogData}
+	* @return an instance of {@link StoreLogData}
     */  
 	public static synchronized StoreLogData getInstance ()
 	{

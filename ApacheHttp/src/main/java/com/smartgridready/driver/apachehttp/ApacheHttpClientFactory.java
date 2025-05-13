@@ -37,7 +37,7 @@ public class ApacheHttpClientFactory implements GenHttpClientFactory {
 
 	/**
 	 * Creates a new request.
-	 * @return a new instance of {@code ApacheHttpRequest}
+	 * @return a new instance of {@link ApacheHttpRequest}
 	 */
 	@Override
 	public GenHttpRequest createHttpRequest() {
@@ -48,7 +48,7 @@ public class ApacheHttpClientFactory implements GenHttpClientFactory {
 	 * Creates a new request.
 	 * Can turn off HTTPS certificate verification.
 	 * @param verifyCertificate verify certificate if true, otherwise do not
-	 * @return a new instance of {@code ApacheHttpRequest}
+	 * @return a new instance of {@link ApacheHttpRequest}
 	 */
 	@Override
 	public GenHttpRequest createHttpRequest(boolean verifyCertificate) {
@@ -58,7 +58,7 @@ public class ApacheHttpClientFactory implements GenHttpClientFactory {
 	/**
 	 * Creates an URI builder.
 	 * @param baseUri the URI to begin with
-	 * @return a new instance of {@code ApacheUriBuilder}
+	 * @return a new instance of {@link ApacheUriBuilder}
 	 * @throws URISyntaxException when base URI is invalid
 	 */
 	@Override

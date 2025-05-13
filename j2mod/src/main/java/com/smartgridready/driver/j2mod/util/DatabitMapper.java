@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Maps the {@code com.smartgridready.driver.api.modbus.DataBits} enumerations to j2mod equivalent.
+ * Maps the {@link com.smartgridready.driver.api.modbus.DataBits} enumerations to j2mod equivalent.
  */
 public class DatabitMapper {
 

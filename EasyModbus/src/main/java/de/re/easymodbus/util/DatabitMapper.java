@@ -6,7 +6,7 @@ import java.util.Map;
 import de.re.easymodbus.datatypes.DataBits;
 
 /**
- * Maps the {@code com.smartgridready.driver.api.modbus.DataBits} enumerations to EasyModbus equivalent.
+ * Maps the {@link com.smartgridready.driver.api.modbus.DataBits} enumerations to EasyModbus equivalent.
  */
 public class DatabitMapper {
 	private static final Map<com.smartgridready.driver.api.modbus.DataBits, DataBits> DATABIT_MAP = new HashMap<>();
@@ -21,7 +21,7 @@ public class DatabitMapper {
 	/**
 	 * Maps data bits value.
 	 * @param genDataBit the data bits value
-	 * @return an instance of {@code DataBits}
+	 * @return an instance of {@link DataBits}
 	 */
 	public static DataBits map(com.smartgridready.driver.api.modbus.DataBits genDataBit) {
 		return DATABIT_MAP.getOrDefault(genDataBit, DataBits.Eight);

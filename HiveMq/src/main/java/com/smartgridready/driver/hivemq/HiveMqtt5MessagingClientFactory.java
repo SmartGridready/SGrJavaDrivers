@@ -21,7 +21,7 @@ public class HiveMqtt5MessagingClientFactory implements GenMessagingClientFactor
     /**
      * Factory method to create a new instance of the messaging client.
      * @param interfaceDescription Describes the messaging interface and it's parameters
-     * @return A new instance of {@code HiveMqtt5MessagingClient}
+     * @return A new instance of {@link HiveMqtt5MessagingClient}
      */
     @Override
     public GenMessagingClient create(MessagingInterfaceDescription interfaceDescription) {
@@ -45,7 +45,7 @@ public class HiveMqtt5MessagingClientFactory implements GenMessagingClientFactor
 
     /**
      * Gets the messaging platforms supported by the implementation.
-     * @return a set of {@code MessagingPlatformType}
+     * @return a set of {@link MessagingPlatformType}
      */
     @Override
     public Set<MessagingPlatformType> getSupportedPlatforms() {

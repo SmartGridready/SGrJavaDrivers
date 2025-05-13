@@ -13,7 +13,7 @@ public class NonValidatingHostnameVerifier implements HostnameVerifier {
 
     /**
      * Gets the singleton instance.
-     * @return an instance of {@code NonValidatingHostnameVerifier}
+     * @return an instance of {@link NonValidatingHostnameVerifier}
      */
     public static synchronized HostnameVerifier getInstance() {
         if (instance == null) instance = new NonValidatingHostnameVerifier();

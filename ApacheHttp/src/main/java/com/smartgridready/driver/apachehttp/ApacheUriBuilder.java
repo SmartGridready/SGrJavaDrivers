@@ -27,7 +27,7 @@ public class ApacheUriBuilder implements GenUriBuilder {
     /**
      * Adds a request path.
      * @param path the request path
-     * @return the same instance of {@code ApacheUriBuilder}
+     * @return the same instance of {@link ApacheUriBuilder}
      */
     @Override
     public GenUriBuilder addPath(String path) {
@@ -39,7 +39,7 @@ public class ApacheUriBuilder implements GenUriBuilder {
      * Adds a query parameter.
      * @param name the parameter name
      * @param value the parameter value
-     * @return the same instance of {@code ApacheUriBuilder}
+     * @return the same instance of {@link ApacheUriBuilder}
      */
     @Override
     public GenUriBuilder addQueryParameter(String name, String value) {
@@ -50,7 +50,7 @@ public class ApacheUriBuilder implements GenUriBuilder {
     /**
      * Sets the raw query string, overriding query parameters.
      * @param queryString the raw query string
-     * @return the same instance of {@code ApacheUriBuilder}
+     * @return the same instance of {@link ApacheUriBuilder}
      */
     @Override
     public GenUriBuilder setQueryString(String queryString) {
@@ -61,7 +61,7 @@ public class ApacheUriBuilder implements GenUriBuilder {
 
     /**
      * Builds the final URI.
-     * @return a new instance of {@code URI}
+     * @return a new instance of {@link URI}
      * @throws URISyntaxException when URI cannot be built
      */
     @Override

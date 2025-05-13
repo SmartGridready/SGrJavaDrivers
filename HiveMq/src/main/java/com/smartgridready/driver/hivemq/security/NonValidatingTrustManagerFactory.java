@@ -16,7 +16,7 @@ public class NonValidatingTrustManagerFactory extends TrustManagerFactory {
 
     /**
      * Gets the singleton instance.
-     * @return an instance of {@code NonValidatingTrustManagerFactory}
+     * @return an instance of {@link NonValidatingTrustManagerFactory}
      */
     public static synchronized TrustManagerFactory getInstance() {
         if (instance == null) instance = new NonValidatingTrustManagerFactory();

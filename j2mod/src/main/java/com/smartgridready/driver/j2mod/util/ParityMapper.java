@@ -6,7 +6,7 @@ import java.util.Map;
 import com.ghgande.j2mod.modbus.net.AbstractSerialConnection;
 
 /**
- * Maps the {@code com.smartgridready.driver.api.modbus.Parity} enumerations to j2mod equivalent.
+ * Maps the {@link com.smartgridready.driver.api.modbus.Parity} enumerations to j2mod equivalent.
  */
 public class ParityMapper {
 	

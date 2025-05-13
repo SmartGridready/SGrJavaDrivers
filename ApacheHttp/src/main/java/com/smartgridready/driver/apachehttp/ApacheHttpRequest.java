@@ -116,7 +116,7 @@ public class ApacheHttpRequest implements GenHttpRequest {
 
     /**
      * Executes the request and delivers the response.
-     * @return a new instance of {@code GenHttpResponse}
+     * @return a new instance of {@link GenHttpResponse}
      * @throws IOException when the request failed
      */
     @Override
@@ -175,7 +175,7 @@ public class ApacheHttpRequest implements GenHttpRequest {
     /**
      * Sets the request URI.
      * @param uri the URI
-     * @return the same instance of {@code ApacheHttpRequest}
+     * @return the same instance of {@link ApacheHttpRequest}
      */
     @Override
     public GenHttpRequest setUri(URI uri) {

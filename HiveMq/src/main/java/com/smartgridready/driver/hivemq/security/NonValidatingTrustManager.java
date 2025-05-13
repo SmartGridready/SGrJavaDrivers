@@ -15,7 +15,7 @@ public class NonValidatingTrustManager implements X509TrustManager {
     /**
      * Gets the accepted certificate issues.
      * Always returns null.
-     * @return an array of {@code java.security.cert.X509Certificate}
+     * @return an array of {@link java.security.cert.X509Certificate}
      */
     @Override
     public java.security.cert.X509Certificate[] getAcceptedIssuers() {

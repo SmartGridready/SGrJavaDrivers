@@ -19,7 +19,7 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
     /**
      * Creates a serial Modbus RTU transport.
      * @param comPort the serial port name
-     * @return a new instance of {@code GenDriverAPI4ModbusRTU}
+     * @return a new instance of {@link GenDriverAPI4ModbusRTU}
      */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort) {
@@ -30,7 +30,7 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
      * Creates a serial Modbus RTU transport.
      * @param comPort the serial port name
      * @param baudRate the serial port baud rate
-     * @return a new instance of {@code GenDriverAPI4ModbusRTU}
+     * @return a new instance of {@link GenDriverAPI4ModbusRTU}
      */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate) {
@@ -42,7 +42,7 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
      * @param comPort the serial port name
      * @param baudRate the serial port baud rate
      * @param parity the serial port parity
-     * @return a new instance of {@code GenDriverAPI4ModbusRTU}
+     * @return a new instance of {@link GenDriverAPI4ModbusRTU}
      */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity) {
@@ -55,7 +55,7 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
      * @param baudRate the serial port baud rate
      * @param parity the serial port parity
      * @param dataBits the serial port data bits
-     * @return a new instance of {@code GenDriverAPI4ModbusRTU}
+     * @return a new instance of {@link GenDriverAPI4ModbusRTU}
      */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits) {
@@ -69,7 +69,7 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
      * @param parity the serial port parity
      * @param dataBits the serial port data bits
      * @param stopBits the serial port stop bits
-     * @return a new instance of {@code GenDriverAPI4ModbusRTU}
+     * @return a new instance of {@link GenDriverAPI4ModbusRTU}
      */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) {
@@ -84,7 +84,7 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
      * @param dataBits the serial port data bits
      * @param stopBits the serial port stop bits
      * @param asciiEncoding use ASCII encoding if true, otherwise RTU encoding
-     * @return a new instance of {@code GenDriverAPI4ModbusRTU}
+     * @return a new instance of {@link GenDriverAPI4ModbusRTU}
      */
     @Override
     public GenDriverAPI4Modbus createRtuTransport(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits, boolean asciiEncoding) {
