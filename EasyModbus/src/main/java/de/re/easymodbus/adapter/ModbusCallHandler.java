@@ -34,6 +34,12 @@ import jssc.SerialPortTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Implements a Modbus command handler.
+ * @param <T> the address type
+ * @param <U> the parameter type
+ * @param <R> the result type
+ */
 public class ModbusCallHandler<T, U, R> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ModbusCallHandler.class);
@@ -47,21 +53,68 @@ public class ModbusCallHandler<T, U, R> {
 
 	private int retryCredit = MAX_RETRY;
 
+	/**
+	 * Defines the interface of a Modbus read function.
+	 * @param <T> the first parameter type, usually the starting address
+	 * @param <U> the second parameter type, usually a counter
+	 * @param <R> the return type
+	 */
 	@FunctionalInterface
 	public interface ModbusReadFunction<T, U, R> {
+
+		/**
+		 * Executes the function.
+		 * @param t the first parameter, usually the starting address
+		 * @param u the second parameter, usually a counter
+		 * @return the read data
+		 * @throws ModbusException when a protocol error occurred
+		 * @throws IOException when an I/O error occurred
+		 * @throws SerialPortException when a serial connection error occurred
+		 * @throws SerialPortTimeoutException when the serial connection timed out
+		 */
 		R read(T t, U u) throws ModbusException, IOException, SerialPortException, SerialPortTimeoutException;
 	}
 
+	/**
+	 * Defines the interface of a Modbus write function.
+	 * @param <T> the first parameter type, usually the starting address
+	 * @param <U> the second parameter type, usually the values to write
+	 */
 	@FunctionalInterface
 	public interface ModbusWriteFunction<T, U> {
+
+		/**
+		 * Executes the function.
+		 * @param t the first parameter, usually the starting address
+		 * @param u the second parameter, usually the values to write
+		 * @throws ModbusException when a protocol error occurred
+		 * @throws IOException when an I/O error occurred
+		 * @throws SerialPortException when a serial connection error occurred
+		 * @throws SerialPortTimeoutException when the serial connection timed out
+		 */
 		void write(T t, U u) throws ModbusException, IOException, SerialPortException, SerialPortTimeoutException;
 	}
 
+	/**
+	 * Defines the interface of a connect function.
+	 */
 	@FunctionalInterface
 	public interface ModbusConnectFunctionTCP {
+
+		/**
+		 * Executes the function.
+		 * @param ipAddress the IP address
+		 * @param port the TCP port
+		 * @throws IOException when the connection failed
+		 */
 		void apply(String ipAddress, int port) throws IOException;
 	}
 
+	/**
+	 * Construct a read command handler.
+	 * @param modbusClient the Modbus client
+	 * @param readFunction the read function
+	 */
 	public ModbusCallHandler(
 			ModbusClient modbusClient,
 			ModbusReadFunction<T, U, R> readFunction) {
@@ -71,6 +124,11 @@ public class ModbusCallHandler<T, U, R> {
 		this.connectFunction = null;
 	}
 
+	/**
+	 * Construct a write command handler.
+	 * @param modbusClient the Modbus client
+	 * @param writeFunction the write function
+	 */
 	public ModbusCallHandler(
 			ModbusClient modbusClient,
 			ModbusWriteFunction<T, U> writeFunction) {
@@ -80,6 +138,12 @@ public class ModbusCallHandler<T, U, R> {
 		this.connectFunction = null;
 	}
 
+	/**
+	 * Construct a connect command handler.
+	 * @param modbusClient the Modbus client
+	 * @param readFunction the read function
+	 * @param connectFunction the connect function
+	 */
 	public ModbusCallHandler(
 			ModbusClient modbusClient,
 			ModbusReadFunction<T, U, R> readFunction,
@@ -90,6 +154,12 @@ public class ModbusCallHandler<T, U, R> {
 		this.connectFunction = connectFunction;
 	}
 
+	/**
+	 * Construct a connect command handler.
+	 * @param modbusClient the Modbus client
+	 * @param writeFunction the write function
+	 * @param connectFunction the connect function
+	 */
 	public ModbusCallHandler(
 			ModbusClient modbusClient,
 			ModbusWriteFunction<T, U> writeFunction,
@@ -100,6 +170,15 @@ public class ModbusCallHandler<T, U, R> {
 		this.connectFunction = connectFunction;
 	}
 
+	/**
+	 * Performs a read command.
+	 * @param address the starting address
+	 * @param parameter the command parameter
+	 * @return a read result
+	 * @throws GenDriverException when a general error occurred
+	 * @throws GenDriverSocketException when a network error occurred
+	 * @throws GenDriverModbusException when a protocol error occurred
+	 */
 	public R read(T address, U parameter)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 		String msgTemplate = "Modbus read error: %s";
@@ -120,6 +199,14 @@ public class ModbusCallHandler<T, U, R> {
 		}
 	}
 
+	/**
+	 * Performs a write command.
+	 * @param address the starting address
+	 * @param parameter the command parameter
+	 * @throws GenDriverException when a general error occurred
+	 * @throws GenDriverSocketException when a network error occurred
+	 * @throws GenDriverModbusException when a protocol error occurred
+	 */
 	public void write(T address, U parameter)
 			throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
 

@@ -5,6 +5,9 @@ import java.util.Map;
 
 import com.ghgande.j2mod.modbus.net.AbstractSerialConnection;
 
+/**
+ * Maps the {@link com.smartgridready.driver.api.modbus.Parity} enumerations to j2mod equivalent.
+ */
 public class ParityMapper {
 	
 	private static final Map<com.smartgridready.driver.api.modbus.Parity, Integer> PARITY_MAP = new HashMap<>();
@@ -17,6 +20,11 @@ public class ParityMapper {
 	
 	private ParityMapper() {};
 	
+	/**
+	 * Maps parity value.
+	 * @param genParity the parity value
+	 * @return an integer
+	 */
 	public static Integer map(com.smartgridready.driver.api.modbus.Parity genParity) {
 		return PARITY_MAP.getOrDefault(genParity, AbstractSerialConnection.NO_PARITY);		
 	}

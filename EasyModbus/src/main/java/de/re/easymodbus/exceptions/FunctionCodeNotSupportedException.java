@@ -23,16 +23,23 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package de.re.easymodbus.exceptions;
 
 /**
- *
+ * Implements a Modbus function code exception.
  * @author Stefan Roßmann
  */
 @SuppressWarnings("serial")
 public class FunctionCodeNotSupportedException extends de.re.easymodbus.exceptions.ModbusException
 {
+  /**
+   * Construct.
+   */
   public FunctionCodeNotSupportedException()
   {
   }
 
+  /**
+   * Construct.
+   * @param s the error message
+   */
   public FunctionCodeNotSupportedException( String s )
   {
     super( s );

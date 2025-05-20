@@ -23,14 +23,22 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package de.re.easymodbus.exceptions;
 
 /**
- *
+ * Implements a connection exception.
  * @author Stefan Roßmann
  */
 @SuppressWarnings("serial")
 public class ConnectionException extends de.re.easymodbus.exceptions.ModbusException {
+
+  /**
+   * Construct.
+   */
   public ConnectionException() {
   }
 
+  /**
+   * Construct.
+   * @param s the error message
+   */
   public ConnectionException(String s) {
     super(s);
   }

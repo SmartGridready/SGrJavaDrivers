@@ -45,13 +45,17 @@ import jssc.SerialPortTimeoutException;
 
 
 
-     /**
-     * @author Stefan Roßmann
-     */
+/**
+ * Implements a Modbus client.
+ * 
+ * @author Stefan Roßmann
+ */
 public class ModbusClient 
 {
 	private Socket tcpClientSocket = new Socket();
+	/** The default IP. */
 	protected String ipAddress = "190.201.100.100";
+	/** The default port. */
 	protected int port = 502;
 	private byte [] transactionIdentifier = new byte[2];
 	private byte [] protocolIdentifier = new byte[2];
@@ -66,7 +70,9 @@ public class ModbusClient
 	private int connectTimeout = 1000;
 	private InputStream inStream;
 	private DataOutputStream outStream;
+	/** The receive buffer. */
     public byte[] receiveData;
+	/** The send buffer. */
     public byte[] sendData;  
 	private List<ReceiveDataChangedListener> receiveDataChangedListener = new ArrayList<ReceiveDataChangedListener>();
 	private List<SendDataChangedListener> sendDataChangedListener = new ArrayList<SendDataChangedListener>();
@@ -80,6 +86,11 @@ public class ModbusClient
     private StopBits stopBits = StopBits.One;
     private boolean debug=false;
 	
+	/**
+	 * Construct a TCP client.
+	 * @param ipAddress the IP address
+	 * @param port the TCP port
+	 */
 	public ModbusClient(String ipAddress, int port)
 	{
 		System.out.println("EasyModbus Client Library");
@@ -91,6 +102,9 @@ public class ModbusClient
 		this.port = port;
 	}
 	
+	/**
+	 * Construct.
+	 */
 	public ModbusClient()
 	{
 		System.out.println("EasyModbus Client Library");
@@ -100,6 +114,10 @@ public class ModbusClient
 		if (debug) StoreLogData.getInstance().Store("EasyModbus library initialized for Modbus-TCP");
 	}
 	
+	/**
+	 * Construct.
+	 * @param serialPort the serial port name
+	 */
 	public ModbusClient(String serialPort)
 	{
 		System.out.println("EasyModbus Client Library");
@@ -112,11 +130,11 @@ public class ModbusClient
 		if (debug) StoreLogData.getInstance().Store("Open Serial Port: " + comPort);
 	}
 	
-        /**
-        * Connects to ModbusServer
-        * @throws UnknownHostException
-        * @throws IOException
-        */        
+	/**
+	* Connects to ModbusServer
+	* @throws UnknownHostException when the host could not be resolved
+	* @throws IOException when a network error occurred
+	*/        
 	public void Connect() throws UnknownHostException, IOException
 	{
 		if (!udpFlag && !this.serialflag)
@@ -151,13 +169,13 @@ public class ModbusClient
 		}
 	}
 	
-        /**
-        * Connects to ModbusServer
-        * @param ipAddress  IP Address of Modbus Server to connect to
-        * @param port   Port Modbus Server listenning (standard 502)
-        * @throws UnknownHostException
-        * @throws IOException
-        */   
+	/**
+	* Connects to ModbusServer
+	* @param ipAddress  IP Address of Modbus Server to connect to
+	* @param port   Port Modbus Server listenning (standard 502)
+	* @throws UnknownHostException when the host could not be resolved
+	* @throws IOException when a network error occurred
+	*/   
 	public void Connect(String ipAddress, int port) throws UnknownHostException, IOException
 	{
 		this.ipAddress = ipAddress;
@@ -170,12 +188,11 @@ public class ModbusClient
 		if (debug) StoreLogData.getInstance().Store("Open TCP-Socket, IP-Address: " + ipAddress + ", Port: " + port);
 	}
         
-        /**
-        * Connects to ModbusServer with serial connection
-        * @param comPort  used Com-Port
-        * @throws UnknownHostException
-        * @throws IOException
-        */   
+	/**
+	* Connects to ModbusServer with serial connection
+	* @param comPort  used Com-Port
+	* @throws SerialPortException when the serial connection is broken
+	*/   
 	public void Connect(String comPort) throws SerialPortException
 	{
 		this.serialflag = true;
@@ -191,11 +208,11 @@ public class ModbusClient
 	    serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);		
     }         
 	
-        /**
-        * Convert two 16 Bit Registers to 32 Bit real value
-        * @param        registers   16 Bit Registers
-        * @return       32 bit real value
-        */
+	/**
+	* Convert two 16 Bit Registers to 32 Bit real value
+	* @param        registers   16 Bit Registers
+	* @return       32 bit real value
+	*/
     public static float ConvertRegistersToFloat(int[] registers) throws IllegalArgumentException
     {
         if (registers.length != 2)
@@ -255,12 +272,12 @@ public class ModbusClient
     	return ConvertRegistersToDouble(swappedRegisters);
     }
    
-        /**
-        * Convert two 16 Bit Registers to 32 Bit real value 
-        * @param        registers   16 Bit Registers
-        * @param        registerOrder    High Register first or low Register first 
-        * @return       32 bit real value
-        */
+	/**
+	* Convert two 16 Bit Registers to 32 Bit real value 
+	* @param        registers   16 Bit Registers
+	* @param        registerOrder    High Register first or low Register first 
+	* @return       32 bit real value
+	*/
     public static float ConvertRegistersToFloat(int[] registers, RegisterOrder registerOrder) throws IllegalArgumentException
     {
         int [] swappedRegisters = {registers[0],registers[1]};
@@ -299,6 +316,7 @@ public class ModbusClient
     /**
      * Convert four 16 Bit Registers to 64 Bit long value Register Order "LowHigh": Reg0: Low Word.....Reg3: High Word, "HighLow": Reg0: High Word.....Reg3: Low Word
      * @param        registers   16 Bit Registers
+	 * @param        registerOrder  the register order
      * @return       64 bit value
      */
     public static long ConvertRegistersToLong(int[] registers, RegisterOrder registerOrder) throws IllegalArgumentException
@@ -311,11 +329,11 @@ public class ModbusClient
     	return ConvertRegistersToLong(swappedRegisters);
     }
     
-        /**
-        * Convert two 16 Bit Registers to 32 Bit long value
-        * @param        registers   16 Bit Registers
-        * @return       32 bit value
-        */
+	/**
+	* Convert two 16 Bit Registers to 32 Bit long value
+	* @param        registers   16 Bit Registers
+	* @return       32 bit value
+	*/
     public static int ConvertRegistersToInt(int[] registers) throws IllegalArgumentException
     {
         if (registers.length != 2)
@@ -333,12 +351,12 @@ public class ModbusClient
         return ByteBuffer.wrap(doubleBytes).getInt();
     }
     
-        /**
-        * Convert two 16 Bit Registers to 32 Bit long value
-        * @param        registers   16 Bit Registers
-        * @param        registerOrder    High Register first or low Register first
-        * @return       32 bit value
-        */
+	/**
+	* Convert two 16 Bit Registers to 32 Bit long value
+	* @param        registers   16 Bit Registers
+	* @param        registerOrder    High Register first or low Register first
+	* @return       32 bit value
+	*/
     public static int ConvertRegistersToInt(int[] registers, RegisterOrder registerOrder) throws IllegalArgumentException
     {
         int[] swappedRegisters = { registers[0], registers[1] };
@@ -347,11 +365,11 @@ public class ModbusClient
         return ConvertRegistersToInt(swappedRegisters);
     }
     
-        /**
-        * Convert 32 Bit real Value to two 16 Bit Value to send as Modbus Registers
-        * @param        floatValue      real to be converted
-        * @return       16 Bit Register values
-        */
+	/**
+	* Convert 32 Bit real Value to two 16 Bit Value to send as Modbus Registers
+	* @param        floatValue      real to be converted
+	* @return       16 Bit Register values
+	*/
     public static int[] ConvertFloatToRegisters(float floatValue)
     {
         byte[] floatBytes = toByteArray(floatValue);
@@ -377,12 +395,12 @@ public class ModbusClient
         return returnValue;
     }
     
-        /**
-        * Convert 32 Bit real Value to two 16 Bit Value to send as Modbus Registers
-        * @param        floatValue      real to be converted
-        * @param        registerOrder    High Register first or low Register first
-        * @return       16 Bit Register values
-        */
+	/**
+	* Convert 32 Bit real Value to two 16 Bit Value to send as Modbus Registers
+	* @param        floatValue      real to be converted
+	* @param        registerOrder    High Register first or low Register first
+	* @return       16 Bit Register values
+	*/
     public static int[] ConvertFloatToRegisters(float floatValue, RegisterOrder registerOrder)
     {
         int[] registerValues = ConvertFloatToRegisters(floatValue);
@@ -392,11 +410,11 @@ public class ModbusClient
         return returnValue;
     }
     
-        /**
-        * Convert 32 Bit Value to two 16 Bit Value to send as Modbus Registers
-        * @param        intValue      Value to be converted
-        * @return       16 Bit Register values
-        */
+	/**
+	* Convert 32 Bit Value to two 16 Bit Value to send as Modbus Registers
+	* @param        intValue      Value to be converted
+	* @return       16 Bit Register values
+	*/
     public static int[] ConvertIntToRegisters(int intValue)
     {
         byte[] doubleBytes = toByteArrayInt(intValue);
@@ -422,12 +440,12 @@ public class ModbusClient
         return returnValue;
     }
     
-       	/**
-        * Convert 32 Bit Value to two 16 Bit Value to send as Modbus Registers
-        * @param        intValue      Value to be converted
-        * @param        registerOrder    High Register first or low Register first
-        * @return       16 Bit Register values
-        */
+	/**
+	* Convert 32 Bit Value to two 16 Bit Value to send as Modbus Registers
+	* @param        intValue      Value to be converted
+	* @param        registerOrder    High Register first or low Register first
+	* @return       16 Bit Register values
+	*/
     public static int[] ConvertIntToRegisters(int intValue, RegisterOrder registerOrder)
     {
         int[] registerValues = ConvertIntToRegisters(intValue);
@@ -482,7 +500,7 @@ public class ModbusClient
 	     return returnValue;
 	 }
 
-    	/**
+    /**
      * Convert 64 Bit Value to two 16 Bit Value to send as Modbus Registers
      * @param        longValue      Value to be converted
      * @param        registerOrder    High Register first or low Register first
@@ -581,7 +599,7 @@ public class ModbusClient
 
    	/**
     * Converts a String to 16 - Bit Registers
-    * @param stringToConvert String to Convert<
+    * @param stringToConvert String to Convert
     * @return Converted String
     */
     public static int[] ConvertStringToRegisters(String stringToConvert)
@@ -599,7 +617,13 @@ public class ModbusClient
         return returnarray;
     }
 
-    
+    /**
+	 * Calculates a CRC.
+	 * @param data the input
+	 * @param numberOfBytes the number of bytes to process
+	 * @param startByte the start offset
+	 * @return an array of bytes
+	 */
     public static byte[] calculateCRC(byte[] data, int numberOfBytes, int startByte)
         { 
            byte[] auchCRCHi = {
@@ -667,11 +691,11 @@ public class ModbusClient
         * @param        startingAddress      Fist Address to read; Shifted by -1	
         * @param        quantity            Number of Inputs to read
         * @return       Discrete Inputs from Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-        * @throws SerialPortTimeoutException 
-        * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+        * @throws SerialPortTimeoutException when the serial connection timed out 
+        * @throws SerialPortException when the serial connection is broken
         */    
 	public boolean[] ReadDiscreteInputs(int startingAddress, int quantity) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
@@ -825,11 +849,11 @@ public class ModbusClient
         * @param        startingAddress      Fist Address to read; Shifted by -1	
         * @param        quantity            Number of Inputs to read
         * @return       coils from Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-        * @throws SerialPortTimeoutException 
-        * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+        * @throws SerialPortTimeoutException when the serial connection timed out 
+        * @throws SerialPortException when the serial connection is broken
         */
 	public boolean[] ReadCoils(int startingAddress, int quantity) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
@@ -980,11 +1004,11 @@ public class ModbusClient
         * @param        startingAddress      Fist Address to read; Shifted by -1	
         * @param        quantity            Number of Inputs to read
         * @return       Holding Registers from Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-        * @throws SerialPortTimeoutException 
-        * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+        * @throws SerialPortTimeoutException when the serial connection timed out 
+        * @throws SerialPortException when the serial connection is broken
         */
 	public int[] ReadHoldingRegisters(int startingAddress, int quantity) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
@@ -1143,11 +1167,11 @@ public class ModbusClient
         * @param        startingAddress      Fist Address to read; Shifted by -1	
         * @param        quantity            Number of Inputs to read
         * @return       Input Registers from Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-	 * @throws SerialPortTimeoutException 
-	 * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+	 * @throws SerialPortTimeoutException when the serial connection timed out 
+	 * @throws SerialPortException when the serial connection is broken
         */
 	public int[] ReadInputRegisters(int startingAddress, int quantity) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
@@ -1301,11 +1325,11 @@ public class ModbusClient
         * Write Single Coil to Server
         * @param        startingAddress      Address to write; Shifted by -1	
         * @param        value            Value to write to Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-        * @throws SerialPortTimeoutException 
-        * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+        * @throws SerialPortTimeoutException when the serial connection timed out 
+        * @throws SerialPortException when the serial connection is broken
         */
     public void WriteSingleCoil(int startingAddress, boolean value) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
@@ -1441,11 +1465,11 @@ public class ModbusClient
         * Write Single Register to Server
         * @param        startingAddress      Address to write; Shifted by -1	
         * @param        value            Value to write to Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-        * @throws SerialPortTimeoutException 
-        * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+        * @throws SerialPortTimeoutException when the serial connection timed out 
+        * @throws SerialPortException when the serial connection is broken
         */
     public void WriteSingleRegister(int startingAddress, int value) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
@@ -1574,11 +1598,11 @@ public class ModbusClient
         * Write Multiple Coils to Server
         * @param        startingAddress      Firts Address to write; Shifted by -1	
         * @param        values           Values to write to Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-     * @throws SerialPortTimeoutException 
-     * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+     * @throws SerialPortTimeoutException when the serial connection timed out 
+     * @throws SerialPortException when the serial connection is broken
         */
     public void WriteMultipleCoils(int startingAddress, boolean[] values) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
@@ -1725,11 +1749,11 @@ public class ModbusClient
         * Write Multiple Registers to Server
         * @param        startingAddress      Firts Address to write; Shifted by -1	
         * @param        values           Values to write to Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-        * @throws SerialPortTimeoutException 
-        * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+        * @throws SerialPortTimeoutException when the serial connection timed out 
+        * @throws SerialPortException when the serial connection is broken
         */    public void WriteMultipleRegisters(int startingAddress, int[] values) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
 
@@ -1866,11 +1890,11 @@ public class ModbusClient
         * @param        startingAddressWrite      Firts Address to write; Shifted by -1	
         * @param        values                  Values to write to Server
         * @return       Register Values from Server
-        * @throws de.re.easymodbus.exceptions.ModbusException
-        * @throws UnknownHostException
-        * @throws SocketException
-        * @throws SerialPortTimeoutException 
-        * @throws SerialPortException 
+        * @throws de.re.easymodbus.exceptions.ModbusException when a protocol error occurred
+        * @throws UnknownHostException when the host could not be resolved
+        * @throws SocketException when a network error occurred
+        * @throws SerialPortTimeoutException when the serial connection timed out 
+        * @throws SerialPortException when the serial connection is broken
         */
     public int[] ReadWriteMultipleRegisters(int startingAddressRead, int quantityRead, int startingAddressWrite, int[] values) throws de.re.easymodbus.exceptions.ModbusException,
                 UnknownHostException, SocketException, IOException, SerialPortException, SerialPortTimeoutException
@@ -2029,11 +2053,11 @@ public class ModbusClient
         return (response);
     }
     
-        /**
-        * Close connection to Server
-        * @throws IOException
-         * @throws SerialPortException 
-        */
+	/**
+	* Close connection to Server
+	* @throws IOException when a network error occurred
+	* @throws SerialPortException when the serial connection is broken
+	*/
 	public void Disconnect() throws IOException, SerialPortException
 	{
 		if (!serialflag)
@@ -2057,7 +2081,11 @@ public class ModbusClient
 		}
 	}
 	
-	
+	/**
+	 * Converts short to byte array.
+	 * @param value a short as integer
+	 * @return an array of bytes
+	 */
 	public static byte[] toByteArray(int value)
     {
 		byte[] result = new byte[2];
@@ -2066,30 +2094,50 @@ public class ModbusClient
 	    return result;
 	}
 
+	/**
+	 * Converts integer to byte array.
+	 * @param value an integer
+	 * @return an array of bytes
+	 */
 	public static byte[] toByteArrayInt(int value)
     {
 		return ByteBuffer.allocate(4).putInt(value).array();
 	}
 	
+	/**
+	 * Converts long to byte array.
+	 * @param value a long value
+	 * @return an array of bytes
+	 */
 	public static byte[] toByteArrayLong(long value)
     {
 		return ByteBuffer.allocate(8).putLong(value).array();
 	}
 	
+	/**
+	 * Converts double to byte array.
+	 * @param value a double value
+	 * @return an array of bytes
+	 */
 	public static byte[] toByteArrayDouble(double value)
     {
 		return ByteBuffer.allocate(8).putDouble(value).array();
 	}
 	
+	/**
+	 * Converts float to byte array.
+	 * @param value a float value
+	 * @return an array of bytes
+	 */
 	public static byte[] toByteArray(float value)
     {
 		 return ByteBuffer.allocate(4).putFloat(value).array();
 	}
 	
-        /**
-        * client connected to Server
-        * @return  if Client is connected to Server
-        */
+	/**
+	* client connected to Server
+	* @return  if Client is connected to Server
+	*/
 	public boolean isConnected()
 	{
 		if (serialflag)
@@ -2115,6 +2163,11 @@ public class ModbusClient
 		return returnValue;
 	}
 	
+	/**
+	 * Tells if the IP address is reachable.
+	 * @param timeout a timeout in ms
+	 * @return true if reachable, false otherwise
+	 */
 	public boolean Available(int timeout)
 	{
         InetAddress address;
@@ -2132,84 +2185,109 @@ public class ModbusClient
 	
 	
 	
-        /**
-        * Returns ip Address of Server
-        * @return ip address of server
-        */
+	/**
+	* Returns ip Address of Server
+	* @return ip address of server
+	*/
 	public String getipAddress()
 	{
 		return ipAddress;
 	}
         
-         /**
-        * sets IP-Address of server
-        * @param        ipAddress                  ipAddress of Server
-        */
+	/**
+	* sets IP-Address of server
+	* @param        ipAddress                  ipAddress of Server
+	*/
 	public void setipAddress(String ipAddress)
 	{
 		this.ipAddress = ipAddress;
 	}
 	
-        /**
-        * Returns port of Server listening
-        * @return port of Server listening
-        */
+	/**
+	* Returns port of Server listening
+	* @return port of Server listening
+	*/
 	public int getPort()
 	{
 		return port;
 	}
         
-        /**
-        * sets Portof server
-        * @param        port                  Port of Server
-        */
+	/**
+	* sets Portof server
+	* @param        port                  Port of Server
+	*/
 	public void setPort(int port)
 	{
 		this.port = port;
 	}	
 	
-        /**
-        * Returns UDP-Flag which enables Modbus UDP and disabled Modbus TCP
-        * @return UDP Flag
-        */
+	/**
+	* Returns UDP-Flag which enables Modbus UDP and disabled Modbus TCP
+	* @return UDP Flag
+	*/
 	public boolean getUDPFlag()
 	{
 		return udpFlag;
 	}
         
-        /**
-        * sets UDP-Flag which enables Modbus UDP and disables Mopdbus TCP
-        * @param        udpFlag      UDP Flag
-        */
+	/**
+	* sets UDP-Flag which enables Modbus UDP and disables Mopdbus TCP
+	* @param        udpFlag      UDP Flag
+	*/
 	public void setUDPFlag(boolean udpFlag)
 	{
 		this.udpFlag = udpFlag;
 	}
 	
+	/**
+	 * Gets the connection timeout in ms.
+	 * @return an integer
+	 */
 	public int getConnectionTimeout()
 	{
 		return connectTimeout;
 	}
+
+	/**
+	 * Sets the connection timeout.
+	 * @param connectionTimeout the timeout in ms
+	 */
 	public void setConnectionTimeout(int connectionTimeout)
 	{
 		this.connectTimeout = connectionTimeout;
 	}
-        
+    
+	/**
+	 * Defines if a serial connection is to be used.
+	 * @param serialflag the boolean flag
+	 */
     public void setSerialFlag(boolean serialflag)
     {
         this.serialflag = serialflag;
     }
     
+	/**
+	 * Tells if a serial connection is to be used.
+	 * @return a boolean
+	 */
     public boolean getSerialFlag()
     {
         return this.serialflag;
     }
     
+	/**
+	 * Sets the unit identifier for future commands.
+	 * @param unitIdentifier the unit identifier
+	 */
     public void setUnitIdentifier(short unitIdentifier)
     {
         this.unitIdentifier = (byte)unitIdentifier;
     }
     
+	/**
+	 * Gets the current unit identifier.
+	 * @return a short
+	 */
     public short getUnitIdentifier()
     {
         return this.unitIdentifier;
@@ -2237,7 +2315,7 @@ public class ModbusClient
     }
     
     /**
-     * 
+     * Gets the name of the serial port.
      * @return the Name of the Serial port
      */
     public String getSerialPort()
@@ -2316,11 +2394,20 @@ public class ModbusClient
     {
     	return this.stopBits;
     }
-      
+    
+	/**
+	 * Adds a data receive listener.
+	 * @param toAdd the listener to add
+	 */
     public void addReveiveDataChangedListener(ReceiveDataChangedListener toAdd) 
     {
         receiveDataChangedListener.add(toAdd);
     }
+
+	/**
+	 * Adds a data send listener.
+	 * @param toAdd the listener to add
+	 */
     public void addSendDataChangedListener(SendDataChangedListener toAdd) 
     {
         sendDataChangedListener.add(toAdd);

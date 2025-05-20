@@ -23,16 +23,23 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package de.re.easymodbus.exceptions;
 
 /**
- *
+ * Implements a serial port exception.
  * @author Stefan Roßmann
  */
 @SuppressWarnings("serial")
 public class SerialPortException extends de.re.easymodbus.exceptions.ModbusException
 {
+  /**
+   * Construct.
+   */
   public SerialPortException()
   {
   }
 
+  /**
+   * Construct.
+   * @param s the error message
+   */
   public SerialPortException( String s )
   {
     super( s );

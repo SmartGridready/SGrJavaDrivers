@@ -3,6 +3,7 @@ package de.re.easymodbus.modbusclient;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 /**
 * Returns the Current Date and Time in different Formats.
 *
@@ -10,6 +11,11 @@ import java.util.Calendar;
 */
 public class DateTime 
 {
+	/**
+	 * Construct.
+	 */
+	public DateTime() {}
+
     /**
     * Returns the current DateTime in Ticks (one ms = 10000ticks)
     * @return Current Date and Time in Ticks

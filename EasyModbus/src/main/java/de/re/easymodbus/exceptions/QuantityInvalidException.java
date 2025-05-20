@@ -23,16 +23,23 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package de.re.easymodbus.exceptions;
 
 /**
- *
+ * Implements an exception which tells that a quantity is invalid.
  * @author Stefan Roßmann
  */
 @SuppressWarnings("serial")
 public class QuantityInvalidException extends ModbusException
 {
+  /**
+   * Construct.
+   */
   public QuantityInvalidException()
   {
   }
 
+  /**
+   * Construct.
+   * @param s the error message
+   */
   public QuantityInvalidException( String s )
   {
     super( s );

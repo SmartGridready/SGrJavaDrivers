@@ -32,6 +32,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build SGrJavaDrivers HiveMQ
+        id: build
         working-directory: HiveMq
         run: |
           chmod +x ./gradlew
@@ -39,8 +40,24 @@ jobs:
 
       - name: Publish SGrJavaDrivers HiveMQ
         # publish after committing to master or creating tag hivemq-{version}
-        if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/hivemq-'))
+        if: (steps.build.outcome == 'success') && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/hivemq-'))
         working-directory: HiveMq
         run: |
           chmod +x ./gradlew
           ./gradlew publishMavenJavaPublicationToNexusRepository -Pnexus.username=smartgrid -Pnexus.password=${{ secrets.NEXUS_PASSWORD }} --no-daemon
+
+      - name: Build Javadoc
+        id: javadoc
+        working-directory: HiveMq
+        run: |
+          chmod +x ./gradlew
+          ./gradlew javadoc --no-daemon
+
+      - name: Publish Javadoc on Github Pages
+        # publish after committing to master or creating tag hivemq-{version}
+        if: (steps.javadoc.outcome == 'success') && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/hivemq-'))
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages  # Change this if using a different branch
+          folder: HiveMq/build/docs/javadoc  # Path where Javadoc is generated
+          target-folder: docs/driver-hivemq

@@ -5,7 +5,9 @@ import java.util.Map;
 
 import de.re.easymodbus.datatypes.StopBits;
 
-
+/**
+ * Maps the {@link com.smartgridready.driver.api.modbus.StopBits} enumerations to EasyModbus equivalent.
+ */
 public class StopbitMapper {
 	private static final Map<com.smartgridready.driver.api.modbus.StopBits, StopBits> STOPBIT_MAP = new HashMap<>();
 	
@@ -17,6 +19,11 @@ public class StopbitMapper {
 	
 	private StopbitMapper() {};
 	
+	/**
+	 * Maps stop bits value.
+	 * @param genStopBit the stop bits value
+	 * @return an instance of {@link StopBits}
+	 */
 	public static StopBits map(com.smartgridready.driver.api.modbus.StopBits genStopBit) {
 		return STOPBIT_MAP.getOrDefault(genStopBit, StopBits.One);
 	}

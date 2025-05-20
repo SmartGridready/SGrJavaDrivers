@@ -23,16 +23,23 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package de.re.easymodbus.exceptions;
 
 /**
- *
+ * Implements an exception which tells that a start address is invalid.
  * @author Stefan Roßmann
  */
 @SuppressWarnings("serial")
 public class StartingAddressInvalidException extends de.re.easymodbus.exceptions.ModbusException
 {
+  /**
+   * Construct.
+   */
   public StartingAddressInvalidException()
   {
   }
 
+  /**
+   * Construct.
+   * @param s the error message
+   */
   public StartingAddressInvalidException( String s )
   {
     super( s );
