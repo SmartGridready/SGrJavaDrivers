@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.re.easymodbus.adapter"},{"l":"de.re.easymodbus.datatypes"},{"l":"de.re.easymodbus.exceptions"},{"l":"de.re.easymodbus.modbusclient"},{"l":"de.re.easymodbus.util"}]

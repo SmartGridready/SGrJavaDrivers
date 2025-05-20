@@ -1,0 +1,5 @@
+de.re.easymodbus.adapter
+de.re.easymodbus.datatypes
+de.re.easymodbus.exceptions
+de.re.easymodbus.modbusclient
+de.re.easymodbus.util
