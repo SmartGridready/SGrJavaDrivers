@@ -1,21 +1,25 @@
 # SGrJavaDrivers
 
 ## Index
-[Summary](#summary)<br>
-[Project setup for developers](#project-setup)<br>
-[Build and publish for development](#build-and-publish-for-development)<br>
-[Build and publish a release](#build-and-publish-a-release)<br>
+
+[Summary](#summary)  
+[Project setup for developers](#project-setup)  
+[Build and publish for development](#build-and-publish-for-development)  
+[Build and publish a release](#build-and-publish-a-release)
 
 ## Summary
 
-SGrJavaDrivers contains libraries  that adapt the commhandler's generic device interface to device specific (communications-) transport layer.
+SGrJavaDrivers contains libraries that adapt the commhandler's generic device interface to device-specific transport layer.
 
 List of current library projects:
-- <b>SGrGenDriverAPI4Modbus</b>: Provides the generic driver API definitions for Modbus (as used by the SGr communication handler).
-- <b>EasyModbus</b>: Consists of the Modbus driver provideded by 'Copyright (c) 2018-2020 Rossmann-Engineering' together with the SGr generic driver API adapters for ModbusRTU and ModbusTCP.
 
-The chapters following chapters describe the architecture of the device adapters in detail.
-To support their own Modbus drivers within SmartgridReady, third party providers can implement their own adapters that implement the SGrGenDriverAPI4Modbus interface.
+- **j2mod**: Contains a Modbus driver backed by [j2mod](https://github.com/steveohara/j2mod). This is the recommended Modbus driver.
+- **EasyModbus**: Consists of the Modbus driver provided by 'Copyright (c) 2018-2020 Rossmann-Engineering' together with the SGr generic driver API adapters for ModbusRTU and ModbusTCP. Note that this implementation is no longer recommended.
+- **ApacheHttp**: Contains an HTTP/REST API driver based on the _Apache_ client libraries.
+- **HiveMq**: Contains a messaging driver which supports MQTT, using the _HiveMQ_ client library.
+
+The following chapters describe the architecture of the device adapters in detail.
+To support their own Modbus drivers within SmartGridready, third party providers can implement their own adapters that implement the generic driver API interface.
 
 ## Generic Device Driver API
 
@@ -23,6 +27,7 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 
 ![UML Generic Device Driver](SGrGenericDeviceDriver.png "UML Generic Device Driver")
 
+**TODO:** Remove this documentation, as it is completely outdated!
 
 ### Component: Communicator
 <table valign="top">
@@ -32,8 +37,8 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
                 <p>Instantiates a concrete device driver adapter  (EasyModbusAdapter, 3rdPartyDriverAdapter...)</p>
                 <p>Creates a Commhandler4Modbus instance (provided by the <b>commhandler4Modbus</b> library)</p>
                 <p>Uses the CommHandler4Modbus instance to send commands to the device (readVal(), getVal())</p> </td></tr>
-    <tr><td>Library:</td><td>n.a.</td></tr>                                                                                          
-    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartgridReady/SGrJavaSamples/tree/master/SampleCommunicator">SGrJavaSamples/SampleCommunicator<a></td></tr>                                                                                                                                                                                                                     
+    <tr><td>Library:</td><td>n.a.</td></tr>
+    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartGridready/SGrJavaSamples/tree/master/SampleCommunicator">SGrJavaSamples/SampleCommunicator<a></td></tr>                                                                                                                                                                                                                     
 </table>  
 
 <br><br>
@@ -49,8 +54,8 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
     <tr><td>Library:</td><td><b>commmHandler4modbus.jar</b>
         <p>includes:</p>
             <ul><li>sgr-driver-api.jar</li><li>easymodbus.jar</li>
-        </td></tr>                                                                                          
-    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartgridReady/SGrJava/tree/master/InterfaceFactory/CommHandler4Modbus">SGrJava/InterfaceFactory/CommHandler4Modbus<a></td></tr>    
+        </td></tr>
+    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartGridready/SGrJava/tree/master/InterfaceFactory/CommHandler4Modbus">SGrJava/InterfaceFactory/CommHandler4Modbus<a></td></tr>    
 </table> 
 
 <br><br>
@@ -61,10 +66,10 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
     <tr><td>Description:</td><td><p>Defines the Java interface that must be implemented by any SGr compliant modbus device driver or driver adapter.</p>
      <p>This interface must be implemented by any modbus device SGr compliant modbus device driver.</p>
     <tr><td valign="top">Responsibilities:</td><td>
-                <p>Definition of the generic device driver API used by the SGrDevice component to send commands to the products.</p>               
+                <p>Definition of the generic device driver API used by the SGrDevice component to send commands to the products.</p>
                 </td></tr>
-    <tr><td>Library:</td><td><b>sgr-driver-api.jar<b></td></tr>                                                                                          
-    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartgridReady/SGrJavaDrivers/tree/master/GenDriverAPI">SGrJavaDrivers/GenDriverAPI<a></td></tr>    
+    <tr><td>Library:</td><td><b>sgr-driver-api.jar<b></td></tr>
+    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartGridready/SGrJavaDrivers/tree/master/GenDriverAPI">SGrJavaDrivers/GenDriverAPI<a></td></tr>
 </table>
 
 <br><br>
@@ -77,8 +82,8 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
                 <p>Maps SGrGenDriverAPI4Modbus commands to EasyModbus commands.</p>
                 <p>Maps EasyModbus specific exceptions to SGrGenDriverAPI4Modbus exceptions.</p>
                 </td></tr>
-    <tr><td>Library:</td><td><b>sgr-driver-api.jar<b></td></tr>                                                                                          
-    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartgridReady/SGrJavaDrivers/tree/master/EasyModbus">SGrJavaDrivers/EasyModbus<a></td></tr>    
+    <tr><td>Library:</td><td><b>sgr-driver-api.jar<b></td></tr>
+    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartGridready/SGrJavaDrivers/tree/master/EasyModbus">SGrJavaDrivers/EasyModbus<a></td></tr>
 </table> 
 
 <br><br>
@@ -90,8 +95,8 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
     <tr><td valign="top">Responsibilities:</td><td>
                 <p>Implements a modbus device driver that supports modbus RTU and modbus overTCP</p>
                 </td></tr>
-    <tr><td>Library:</td><td><b>easymodbus.jar<b></td></tr>                                                                                          
-    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartgridReady/SGrJavaDrivers/tree/master/EasyModbus">SGrJavaDrivers/EasyModbus<a></td></tr>    
+    <tr><td>Library:</td><td><b>easymodbus.jar<b></td></tr>
+    <tr><td>SGrProject:</td><td><a href="https://github.com/SmartGridready/SGrJavaDrivers/tree/master/EasyModbus">SGrJavaDrivers/EasyModbus<a></td></tr>
 </table>
 
 <br><br>
@@ -110,7 +115,7 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 <table valign="top">
     <tr><td>Implementor:</td><td>3rd party provider</td></tr>
     <tr><td>Description:</ts><td>Proprietary Modbus driver provided by a 3rd party.</td></tr>
-    <tr><td valign="top">Responsibilities:</td><td>        
+    <tr><td valign="top">Responsibilities:</td><td>
        <p>Implements a 3rd party modbus driver</p>
        <p>Receive commands from the 3rdPartyAdapter.</p>
     </td></tr>
@@ -124,7 +129,7 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 - Java JDK version >= Java 11
 
 ### Clone from GitHub
-- Clone this repo to your local machine: https://github.com/SmartgridReady/SGrJavaDrivers.git
+- Clone this repo to your local machine: https://github.com/SmartGridready/SGrJavaDrivers.git
 
 ## Build and publish for development
 - Change to the local ```{project-root}/SGrJavaDrivers/GenDriverAPI``` directory.
@@ -140,7 +145,7 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
 <p>When using an IDE (Intellij/Eclipse...) you can also use the IDE's Gradle integration to run 'publishToMavenLocal'. </p>
 
 <p>The steps above will compile, build the library jar's and publish the libraries to the local Maven repository. 
-<p><b>Rem:</b>The libraries are the most current and used for SGr core development such as the communication handler ( see https://github.com/SmartgridReady/SGrJava ).
+<p><b>Rem:</b>The libraries are the most current and used for SGr core development such as the communication handler ( see https://github.com/SmartGridready/SGrJava ).
 
 
 ## Build and publish a release
@@ -156,7 +161,7 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
                 artifactId = 'sgr-driver-api'
                 version = '<correct-version>'
 
-                from components.java        
+                from components.java
             }
         }
     }
@@ -186,46 +191,11 @@ The Generic Device Driver API makes the SGr communication handler (CommHandler4M
     ```
 
 - Run the command:
-    ```
-    bash>gradle publishAllPublicationsToGitHubRepository
+
+    ```bash
+    ./gradlew publish
     ```
 
 <p>The steps above will compile, build the library jar's and publish the libraries to the  Maven repository on GitHub. The libaries are now published on GitHub, therefore public and can be used by integrators of SGr communicators.</p> 
 
-<p><b>Rem:</b> The SGr starter projects/code samples use the driver libraries from GitHub (see: https://github.com/SmartgridReady/SGrJavaSamples)
-
-
-## Obtaining a GitHub token for publishing
-
-### Creating the token on GitHub
-- Go to your GitHub profile settings page: https://github.com/settings/profile
-- On the left menu scroll down and select [<>Developer settings]
-- On the left menu select [<>Personal access tokens]
-- Select [Generate new token] on the top right.
-- When asked, enter your GitHub password
-- Fill in the new token form: 
-    - give the token a name for example 'TOKEN_4_GRADLE_PUBLISH'
-    - choose an expiry date
-    - check only the packages:write and packages:read permissions
-    - push the [Generate token] button on the bottom right.
-
-### Use the GitHub token on the local machine for publishing
-- On Windows go to ```c:\users\<username>\.gradle``` directory.
-- On Unix go to to your ```~/.gradle``` directory.
-- Create a file called ```gradle.properties```
-- Add the following entries in ```gradle.properties```:
-```
-github.username=ergo-furrer
-github.token=<-- add your GitHub publising token here-->
-```
-
-
-
-
-
-
-
-
-
-
-
+<p><b>Rem:</b> The SGr starter projects/code samples use the driver libraries from GitHub (see: https://github.com/SmartGridready/SGrJavaSamples)

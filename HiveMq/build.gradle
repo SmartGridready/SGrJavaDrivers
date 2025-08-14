@@ -16,13 +16,13 @@ repositories {
     gradlePluginPortal()
 
     maven {
-        url "https://nexus.library.smartgridready.ch/repository/maven-releases/"
+        url = "https://nexus.library.smartgridready.ch/repository/maven-releases/"
         mavenContent {
             releasesOnly()
         }
     }
     maven {
-        url "https://nexus.library.smartgridready.ch/repository/maven-snapshots/"
+        url = "https://nexus.library.smartgridready.ch/repository/maven-snapshots/"
         mavenContent {
             snapshotsOnly()
         }
@@ -61,9 +61,11 @@ dependencies {
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.19.0'
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.19.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.10.2'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.12.2'
 
     testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.0'
 }

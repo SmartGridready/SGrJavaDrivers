@@ -16,13 +16,13 @@ repositories {
     gradlePluginPortal()
 
     maven {
-        url "https://nexus.library.smartgridready.ch/repository/maven-releases/"
+        url = "https://nexus.library.smartgridready.ch/repository/maven-releases/"
         mavenContent {
             releasesOnly()
         }
     }
     maven {
-        url "https://nexus.library.smartgridready.ch/repository/maven-snapshots/"
+        url = "https://nexus.library.smartgridready.ch/repository/maven-snapshots/"
         mavenContent {
             snapshotsOnly()
         }
