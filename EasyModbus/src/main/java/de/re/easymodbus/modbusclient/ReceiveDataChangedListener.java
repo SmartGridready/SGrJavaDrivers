@@ -26,9 +26,9 @@ package de.re.easymodbus.modbusclient;
  */
 public interface ReceiveDataChangedListener 
 {
-	/**
-	 * Handles received data.
-	 */
-	void ReceiveDataChanged();
+    /**
+     * Handles received data.
+     */
+    void ReceiveDataChanged();
 
 }

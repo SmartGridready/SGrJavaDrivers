@@ -25,9 +25,9 @@ package de.re.easymodbus.modbusclient;
  * Defines the interface of a listener for sent data.
  */
 public interface SendDataChangedListener {
-	
-	/**
-	 * Handles sent data.
-	 */
-	void SendDataChanged();
+    
+    /**
+     * Handles sent data.
+     */
+    void SendDataChanged();
 }

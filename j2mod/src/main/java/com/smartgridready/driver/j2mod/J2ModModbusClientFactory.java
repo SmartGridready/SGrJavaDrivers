@@ -21,7 +21,7 @@ import com.smartgridready.driver.j2mod.util.StopbitMapper;
 public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
 
     private static final int DEFAULT_TIMEOUT = 5000;
-	private static final int DEFAULT_PORT = 502;
+    private static final int DEFAULT_PORT = 502;
     private static final boolean DEFAULT_RECONNECT = true;
     private static final boolean DEFAULT_RTU_OVER_TCP = false;  // not supported by SGr spec
     private static final boolean DEFAULT_ECHO = false;
@@ -189,21 +189,21 @@ public class J2ModModbusClientFactory implements GenDriverAPI4ModbusFactory {
     }
 
     private static SerialParameters getSerialParameters(String portName, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits, boolean asciiEncoding) {
-		SerialParameters params = new SerialParameters(
-			portName,
-			baudRate,
-			AbstractSerialConnection.FLOW_CONTROL_DISABLED,
-			AbstractSerialConnection.FLOW_CONTROL_DISABLED,
-			DatabitMapper.map(dataBits),
-			StopbitMapper.map(stopBits),
-			ParityMapper.map(parity),
-			DEFAULT_ECHO
-		);
+        SerialParameters params = new SerialParameters(
+            portName,
+            baudRate,
+            AbstractSerialConnection.FLOW_CONTROL_DISABLED,
+            AbstractSerialConnection.FLOW_CONTROL_DISABLED,
+            DatabitMapper.map(dataBits),
+            StopbitMapper.map(stopBits),
+            ParityMapper.map(parity),
+            DEFAULT_ECHO
+        );
 
         params.setEncoding(asciiEncoding ? Modbus.SERIAL_ENCODING_ASCII : Modbus.SERIAL_ENCODING_RTU);
 
         return params;
-	}
+    }
 
     private static SerialParameters getSerialParameters(String portName, int baudRate, Parity parity, DataBits dataBits) {
         return getSerialParameters(portName, baudRate, parity, dataBits, StopBits.ONE, DEFAULT_IS_ASCII);

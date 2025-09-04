@@ -30,23 +30,23 @@ use their own Modbus TCP drivers
  */
 public class GenDriverAPI4ModbusUDP extends GenDriverAPI4ModbusBase {
 
-	/**
-	 * Construct.
-	 * @param sIP4Address the IP address
-	 * @param iPort the UDP port
-	 */
-	public GenDriverAPI4ModbusUDP(String sIP4Address, int iPort) {
-		super();
-		mbDevice.setipAddress(sIP4Address);
-		mbDevice.setPort(iPort);
-		mbDevice.setUDPFlag(true);
-	}
+    /**
+     * Construct.
+     * @param sIP4Address the IP address
+     * @param iPort the UDP port
+     */
+    public GenDriverAPI4ModbusUDP(String sIP4Address, int iPort) {
+        super();
+        mbDevice.setipAddress(sIP4Address);
+        mbDevice.setPort(iPort);
+        mbDevice.setUDPFlag(true);
+    }
 
-	/**
-	 * Construct.
-	 * @param sIP4Address the IP address
-	 */
-	public GenDriverAPI4ModbusUDP(String sIP4Address) {
-		this(sIP4Address, 502);
-	}
+    /**
+     * Construct.
+     * @param sIP4Address the IP address
+     */
+    public GenDriverAPI4ModbusUDP(String sIP4Address) {
+        this(sIP4Address, 502);
+    }
 }
