@@ -6,13 +6,13 @@ package de.re.easymodbus.datatypes;
 public enum StopBits 
 {
     /** 1 stop bit. */
-	One (1),
+    One (1),
     /** 1.5 stop bits. */
-	OnePointFive (3),
+    OnePointFive (3),
     /** 2 stop bits. */
-	Two (2);
-	
-	private int value;
+    Two (2);
+    
+    private int value;
     
     private StopBits(int value) 
     {

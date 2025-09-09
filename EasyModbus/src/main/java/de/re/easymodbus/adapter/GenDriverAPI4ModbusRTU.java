@@ -33,60 +33,60 @@ import de.re.easymodbus.util.StopbitMapper;
  */
 public class GenDriverAPI4ModbusRTU extends GenDriverAPI4ModbusBase {
 
-	/**
-	 * Construct.
-	 * @param comPort the serial port name
-	 * @param baudRate the serial connection baud rate
-	 * @param parity the serial connection parity
-	 * @param dataBits the serial connection data bits
-	 * @param stopBits the serial connection stop bits
-	 */
-	public GenDriverAPI4ModbusRTU(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) {
-		super();
-		mbDevice.setSerialFlag(true);
-		mbDevice.setSerialPort(comPort);
-		mbDevice.setBaudrate(baudRate);
-		mbDevice.setParity(ParityMapper.map(parity));
-		mbDevice.setDataBits(DatabitMapper.map(dataBits));
-		mbDevice.setStopBits(StopbitMapper.map(stopBits));
-		mbDevice.setConnectionTimeout(1500);
-	}
+    /**
+     * Construct.
+     * @param comPort the serial port name
+     * @param baudRate the serial connection baud rate
+     * @param parity the serial connection parity
+     * @param dataBits the serial connection data bits
+     * @param stopBits the serial connection stop bits
+     */
+    public GenDriverAPI4ModbusRTU(String comPort, int baudRate, Parity parity, DataBits dataBits, StopBits stopBits) {
+        super();
+        mbDevice.setSerialFlag(true);
+        mbDevice.setSerialPort(comPort);
+        mbDevice.setBaudrate(baudRate);
+        mbDevice.setParity(ParityMapper.map(parity));
+        mbDevice.setDataBits(DatabitMapper.map(dataBits));
+        mbDevice.setStopBits(StopbitMapper.map(stopBits));
+        mbDevice.setConnectionTimeout(1500);
+    }
 
-	/**
-	 * Construct.
-	 * @param comPort the serial port name
-	 * @param baudRate the serial connection baud rate
-	 * @param parity the serial connection parity
-	 * @param dataBits the serial connection data bits
-	 */
-	public GenDriverAPI4ModbusRTU(String comPort, int baudRate, Parity parity, DataBits dataBits) {
-		this(comPort, baudRate, parity, dataBits, StopBits.ONE);
-	}
+    /**
+     * Construct.
+     * @param comPort the serial port name
+     * @param baudRate the serial connection baud rate
+     * @param parity the serial connection parity
+     * @param dataBits the serial connection data bits
+     */
+    public GenDriverAPI4ModbusRTU(String comPort, int baudRate, Parity parity, DataBits dataBits) {
+        this(comPort, baudRate, parity, dataBits, StopBits.ONE);
+    }
 
-	/**
-	 * Construct.
-	 * @param comPort the serial port name
-	 * @param baudRate the serial connection baud rate
-	 * @param parity the serial connection parity
-	 */
-	public GenDriverAPI4ModbusRTU(String comPort, int baudRate, Parity parity) {
-		this(comPort, baudRate, parity, DataBits.EIGHT);
-	}
+    /**
+     * Construct.
+     * @param comPort the serial port name
+     * @param baudRate the serial connection baud rate
+     * @param parity the serial connection parity
+     */
+    public GenDriverAPI4ModbusRTU(String comPort, int baudRate, Parity parity) {
+        this(comPort, baudRate, parity, DataBits.EIGHT);
+    }
 
-	/**
-	 * Construct.
-	 * @param comPort the serial port name
-	 * @param baudRate the serial connection baud rate
-	 */
-	public GenDriverAPI4ModbusRTU(String comPort, int baudRate) {
-		this(comPort, baudRate, Parity.EVEN);
-	}
+    /**
+     * Construct.
+     * @param comPort the serial port name
+     * @param baudRate the serial connection baud rate
+     */
+    public GenDriverAPI4ModbusRTU(String comPort, int baudRate) {
+        this(comPort, baudRate, Parity.EVEN);
+    }
 
-	/**
-	 * Construct.
-	 * @param comPort the serial port name
-	 */
-	public GenDriverAPI4ModbusRTU(String comPort) {
-		this(comPort, 9600);
-	}
+    /**
+     * Construct.
+     * @param comPort the serial port name
+     */
+    public GenDriverAPI4ModbusRTU(String comPort) {
+        this(comPort, 9600);
+    }
 }

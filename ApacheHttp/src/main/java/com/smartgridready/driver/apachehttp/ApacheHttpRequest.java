@@ -94,24 +94,24 @@ public class ApacheHttpRequest implements GenHttpRequest {
     public ApacheHttpRequest(boolean verifyCertificate) {
         this.clientConnectionManager = null;
         try {
-			final SSLContext sslContext = verifyCertificate
-				? SSLContexts.createSystemDefault()
-				: SSLContexts.custom()
-			        .loadTrustMaterial(TrustAllStrategy.INSTANCE)
-			        .build();
+            final SSLContext sslContext = verifyCertificate
+                ? SSLContexts.createSystemDefault()
+                : SSLContexts.custom()
+                    .loadTrustMaterial(TrustAllStrategy.INSTANCE)
+                    .build();
 
-			final SSLConnectionSocketFactory sslFactory = verifyCertificate
-				? new SSLConnectionSocketFactory(sslContext)
-				: new SSLConnectionSocketFactory(sslContext, NonValidatingHostnameVerifier.getInstance());
-	
+            final SSLConnectionSocketFactory sslFactory = verifyCertificate
+                ? new SSLConnectionSocketFactory(sslContext)
+                : new SSLConnectionSocketFactory(sslContext, NonValidatingHostnameVerifier.getInstance());
+    
             this.clientConnectionManager = PoolingHttpClientConnectionManagerBuilder
-				.create()
-				.setSSLSocketFactory(sslFactory)
-				.build();
+                .create()
+                .setSSLSocketFactory(sslFactory)
+                .build();
 
-		} catch (SSLInitializationException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-			LOG.error("SSL initialization error", e);
-		}
+        } catch (SSLInitializationException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+            LOG.error("SSL initialization error", e);
+        }
     }
 
     /**

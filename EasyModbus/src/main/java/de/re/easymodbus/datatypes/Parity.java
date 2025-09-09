@@ -6,13 +6,13 @@ package de.re.easymodbus.datatypes;
 public enum Parity 
 {
     /** No parity. */
-	None (0),
+    None (0),
     /** Even parity. */
-	Even (2),
+    Even (2),
     /** Odd parity. */
-	Odd(1);
-	
-	private final int value;
+    Odd(1);
+    
+    private final int value;
     
     Parity(int value)
     {

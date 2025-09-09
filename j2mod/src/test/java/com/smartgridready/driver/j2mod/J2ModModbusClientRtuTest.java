@@ -17,44 +17,44 @@ import static org.mockito.Mockito.when;
 
 class J2ModModbusClientRtuTest {
 
-	private final short UNIT_ID = 1;
-	private final int[] EXPECTED_RESPONSE = new int[] {0xAA, 2};
+    private final short UNIT_ID = 1;
+    private final int[] EXPECTED_RESPONSE = new int[] {0xAA, 2};
 
-	@Mock
-	ModbusSerialMaster modbusClient;
+    @Mock
+    ModbusSerialMaster modbusClient;
 
-	@BeforeEach
-	public void initMocks() {
-		MockitoAnnotations.openMocks(this);
-	}
+    @BeforeEach
+    public void initMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-	@Test
-	void readInputRegisters_success() throws Exception {
-		GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
+    @Test
+    void readInputRegisters_success() throws Exception {
+        GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
 
-		final Register[] EXPECTED_RESPONSE_REGS = J2ModModbusClient.convertValuesToRegisters(EXPECTED_RESPONSE);
-		when(modbusClient.readMultipleRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenReturn(EXPECTED_RESPONSE_REGS);
+        final Register[] EXPECTED_RESPONSE_REGS = J2ModModbusClient.convertValuesToRegisters(EXPECTED_RESPONSE);
+        when(modbusClient.readMultipleRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenReturn(EXPECTED_RESPONSE_REGS);
 
-		int[] result = driver.readHoldingRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]);
-		assertArrayEquals(EXPECTED_RESPONSE, result);
-	}
+        int[] result = driver.readHoldingRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]);
+        assertArrayEquals(EXPECTED_RESPONSE, result);
+    }
 
-	@Test
-	void readInputRegisters_throws_Exception() throws Exception {
-		GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
+    @Test
+    void readInputRegisters_throws_Exception() throws Exception {
+        GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
 
-		when(modbusClient.readMultipleRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenThrow(new ModbusException("Serial port not connected"));
+        when(modbusClient.readMultipleRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenThrow(new ModbusException("Serial port not connected"));
 
-		GenDriverModbusException e = assertThrows(GenDriverModbusException.class, () ->
-			driver.readHoldingRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]));
+        GenDriverModbusException e = assertThrows(GenDriverModbusException.class, () ->
+            driver.readHoldingRegisters(UNIT_ID, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]));
 
-		assertEquals("Error reading holding registers", e.getMessage());
-	}
+        assertEquals("Error reading holding registers", e.getMessage());
+    }
 
-	@Test
-	void initTrspServiceModbusRTU() throws Exception {
-		GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
-		driver.connect();
-		driver.disconnect();
-	}
+    @Test
+    void initTrspServiceModbusRTU() throws Exception {
+        GenDriverAPI4Modbus driver = new J2ModModbusClient<>(modbusClient);
+        driver.connect();
+        driver.disconnect();
+    }
 }

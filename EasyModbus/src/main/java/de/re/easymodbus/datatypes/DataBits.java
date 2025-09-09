@@ -6,11 +6,11 @@ package de.re.easymodbus.datatypes;
 public enum DataBits 
 {
     /** 7 bits. */
-	Seven (7),
+    Seven (7),
     /** 8 bits. */
-	Eight (8);
-	
-	private int value;
+    Eight (8);
+    
+    private int value;
     
     private DataBits(int value) 
     {
