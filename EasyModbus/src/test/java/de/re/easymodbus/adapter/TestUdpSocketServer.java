@@ -23,45 +23,43 @@ use their own Modbus RTU drivers
 
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class TestUdpSocketServer {
-    
+
     private static final Logger LOG = LogManager.getLogger(TestUdpSocketServer.class);
 
+    private final int port;
+
     private DatagramSocket serverSocket;
-    private boolean closeFlag = false;
     private boolean stopFlag = false;
+
+    public TestUdpSocketServer(int port) {
+        this.port = port;
+    }
 
     public void start() throws Exception {
         stopFlag = false;
         Thread server = new ServerHandler();
         server.start();
     }
-    
+
     public void disconnect() throws Exception {
         stopFlag = true;
-    }
-    
-    public void setCloseFlag(boolean closeFlag) {
-        this.closeFlag = closeFlag;
     }
     
     class ServerHandler extends Thread {
         
         @Override
-        public void run() {                            
+        public void run() {
             try {
-                serverSocket = new DatagramSocket(9099);
+                serverSocket = new DatagramSocket(port, InetAddress.getLoopbackAddress());
                 
                 while(!stopFlag) {
                     handleMessage();

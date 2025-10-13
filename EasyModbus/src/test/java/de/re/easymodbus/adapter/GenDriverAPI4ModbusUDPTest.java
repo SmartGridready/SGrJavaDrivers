@@ -24,6 +24,7 @@ use their own Modbus RTU drivers
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
+import java.net.InetAddress;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
@@ -36,18 +37,21 @@ class GenDriverAPI4ModbusUDPTest {
     
     private static final Logger LOG = LogManager.getLogger(GenDriverAPI4ModbusUDPTest.class);
     
+    private final int PORT = 9099;
     private final int[] EXPECTED_RESPONSE = new int[] {0xAA, 2};
     
     @Test
     void testReadInputRegistersSuccess() throws Exception {
         
-        TestUdpSocketServer server = new TestUdpSocketServer();
+        TestUdpSocketServer server = new TestUdpSocketServer(PORT);
         server.start();
+
+        Thread.sleep(1000);
         
-        GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusUDP("127.0.0.1", 9099);
+        GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusUDP(InetAddress.getLoopbackAddress().getHostAddress(), PORT);
         driver.connect();
         
-        int[] result = driver.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1] );
+        int[] result = driver.readHoldingRegisters((short) 1, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1] );
         reportResult(result);
         assertArrayEquals(EXPECTED_RESPONSE, result);
         
