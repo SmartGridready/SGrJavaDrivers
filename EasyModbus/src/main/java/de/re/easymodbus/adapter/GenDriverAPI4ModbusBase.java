@@ -221,7 +221,7 @@ abstract class GenDriverAPI4ModbusBase implements GenDriverAPI4Modbus {
             return mbDevice.isConnected();
         } catch (Exception e) {
             throw new GenDriverException("Connect failed.", e);
-         }
+        }
     }
 
     @Override

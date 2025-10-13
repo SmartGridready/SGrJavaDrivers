@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - added Javadoc code documentation
+- added support for RTU over TCP
+- added support for timeout parameter
 
 ### Changed
 

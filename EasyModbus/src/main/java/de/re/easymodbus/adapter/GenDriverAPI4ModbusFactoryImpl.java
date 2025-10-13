@@ -105,6 +105,19 @@ public class GenDriverAPI4ModbusFactoryImpl implements GenDriverAPI4ModbusFactor
     }
 
     @Override
+    public GenDriverAPI4Modbus createTcpTransport(String ipAddress, int port, int timeout) {
+        return new GenDriverAPI4ModbusTCP(ipAddress, port, timeout);
+    }
+
+    @Override
+    public GenDriverAPI4Modbus createTcpTransport(String ipAddress, int port, int timeout, boolean rtuOverTcp) {
+        if (rtuOverTcp) {
+            throw new UnsupportedOperationException("RTU over TCP not supported");
+        }
+        return createTcpTransport(ipAddress, port, timeout);
+    }
+
+    @Override
     public GenDriverAPI4Modbus createUdpTransport(String ipAddress) {
         return new GenDriverAPI4ModbusUDP(ipAddress);
     }

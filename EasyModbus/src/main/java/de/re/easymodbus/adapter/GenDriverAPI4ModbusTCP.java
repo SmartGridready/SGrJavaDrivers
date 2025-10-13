@@ -34,12 +34,23 @@ public class GenDriverAPI4ModbusTCP extends GenDriverAPI4ModbusBase {
      * Construct.
      * @param sIP4Address the IP address
      * @param iPort the TCP port
+     * @param timeout the connection timeout in milliseconds
      */
-    public GenDriverAPI4ModbusTCP(String sIP4Address, int iPort) {
+    public GenDriverAPI4ModbusTCP(String sIP4Address, int iPort, int timeout) {
         super();
         mbDevice.setipAddress(sIP4Address);
         mbDevice.setPort(iPort);
         mbDevice.setUDPFlag(false);
+        mbDevice.setConnectionTimeout(timeout);
+    }
+
+    /**
+     * Construct.
+     * @param sIP4Address the IP address
+     * @param iPort the TCP port
+     */
+    public GenDriverAPI4ModbusTCP(String sIP4Address, int iPort) {
+        this(sIP4Address, 502, 1000);
     }
 
     /**
