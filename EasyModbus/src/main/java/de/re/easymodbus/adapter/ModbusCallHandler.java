@@ -27,7 +27,12 @@ import java.net.SocketException;
 import com.smartgridready.driver.api.common.GenDriverException;
 import com.smartgridready.driver.api.modbus.GenDriverModbusException;
 import com.smartgridready.driver.api.modbus.GenDriverSocketException;
+
+import de.re.easymodbus.exceptions.ConnectionException;
+import de.re.easymodbus.exceptions.FunctionCodeNotSupportedException;
 import de.re.easymodbus.exceptions.ModbusException;
+import de.re.easymodbus.exceptions.QuantityInvalidException;
+import de.re.easymodbus.exceptions.StartingAddressInvalidException;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import jssc.SerialPortException;
 import jssc.SerialPortTimeoutException;
@@ -192,8 +197,16 @@ public class ModbusCallHandler<T, U, R> {
                 retryCredit--;
                 return retryRead(address, parameter);
             }
+        } catch (FunctionCodeNotSupportedException e) {
+            throw new GenDriverModbusException(errorReport(msgTemplate, e), e, 0x01);
+        } catch (StartingAddressInvalidException e) {
+            throw new GenDriverModbusException(errorReport(msgTemplate, e), e, 0x02);
+        } catch (QuantityInvalidException e) {
+            throw new GenDriverModbusException(errorReport(msgTemplate, e), e, 0x03);
+        } catch (ConnectionException e) {
+            throw new GenDriverSocketException(errorReport(msgTemplate, e), e);
         } catch (ModbusException e) {
-            throw new GenDriverModbusException(errorReport(msgTemplate, e), e);
+            throw new GenDriverModbusException(errorReport(msgTemplate, e), e, 0x04);
         } catch (IOException | SerialPortException | SerialPortTimeoutException e) {
             throw new GenDriverException(errorReport(msgTemplate, e), e);
         }
@@ -221,8 +234,16 @@ public class ModbusCallHandler<T, U, R> {
                 retryCredit--;
                 retryWrite(address, parameter);
             }
+        } catch (FunctionCodeNotSupportedException e) {
+            throw new GenDriverModbusException(errorReport(msgTemplate, e), e, 0x01);
+        } catch (StartingAddressInvalidException e) {
+            throw new GenDriverModbusException(errorReport(msgTemplate, e), e, 0x02);
+        } catch (QuantityInvalidException e) {
+            throw new GenDriverModbusException(errorReport(msgTemplate, e), e, 0x03);
+        } catch (ConnectionException e) {
+            throw new GenDriverSocketException(errorReport(msgTemplate, e), e);
         } catch (ModbusException e) {
-            throw new GenDriverModbusException(errorReport(msgTemplate, e), e);
+            throw new GenDriverModbusException(errorReport(msgTemplate, e), e, 0x04);
         } catch (IOException | SerialPortException | SerialPortTimeoutException e) {
             throw new GenDriverException(errorReport(msgTemplate, e), e);
         }

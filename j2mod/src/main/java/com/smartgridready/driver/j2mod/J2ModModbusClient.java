@@ -2,6 +2,8 @@ package com.smartgridready.driver.j2mod;
 
 import com.smartgridready.driver.api.modbus.GenDriverAPI4Modbus;
 import com.ghgande.j2mod.modbus.ModbusException;
+import com.ghgande.j2mod.modbus.ModbusIOException;
+import com.ghgande.j2mod.modbus.ModbusSlaveException;
 import com.ghgande.j2mod.modbus.facade.AbstractModbusMaster;
 import com.ghgande.j2mod.modbus.procimg.InputRegister;
 import com.ghgande.j2mod.modbus.procimg.Register;
@@ -179,6 +181,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
         try {
             Register[] res = mbDevice.readMultipleRegisters(unitId, startingAddress, quantity);
             return convertRegistersToValues(res);
+        } catch (ModbusSlaveException e) {
+            throw new GenDriverModbusException(String.format("Error reading holding registers (%02X)", e.getType()), e, e.getType());
+        } catch (ModbusIOException e) {
+            throw new GenDriverSocketException("Error reading from device", e);
         } catch (ModbusException e) {
             throw new GenDriverModbusException("Error reading holding registers", e);
         }
@@ -200,6 +206,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
         try {
             InputRegister[] res = mbDevice.readInputRegisters(unitId, startingAddress, quantity);
             return convertRegistersToValues(res);
+        } catch (ModbusSlaveException e) {
+            throw new GenDriverModbusException(String.format("Error reading input registers (%02X)", e.getType()), e, e.getType());
+        } catch (ModbusIOException e) {
+            throw new GenDriverSocketException("Error reading from device", e);
         } catch (ModbusException e) {
             throw new GenDriverModbusException("Error reading input registers", e);
         }
@@ -221,6 +231,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
         try {
             BitVector res = mbDevice.readInputDiscretes(unitId, startingAddress, quantity);
             return convertBitVectorToValues(res);
+        } catch (ModbusSlaveException e) {
+            throw new GenDriverModbusException(String.format("Error reading discrete inputs (%02X)", e.getType()), e, e.getType());
+        } catch (ModbusIOException e) {
+            throw new GenDriverSocketException("Error reading from device", e);
         } catch (ModbusException e) {
             throw new GenDriverModbusException("Error reading discrete inputs", e);
         }
@@ -242,6 +256,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
         try {
             BitVector res = mbDevice.readCoils(unitId, startingAddress, quantity);
             return convertBitVectorToValues(res);
+        } catch (ModbusSlaveException e) {
+            throw new GenDriverModbusException(String.format("Error reading coils (%02X)", e.getType()), e, e.getType());
+        } catch (ModbusIOException e) {
+            throw new GenDriverSocketException("Error reading from device", e);
         } catch (ModbusException e) {
             throw new GenDriverModbusException("Error reading coils", e);
         }
@@ -262,6 +280,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
         try {
             BitVector bv = convertValuesToBitVector(values);
             mbDevice.writeMultipleCoils(unitId, bv);
+        } catch (ModbusSlaveException e) {
+            throw new GenDriverModbusException(String.format("Error writing coils (%02X)", e.getType()), e, e.getType());
+        } catch (ModbusIOException e) {
+            throw new GenDriverSocketException("Error writing to device", e);
         } catch (ModbusException e) {
             throw new GenDriverModbusException("Error writing coils", e);
         }
@@ -281,6 +303,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
             throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
         try {
             mbDevice.writeCoil(unitId, startingAddress, value);
+        } catch (ModbusSlaveException e) {
+            throw new GenDriverModbusException(String.format("Error writing coil (%02X)", e.getType()), e, e.getType());
+        } catch (ModbusIOException e) {
+            throw new GenDriverSocketException("Error writing to device", e);
         } catch (ModbusException e) {
             throw new GenDriverModbusException("Error writing coil", e);
         }
@@ -301,6 +327,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
         try {
             Register[] registers = convertValuesToRegisters(values);
             mbDevice.writeMultipleRegisters(unitId, startingAddress, registers);
+        } catch (ModbusSlaveException e) {
+            throw new GenDriverModbusException(String.format("Error writing registers (%02X)", e.getType()), e, e.getType());
+        } catch (ModbusIOException e) {
+            throw new GenDriverSocketException("Error writing to device", e);
         } catch (ModbusException e) {
             throw new GenDriverModbusException("Error writing registers", e);
         }
@@ -320,6 +350,10 @@ public class J2ModModbusClient<T extends AbstractModbusMaster> implements GenDri
             throws GenDriverException, GenDriverSocketException, GenDriverModbusException {
         try {
             mbDevice.writeSingleRegister(unitId, startingAddress, new SimpleRegister(value));
+        } catch (ModbusSlaveException e) {
+            throw new GenDriverModbusException(String.format("Error writing register (%02X)", e.getType()), e, e.getType());
+        } catch (ModbusIOException e) {
+            throw new GenDriverSocketException("Error writing to device", e);
         } catch (ModbusException e) {
             throw new GenDriverModbusException("Error writing register", e);
         }

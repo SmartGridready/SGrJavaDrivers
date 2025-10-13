@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - added Javadoc code documentation
+- uses updated driver API, but no support for RTU over TCP
 
 
 ## [2.2.0] - 2025-02-10
