@@ -30,48 +30,45 @@ import static org.mockito.Mockito.when;
 
 class GenDriverAPI4ModbusRTUTest {
     private static final Logger LOG = LoggerFactory.getLogger(GenDriverAPI4ModbusRTUTest.class);
-    
+
     private final int[] EXPECTED_RESPONSE = new int[] {0xAA, 2};
-    
+
     @Mock
     ModbusClient modbusClient;
-    
+
     @BeforeEach 
     public void initMocks() {
        MockitoAnnotations.openMocks(this);
     }
-    
+
     @Test
     void readInputRegisters_success() throws Exception {
-                        
-        
+
         GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusRTU("COM9");
         setFieldByReflection(driver, "mbDevice", modbusClient);
-        
+
         when(modbusClient.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenReturn(EXPECTED_RESPONSE);
-                
-        int[] result = driver.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1] );
+
+        int[] result = driver.readHoldingRegisters((short) 1, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1] );
         reportResult("Successful read register", result);
-        assertArrayEquals(EXPECTED_RESPONSE, result);            
+        assertArrayEquals(EXPECTED_RESPONSE, result);
     }
-    
-    
+
     @SuppressWarnings("deprecation")
     @Test
     void readInputRegisters_throws_SerialPortException() throws Exception {
-                        
-        
+
         GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusRTU("COM9");
         setFieldByReflection(driver, "mbDevice", modbusClient);
         
         when(modbusClient.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1])).thenThrow(new SerialPortException("COM9", "write", SerialPortException.TYPE_PORT_NOT_OPENED));
-                
+
         GenDriverException e = assertThrows(GenDriverException.class, () ->
-            driver.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]));
-                
-        assertEquals("Modbus read error: Port name - COM9; Method name - write; Exception type - Port not opened.", e.getMessage());        
+            driver.readHoldingRegisters((short) 1, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1]));
+
+        assertEquals("Modbus read error: Port name - COM9; Method name - write; Exception type - Port not opened.", e.getMessage());
     }
-    
+
 
     @Test
     void initTrspServiceModbusRTU() throws Exception {
@@ -144,26 +141,26 @@ class GenDriverAPI4ModbusRTUTest {
     
     private void reportResult(String testCase, int[] result) {
         StringBuffer sbuf = new StringBuffer();
-        Arrays.stream(result).boxed().forEach( b -> sbuf.append(String.format("%x, ", b)));        
+        Arrays.stream(result).boxed().forEach( b -> sbuf.append(String.format("%x, ", b)));
         LOG.info(testCase + " - result: {}", sbuf);
     }
-            
+
     private void setFieldByReflection(Object object, String fieldName, Object value) 
             throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         
-        Field f1 = getAccessibleField(object, fieldName);        
+        Field f1 = getAccessibleField(object, fieldName);
         f1.setAccessible(true);
         f1.set(object, value);
     }
-    
+
     private Object getFieldByReflection(Object object, String fieldName) 
             throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        
+
         Field f1 = getAccessibleField(object, fieldName);
         return f1.get(object);
     }
 
-    private Field getAccessibleField(Object object, String fieldName) throws NoSuchFieldException {        
+    private Field getAccessibleField(Object object, String fieldName) throws NoSuchFieldException {
         Optional<Field> field = Stream.concat(
             Arrays.asList(object.getClass().getDeclaredFields()).stream(),
             Arrays.asList(object.getClass().getSuperclass().getDeclaredFields()).stream()

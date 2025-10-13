@@ -24,6 +24,7 @@ use their own Modbus RTU drivers
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
+import java.net.InetAddress;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,21 +34,22 @@ import org.junit.jupiter.api.Test;
 import com.smartgridready.driver.api.modbus.GenDriverAPI4Modbus;
 
 class GenDriverAPI4ModbusTCPTest {
-    
+
     private static final Logger LOG = LogManager.getLogger(GenDriverAPI4ModbusTCPTest.class);
-    
+
+    private final int PORT = 9099;
     private final int[] EXPECTED_RESPONSE = new int[] {0xAA, 2};
-    
+
     @Test
     void testReadInputRegistersSuccess() throws Exception {
         
-        TestSocketServer server = new TestSocketServer();
+        TestSocketServer server = new TestSocketServer(PORT);
         server.start();
-        
-        GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusTCP("127.0.0.1", 9099);
-        driver.connect();                
-        
-        int[] result = driver.ReadHoldingRegisters(EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1] );
+
+        GenDriverAPI4Modbus driver = new GenDriverAPI4ModbusTCP(InetAddress.getLoopbackAddress().getHostAddress(), PORT, 5000);
+        driver.connect();
+
+        int[] result = driver.readHoldingRegisters((short) 1, EXPECTED_RESPONSE[0], EXPECTED_RESPONSE[1] );
         reportResult(result);
         assertArrayEquals(EXPECTED_RESPONSE, result);
         
@@ -56,8 +58,7 @@ class GenDriverAPI4ModbusTCPTest {
 
     private void reportResult(int[] result) {
         StringBuffer sbuf = new StringBuffer();
-        Arrays.stream(result).boxed().forEach( b -> sbuf.append(String.format("%x, ", b)));        
+        Arrays.stream(result).boxed().forEach( b -> sbuf.append(String.format("%x, ", b)));
         LOG.info("Successful read register - result: {}", sbuf.toString());
     }
-    
 }
