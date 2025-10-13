@@ -52,13 +52,13 @@ if (project.hasProperty("snapshots")) {
 }
 
 dependencies {
-    api group: 'com.smartgridready', name: 'sgr-driver-api', version: "2.3.1${sgr_driver_suffix}"
+    api group: 'com.smartgridready', name: 'sgr-driver-api', version: "2.4.0${sgr_driver_suffix}"
 
-    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.1.3'
-    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5-fluent', version: '5.1.3'
+    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5.1'
+    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5-fluent', version: '5.5.1'
     implementation group: 'commons-io', name: 'commons-io', version: '2.15.1'
 
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.10'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.17'
 }
 
 test {
